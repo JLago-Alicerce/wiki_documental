@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Document sources
+_fuentes/_originales/
+_fuentes/_originales_normalizados/
+
+# Misc
+*.docx
+*.pdf
