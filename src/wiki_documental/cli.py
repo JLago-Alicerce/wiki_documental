@@ -84,7 +84,7 @@ def full() -> None:
     tmp_full = tmp_dir / "tmp_full.md"
     with tmp_full.open("w", encoding="utf-8") as out:
         for md in sorted(md_raw_dir.glob("*.md")):
-            out.write(md.read_text())
+            out.write(md.read_text(encoding="utf-8"))
             out.write("\n\n")
 
     map_path = cfg["paths"]["work"] / "map.yaml"
