@@ -24,3 +24,16 @@ Thumbs.db
 
 # GitHub Actions
 .github/workflows/*.log
+
+# Tests / cobertura
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Empaquetado
+dist/
+build/
+*.egg-info/
+
