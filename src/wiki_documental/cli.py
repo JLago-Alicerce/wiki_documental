@@ -10,6 +10,7 @@ from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
 from .processing.ingest import ingest_content
 from .processing.sidebar import build_sidebar
+from .processing.reclassify import reclassify_unclassified
 from rich.progress import track
 import yaml
 
@@ -260,4 +261,18 @@ def sidebar(
     output_path = cfg["paths"]["wiki"] / "_sidebar.md"
     build_sidebar(index_path, output_path, depth=depth)
     typer.echo("Sidebar generated")
+
+
+@app.command()
+def reclassify(
+    threshold: float = typer.Option(0.3, "--threshold", "-t", help="Match threshold")
+) -> None:
+    """Reclassify sections from 99_unclassified.md."""
+    wiki_dir = cfg["paths"]["wiki"]
+    unclassified = wiki_dir / "99_unclassified.md"
+    if not unclassified.exists():
+        raise typer.Exit(code=1)
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    reclassify_unclassified(unclassified, index_path, wiki_dir, threshold=threshold)
+    typer.echo("Reclassification completed")
 
