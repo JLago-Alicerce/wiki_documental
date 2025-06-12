@@ -25,14 +25,25 @@ def build_headings_map(md_folder: Path) -> List[Dict[str, str | int]]:
                         {
                             "level": level,
                             "title": title,
-                            "slug": slugify(title),
+                            "slug": slugify(title, lowercase=True, max_length=60),
                         }
                     )
     return map_data
 
 
 def save_map_yaml(map_data: List[Dict[str, str | int]], path: Path) -> None:
-    """Save map data to YAML file."""
+    """Save map data to YAML file with id/slug pairs."""
+    counters: dict[int, int] = {}
+    enriched: List[Dict[str, str | int]] = []
+    for item in map_data:
+        level = int(item.get("level", 1))
+        counters[level] = counters.get(level, 0) + 1
+        for l in list(counters.keys()):
+            if l > level:
+                del counters[l]
+        id_parts = [str(counters[i]) for i in range(1, level + 1) if i in counters]
+        enriched.append({"id": ".".join(id_parts), **item})
+
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
-        yaml.safe_dump(map_data, f, allow_unicode=True)
+        yaml.safe_dump(enriched, f, allow_unicode=True)

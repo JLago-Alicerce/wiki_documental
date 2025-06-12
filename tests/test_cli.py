@@ -89,6 +89,7 @@ def test_map_command(tmp_path, monkeypatch):
     assert map_file.exists()
     data = yaml.safe_load(map_file.read_text(encoding="utf-8"))
     assert data[0]["slug"] == "title"
+    assert data[0]["id"] == "1"
 
 
 def test_index_overwrite(tmp_path, monkeypatch):
