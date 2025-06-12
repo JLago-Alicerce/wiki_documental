@@ -90,7 +90,7 @@ def ingest_content(md_path: Path, index_path: Path, out_dir: Path, cutoff: float
 
     out_dir.mkdir(parents=True, exist_ok=True)
     created = datetime.utcnow().isoformat()
-    header = f"---\nsource: {md_path.name}\ncreated: {created}\n---\n\n"
+    header = f"---\nsource: {md_path.name}\ncreated: {created}\n---\n"
 
     for entry in entries:
         slug = entry["slug"]

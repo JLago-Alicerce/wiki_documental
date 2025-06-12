@@ -24,6 +24,12 @@ def test_ingest_content(tmp_path):
     assert second.exists()
     assert not (out_dir / "99_unclassified.md").exists()
     content = first.read_text(encoding="utf-8")
+    lines = content.splitlines()
+    assert lines[0] == "---"
+    end = lines.index("---", 1)
+    meta = yaml.safe_load("\n".join(lines[1:end]))
+    assert meta["source"] == md.name
+    assert lines[end + 1].startswith("#")
     assert "## Y" in content
     assert "### Zeta" in content
 
