@@ -1,8 +1,7 @@
 ---
 source: tmp_full.md
-created: 2025-06-12T11:07:01.503385
+created: 2025-06-12T13:03:21.397965
 ---
-
 # 2. Descripción del sistema actual 
 
 > <img src="media/image2.jpg" style="width:8.13681in;height:5.02083in" />

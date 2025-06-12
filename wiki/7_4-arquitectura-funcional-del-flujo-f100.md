@@ -1,8 +1,7 @@
 ---
 source: tmp_full.md
-created: 2025-06-12T11:07:01.503385
+created: 2025-06-12T13:03:21.397965
 ---
-
 # 4. Arquitectura funcional del flujo F100 
 
 <img src="media/image5.jpg" style="width:9.39375in;height:4.075in" />

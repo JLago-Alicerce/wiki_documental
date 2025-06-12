@@ -1,8 +1,7 @@
 ---
 source: tmp_full.md
-created: 2025-06-12T11:07:01.503385
+created: 2025-06-12T13:03:21.397965
 ---
-
 # 1. Objeto del documento 
 
 El presente documento tiene como objetivo describir el estado

@@ -1,8 +1,7 @@
 ---
 source: tmp_full.md
-created: 2025-06-12T11:07:01.503385
+created: 2025-06-12T13:03:21.397965
 ---
-
 # **2.3. Plataforma Necor@ extendida (<sub>MASQL20142\NECORANET</sub>)**
 
 Este entorno funcional de AWD incluye bases de datos como
