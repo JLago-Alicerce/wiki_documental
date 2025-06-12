@@ -1,4 +1,6 @@
 import builtins
+from docx import Document
+from docx.shared import Pt
 
 from typer.testing import CliRunner
 
@@ -24,3 +26,20 @@ def test_full_calls_ensure_pandoc(monkeypatch):
     assert result.exit_code == 0
     assert called["value"]
     assert "Running full placeholder" in result.stdout
+
+
+def test_normalize_command(tmp_path, monkeypatch):
+    sample = tmp_path / "sample.docx"
+    doc = Document()
+    run = doc.add_paragraph().add_run("Title")
+    run.bold = True
+    run.font.size = Pt(16)
+    doc.add_paragraph("Text")
+    doc.save(sample)
+
+    monkeypatch.setattr(
+        "wiki_documental.cli.cfg", {"paths": {"work": tmp_path}}
+    )
+    result = runner.invoke(app, ["normalize", str(sample)])
+    assert result.exit_code == 0
+    assert (tmp_path / "normalized" / sample.name).exists()
