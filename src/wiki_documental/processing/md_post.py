@@ -2,6 +2,30 @@ from __future__ import annotations
 
 import re
 from typing import List
+from pathlib import Path
+
+IMAGE_LINK_RE = re.compile(r"!\[([^\]]*)\]\((?:\./|\.\./)*media/([^)]+)\)")
+
+
+def fix_image_links(text: str) -> str:
+    """Replace media paths with assets/media paths."""
+
+    def repl(match: re.Match[str]) -> str:
+        alt = match.group(1)
+        filename = match.group(2)
+        return f"![{alt}](assets/media/{filename})"
+
+    return IMAGE_LINK_RE.sub(repl, text)
+
+
+ASSET_LINK_RE = re.compile(r"!\[[^\]]*\]\((assets/media/[^)]+)\)")
+
+
+def warn_missing_images(text: str, wiki_dir: Path) -> None:
+    """Print warning for any linked images that do not exist."""
+    for rel in ASSET_LINK_RE.findall(text):
+        if not (wiki_dir / rel).exists():
+            print(f"Warning: missing image {wiki_dir / rel}")
 
 
 _HEADING2_RE = re.compile(r"^##\s")
