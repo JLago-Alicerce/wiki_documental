@@ -1,4 +1,5 @@
 import builtins
+from pathlib import Path
 from docx import Document
 from docx.shared import Pt
 
@@ -16,17 +17,46 @@ def test_version_option():
     assert wiki_documental.__version__ in result.stdout
 
 
-def test_full_calls_ensure_pandoc(monkeypatch):
+def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
     called = {"value": False}
 
     def dummy():
         called["value"] = True
 
     monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", dummy)
+
+    paths = {
+        "originals": tmp_path / "orig",
+        "work": tmp_path / "work",
+        "wiki": tmp_path / "wiki",
+        "tmp": tmp_path / "tmp",
+    }
+    for p in paths.values():
+        p.mkdir(parents=True, exist_ok=True)
+
+    doc_path = paths["originals"] / "sample.docx"
+    doc = Document()
+    run = doc.add_paragraph().add_run("Title")
+    run.bold = True
+    run.font.size = Pt(16)
+    doc.add_paragraph("Text")
+    doc.save(doc_path)
+
+    def fake_run(cmd, capture_output=True, text=True):
+        Path(cmd[-1]).write_text("# Title\nText")
+        class Result:
+            returncode = 0
+            stderr = ""
+        return Result()
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+
     result = runner.invoke(app, ["full"])
     assert result.exit_code == 0
     assert called["value"]
-    assert "Running full placeholder" in result.stdout
+    assert (paths["wiki"] / "_sidebar.md").exists()
 
 
 def test_normalize_command(tmp_path, monkeypatch):
