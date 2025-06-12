@@ -43,3 +43,18 @@ def test_normalize_command(tmp_path, monkeypatch):
     result = runner.invoke(app, ["normalize", str(sample)])
     assert result.exit_code == 0
     assert (tmp_path / "normalized" / sample.name).exists()
+
+import yaml
+
+
+def test_map_command(tmp_path, monkeypatch):
+    md_folder = tmp_path / "md_raw"
+    md_folder.mkdir()
+    (md_folder / "sample.md").write_text("# Title\n")
+    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": tmp_path}})
+    result = runner.invoke(app, ["map"])
+    assert result.exit_code == 0
+    map_file = tmp_path / "map.yaml"
+    assert map_file.exists()
+    data = yaml.safe_load(map_file.read_text())
+    assert data[0]["slug"] == "title"
