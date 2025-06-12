@@ -76,3 +76,21 @@ def test_index_overwrite(tmp_path, monkeypatch):
     data = yaml.safe_load((work / "index.yaml").read_text())
     assert data[0]["id"] == "1"
     assert data[0]["children"][0]["children"][0]["id"] == "1.1.1"
+
+
+def test_sidebar_command(tmp_path, monkeypatch):
+    index = [
+        {"id": "1", "title": "A", "slug": "a", "children": []}
+    ]
+    work = tmp_path
+    (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True))
+    paths = {"work": work, "wiki": work}
+    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
+
+    result = runner.invoke(app, ["sidebar"])
+    assert result.exit_code == 0
+    sidebar = work / "_sidebar.md"
+    assert sidebar.exists()
+    content = sidebar.read_text().splitlines()
+    assert content[1] == "* [A](1_a.md)"
+
