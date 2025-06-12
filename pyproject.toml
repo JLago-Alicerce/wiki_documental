@@ -14,6 +14,9 @@ rich = "^13.7"
 python-slugify = "^8.0"
 tqdm = "^4.66"
 typer = {version = "^0.9", extras = ["all"]}
+"pdfminer.six" = {version = "^20221105", optional = true}
+pdf2image = {version = "^1.17", optional = true}
+pytesseract = {version = "^0.3", optional = true}
 
 [tool.poetry.extras]
 pdf = ["pdfminer.six", "pdf2image", "pytesseract"]
