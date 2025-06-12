@@ -1,3 +1,4 @@
+import shutil
 import typer
 from pathlib import Path
 from rich.console import Console
@@ -72,10 +73,11 @@ def full() -> None:
             raise typer.Exit(code=1)
 
     console.print("[bold]Converting DOCX to Markdown...[/bold]")
+    media_dir = md_raw_dir / "media"
     for docx in track(norm_dir.glob("*.docx"), description="Convert"):
         out = md_raw_dir / f"{docx.stem}.md"
         try:
-            convert_docx_to_md(docx, out)
+            convert_docx_to_md(docx, out, media_dir)
         except Exception as exc:  # pragma: no cover - defensive
             console.print(f"Error converting {docx.name}: {exc}", style="red")
             raise typer.Exit(code=1)
@@ -125,6 +127,13 @@ def full() -> None:
     console.print("[bold]Generating sidebar...[/bold]")
     build_sidebar(index_path, wiki_dir / "_sidebar.md")
 
+    media_src = md_raw_dir / "media"
+    if media_src.exists():
+        dest = wiki_dir / "assets" / "media"
+        if dest.exists():
+            shutil.rmtree(dest)
+        shutil.copytree(media_src, dest)
+
     console.print(f"\N{check mark} Wiki generada correctamente en: {wiki_dir / 'index.html'}")
 
 
@@ -150,7 +159,7 @@ def convert(file: Path) -> None:
     dest_dir = cfg["paths"]["work"] / "md_raw"
     dest_dir.mkdir(parents=True, exist_ok=True)
     out_file = dest_dir / f"{file.stem}.md"
-    convert_docx_to_md(file, out_file)
+    convert_docx_to_md(file, out_file, dest_dir / "media")
     typer.echo(f"Converted markdown saved to {out_file}")
 
 
