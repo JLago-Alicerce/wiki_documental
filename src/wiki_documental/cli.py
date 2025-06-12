@@ -5,7 +5,7 @@ from . import ensure_pandoc
 
 app = typer.Typer(add_completion=False, add_help_option=True)
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 
 def _version_callback(value: bool) -> None:

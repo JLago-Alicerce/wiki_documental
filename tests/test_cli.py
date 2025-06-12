@@ -10,7 +10,7 @@ runner = CliRunner()
 def test_version_option():
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert "0.1.0" in result.stdout
+    assert "1.0.0" in result.stdout
 
 
 def test_full_calls_ensure_pandoc(monkeypatch):

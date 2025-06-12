@@ -1,0 +1,9 @@
+paths:
+  originals: "inputs/_originals"
+  work: "work"
+  wiki: "wiki"
+  tmp: "work/tmp"
+
+options:
+  ocr: false
+  cutoff_similarity: 0.5
