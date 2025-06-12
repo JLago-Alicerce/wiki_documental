@@ -74,8 +74,8 @@ def test_pipeline_full_with_image(tmp_path, monkeypatch):
             if part.startswith("--extract-media="):
                 media_dir = Path(part.split("=", 1)[1])
         if media_dir is not None:
-            media_dir.mkdir(parents=True, exist_ok=True)
-            (media_dir / "img.png").write_text("binary", encoding="utf-8")
+            (media_dir / "media").mkdir(parents=True, exist_ok=True)
+            (media_dir / "media" / "img.png").write_text("binary", encoding="utf-8")
         class R:
             returncode = 0
             stderr = ""

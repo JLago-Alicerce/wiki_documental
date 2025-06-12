@@ -1,4 +1,9 @@
-from wiki_documental.processing.md_post import post_process_text, clean_markdown
+from wiki_documental.processing.md_post import (
+    post_process_text,
+    clean_markdown,
+    fix_image_links,
+    warn_missing_images,
+)
 
 
 def test_clean_and_spacing():
@@ -23,3 +28,17 @@ def test_heading_cleanup():
     assert lines[0] == '## Title'
     assert lines[1] == ''
     assert lines[2] == '### Another Title'
+
+
+def test_fix_image_links_and_warning(tmp_path, capsys):
+    text = '![a](media/img.png) and ![](../media/img2.jpg)'
+    assets = tmp_path / 'assets' / 'media'
+    assets.mkdir(parents=True)
+    (assets / 'img.png').write_text('x', encoding='utf-8')
+
+    fixed = fix_image_links(text)
+    warn_missing_images(fixed, tmp_path)
+    captured = capsys.readouterr()
+    assert 'assets/media/img.png' in fixed
+    assert 'assets/media/img2.jpg' in fixed
+    assert 'img2.jpg' in captured.out

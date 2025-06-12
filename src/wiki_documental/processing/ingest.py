@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import yaml
-from .md_post import post_process_text
+from .md_post import post_process_text, fix_image_links, warn_missing_images
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 
@@ -114,10 +114,14 @@ def ingest_content(
         prefix = str(entry.get("id", "")).replace(".", "-")
         path = out_dir / f"{prefix}_{slug}.md"
         final_text = post_process_text(header + text)
+        final_text = fix_image_links(final_text)
+        warn_missing_images(final_text, out_dir)
         with path.open("w", encoding="utf-8") as f:
             f.write(final_text)
 
     if unclassified:
         final_text = post_process_text(header + "".join(unclassified))
+        final_text = fix_image_links(final_text)
+        warn_missing_images(final_text, out_dir)
         with (out_dir / "99_unclassified.md").open("w", encoding="utf-8") as f:
             f.write(final_text)

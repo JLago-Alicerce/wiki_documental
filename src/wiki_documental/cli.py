@@ -74,7 +74,7 @@ def full() -> None:
             raise typer.Exit(code=1)
 
     console.print("[bold]Converting DOCX to Markdown...[/bold]")
-    media_dir = md_raw_dir / "media"
+    media_dir = md_raw_dir
     for docx in track(norm_dir.glob("*.docx"), description="Convert"):
         out = md_raw_dir / f"{docx.stem}.md"
         try:
@@ -132,6 +132,11 @@ def full() -> None:
     media_src = md_raw_dir / "media"
     if media_src.exists():
         dest = wiki_dir / "assets" / "media"
+        double_media = dest / "media"
+        if double_media.exists():
+            for img in double_media.iterdir():
+                shutil.move(img, dest)
+            shutil.rmtree(double_media)
         if dest.exists():
             shutil.rmtree(dest)
         shutil.copytree(media_src, dest)
@@ -161,7 +166,7 @@ def convert(file: Path) -> None:
     dest_dir = cfg["paths"]["work"] / "md_raw"
     dest_dir.mkdir(parents=True, exist_ok=True)
     out_file = dest_dir / f"{file.stem}.md"
-    convert_docx_to_md(file, out_file, dest_dir / "media")
+    convert_docx_to_md(file, out_file, dest_dir)
     typer.echo(f"Converted markdown saved to {out_file}")
 
 
