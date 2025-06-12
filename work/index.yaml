@@ -1,0 +1,467 @@
+- children:
+  - children: []
+    id: '1.1'
+    slug: 1-objetivos-del-documento-4-2-servicio-de-soporte-general-5
+    title: 1 Objetivos del documento.............................................................4
+      2 Servicio de soporte general..........................................................5
+  - children: []
+    id: '1.2'
+    slug: 6-integracion-con-sap-12
+    title: 6 Integración con SAP...................................................................12
+  - children: []
+    id: '1.3'
+    slug: 7-migracion-de-aplicaciones-a-arquitectura-radar-14
+    title: 7 Migración de aplicaciones a arquitectura RADAR.....................14
+  - children:
+    - children: []
+      id: 1.4.1
+      slug: 1-objetivos-del-documento
+      title: 1 Objetivos del documento
+    - children:
+      - children: []
+        id: 1.4.2.1
+        slug: 2-1-descripcion-general
+        title: 2.1 Descripción general
+      - children:
+        - children: []
+          id: 1.4.2.2.1
+          slug: 2-2-1-necor-v6
+          title: 2.2.1 Necor@V6
+        - children: []
+          id: 1.4.2.2.2
+          slug: 2-2-2-pdb
+          title: 2.2.2 PDB
+        - children: []
+          id: 1.4.2.2.3
+          slug: 2-2-3-clientes-externos
+          title: 2.2.3 Clientes Externos
+        id: 1.4.2.2
+        slug: 2-2-situacion-actual
+        title: 2.2 Situación actual
+      - children: []
+        id: 1.4.2.3
+        slug: 2-3-transferencia-de-conocimientos
+        title: 2.3 Transferencia de conocimientos
+      - children: []
+        id: 1.4.2.4
+        slug: 2-4-responsables
+        title: 2.4 Responsables
+      id: 1.4.2
+      slug: 2-servicio-de-soporte-general
+      title: 2 Servicio de soporte general
+    - children:
+      - children: []
+        id: 1.4.3.1
+        slug: 3-1-descripcion-general
+        title: 3.1 Descripción general
+      - children:
+        - children: []
+          id: 1.4.3.2.1
+          slug: 3-2-1-necor-v6
+          title: 3.2.1 Necor@V6
+        id: 1.4.3.2
+        slug: 3-2-situacion-actual
+        title: 3.2 Situación actual
+      - children:
+        - children: []
+          id: 1.4.3.3.1
+          slug: 3-3-1-necor-v6
+          title: 3.3.1 Necor@V6
+        - children: []
+          id: 1.4.3.3.2
+          slug: 3-3-2-pdb
+          title: 3.3.2 PDB
+        id: 1.4.3.3
+        slug: 3-3-transferencia-de-conocimientos
+        title: 3.3 Transferencia de conocimientos
+      - children: []
+        id: 1.4.3.4
+        slug: 3-4-responsables
+        title: 3.4 Responsables
+      id: 1.4.3
+      slug: 3-proyectos-historicos-pdb
+      title: 3 Proyectos históricos / PDB
+    - children:
+      - children: []
+        id: 1.4.4.1
+        slug: 4-1-descripcion-general
+        title: 4.1 Descripción general
+      - children:
+        - children: []
+          id: 1.4.4.2.1
+          slug: 4-2-1-ecadat
+          title: 4.2.1 Ecadat
+        - children: []
+          id: 1.4.4.2.2
+          slug: 4-2-3-procesos-manuales
+          title: 4.2.3 Procesos manuales
+        id: 1.4.4.2
+        slug: 4-2-situacion-actual
+        title: 4.2 Situación actual
+      - children: []
+        id: 1.4.4.3
+        slug: 4-3-transferencia-de-conocimientos
+        title: 4.3 Transferencia de conocimientos
+      - children: []
+        id: 1.4.4.4
+        slug: 4-4-responsables
+        title: 4.4 Responsables
+      id: 1.4.4
+      slug: 4-interfaces-con-clientes-externos
+      title: 4 Interfaces con Clientes Externos
+    - children:
+      - children: []
+        id: 1.4.5.1
+        slug: 5-1-descripcion-general
+        title: 5.1 Descripción general
+      - children:
+        - children: []
+          id: 1.4.5.2.1
+          slug: 5-2-1-interarma
+          title: 5.2.1 InterArma
+        - children: []
+          id: 1.4.5.2.2
+          slug: 5-2-2-comunicacion-sistema-armada-galia
+          title: 5.2.2 Comunicación sistema Armada – Galia
+        - children: []
+          id: 1.4.5.2.3
+          slug: 5-2-3-linea-de-desarrollo
+          title: 5.2.3 Línea de desarrollo
+        id: 1.4.5.2
+        slug: 5-2-situacion-actual
+        title: 5.2 Situación actual
+      - children: []
+        id: 1.4.5.3
+        slug: 5-3-transferencia-de-conocimientos
+        title: 5.3 Transferencia de conocimientos
+      - children: []
+        id: 1.4.5.4
+        slug: 5-4-responsables
+        title: 5.4 Responsables
+      id: 1.4.5
+      slug: 5-soporte-y-mantenimiento-interarma-galia
+      title: 5 Soporte y mantenimiento InterArma – Galia
+    - children:
+      - children: []
+        id: 1.4.6.1
+        slug: 6-1-descripcion-general
+        title: 6.1 Descripción general
+      - children:
+        - children: []
+          id: 1.4.6.2.1
+          slug: 6-2-1-linea-de-desarrollo
+          title: 6.2.1 Línea de desarrollo
+        id: 1.4.6.2
+        slug: 6-2-situacion-actual
+        title: 6.2 Situación actual
+      - children: []
+        id: 1.4.6.3
+        slug: 6-3-transferencia-de-conocimientos
+        title: 6.3 Transferencia de conocimientos
+      - children: []
+        id: 1.4.6.4
+        slug: 6-4-responsables
+        title: 6.4 Responsables
+      id: 1.4.6
+      slug: 6-integracion-con-sap
+      title: 6 Integración con SAP
+    - children:
+      - children:
+        - children: []
+          id: 1.4.7.1.1
+          slug: 7-2-1-linea-de-desarrollo
+          title: 7.2.1 Línea de desarrollo
+        id: 1.4.7.1
+        slug: 7-2-situacion-actual
+        title: 7.2 Situación actual
+      - children: []
+        id: 1.4.7.2
+        slug: 7-3-transferencia-de-conocimientos
+        title: 7.3 Transferencia de conocimientos
+      - children: []
+        id: 1.4.7.3
+        slug: 7-4-responsables
+        title: 7.4 Responsables
+      id: 1.4.7
+      slug: 7-migracion-de-aplicaciones-a-arquitectura-radar
+      title: 7 Migración de aplicaciones a arquitectura RADAR
+    - children:
+      - children: []
+        id: 1.4.8.1
+        slug: 8-1-descripcion-general
+        title: 8.1 Descripción general
+      - children:
+        - children: []
+          id: 1.4.8.2.1
+          slug: 8-2-1-migracion-de-bases-de-datos-sql-server
+          title: 8.2.1 Migración de Bases de Datos SQL Server
+        - children: []
+          id: 1.4.8.2.2
+          slug: 8-2-2-migracion-de-aplicaciones-para-ejecutar-en-w10
+          title: 8.2.2 Migración de aplicaciones para ejecutar en W10
+        id: 1.4.8.2
+        slug: 8-2-situacion-actual
+        title: 8.2 Situación actual
+      - children: []
+        id: 1.4.8.3
+        slug: 8-3-transferencia-de-conocimientos
+        title: 8.3 Transferencia de conocimientos
+      - children: []
+        id: 1.4.8.4
+        slug: 8-4-responsables
+        title: 8.4 Responsables
+      id: 1.4.8
+      slug: 8-gestion-de-la-obsolescencia
+      title: 8 Gestión de la obsolescencia
+    - children: []
+      id: 1.4.9
+      slug: 9-progreso-actual-en-el-ciclo-de-traspaso-de-conocimientos
+      title: 9 Progreso actual en el ciclo de traspaso de conocimientos
+    id: '1.4'
+    slug: 9-progreso-actual-en-el-ciclo-de-traspaso-de-conocimientos-17
+    title: 9 Progreso actual en el ciclo de traspaso de conocimientos.......17
+  id: '1'
+  slug: indice
+  title: ÍNDICE
+- children: []
+  id: '2'
+  slug: 1-objeto-del-documento
+  title: 1. Objeto del documento
+- children:
+  - children: []
+    id: '3.1'
+    slug: 2-1-nucleo-hostdb2-sub-masql20171-hostdb2-sub
+    title: 2.1. Núcleo HOSTDB2 (<sub>MASQL20171\HOSTDB2</sub>)
+  id: '3'
+  slug: 2-descripcion-del-sistema-actual
+  title: 2. Descripción del sistema actual
+- children: []
+  id: '4'
+  slug: 2-2-plataforma-necor-clasica-sub-masql20142-sql20142-sub
+  title: '**2.2. Plataforma Necor@ clásica (<sub>MASQL20142\SQL20142</sub>)**'
+- children:
+  - children: []
+    id: '5.1'
+    slug: 2-4-clientes-internacionales-sql-server-2022
+    title: '**2.4. Clientes internacionales (SQL Server 2022)**'
+  - children: []
+    id: '5.2'
+    slug: 2-5-servicios-intermedios-maservf9
+    title: '**2.5. Servicios intermedios (MASERVF9)**'
+  - children: []
+    id: '5.1'
+    slug: el-servidor-iis-10-configurado-como-pasarela-de-integracion-entre-sap-po-y-sql-server-actua-como-intermediario-en-la-comunicacion-de-datos-expone-web-services-rest-soap-que-permiten-a-sap-consultar-datos-de-materiales-y-recibir-confirmaciones-de-manera-segura-se-comunica-directamente-con-hostdb2-v6-a-traves-de-odbc-y-opera-en-un-puerto-fijo-58898-controlado-por-un-firewall-y-validado-por-el-departamento-de-ciberseguridad
+    title: El servidor IIS 10, configurado como pasarela de integración entre SAP
+      PO y SQL Server, actúa como intermediario en la comunicación de datos. Expone
+      **Web Services REST/SOAP** que permiten a SAP consultar datos de materiales
+      y recibir confirmaciones de manera segura. Se comunica directamente con HOSTDB2.V6
+      a través de ODBC y opera en un puerto fijo (58898), controlado por un firewall
+      y validado por el departamento de Ciberseguridad.
+  - children: []
+    id: '5.2'
+    slug: maservf9-es-el-host-windows-server-2019-10-100-161-76-que-reemplaza-al-antiguo-manecnet-como-punto-unico-de-integracion-soap-entre-sap-po-y-necor-desde-noviembre-de-2024-aloja
+    title: 'MASERVF9 es el host Windows Server 2019 (10.100.161.76) que reemplaza
+      al antiguo **MANECNET** como punto único de integración SOAP entre SAP PO y
+      Necor@. Desde noviembre de 2024, aloja:'
+  - children: []
+    id: '5.3'
+    slug: web-service-necorawebintegrator-svc-expuesto-en-iis-10-puerto-80
+    title: '**Web Service NecoraWebIntegrator.svc** — expuesto en IIS 10, puerto 80.'
+  - children: []
+    id: '5.4'
+    slug: carpetas-de-intercambio-necorasap-request-response-con-permisos-ntfs-equivalentes-a-los-de
+    title: Carpetas de intercambio **NecoraSAP\Request\|Response** con permisos NTFS
+      equivalentes a los de
+  - children: []
+    id: '5.5'
+    slug: cliente-sql-native-11-para-conectividad-con-masql20171-hostdb2
+    title: Cliente SQL Native 11 para conectividad con **MASQL20171\HOSTDB2**.
+  - children:
+    - children: []
+      id: 5.6.1
+      slug: 2-6-flujos-de-carga-y-extraccion
+      title: '**2.6. Flujos de carga y extracción**'
+    id: '5.6'
+    slug: este-servidor-concentra-ahora-los-flujos-m-at-setinfomateriales-y-login-que-sincronizan-el-material-maestro-entre-sap-y-la-base-v6-su-consolidacion-elimina-dependencias-de-hardware-obsoleto-y-simplifica-la-matriz-del-firewall-corporativo-mejorando-la-eficiencia-operativa-y-la-seguridad-de-las-comunicaciones
+    title: Este servidor concentra ahora los flujos M-AT (*SetInfoMateriales*) y Login,
+      que sincronizan el material maestro entre SAP y la base **V6**. Su consolidación
+      elimina dependencias de hardware obsoleto y simplifica la matriz del firewall
+      corporativo, mejorando la eficiencia operativa y la seguridad de las comunicaciones.
+  - children: []
+    id: '5.7'
+    slug: el-modelo-de-datos-actual-se-caracteriza-por-su-arquitectura-modular-desacoplada-y-orientada-al-cliente-esta-estructura-permite-la-existencia-de-instancias-dedicadas-por-funcion-pais-o-sistema-fuente-lo-que-garantiza-una-trazabilidad-completa-desde-el-origen-en-sap-hasta-la-entrega-final-en-necor-esta-orientacion-modular-no-solo-facilita-la-gestion-y-el-mantenimiento-del-sistema-sino-que-tambien-asegura-que-las-necesidades-especificas-de-cada-cliente-y-region-sean-atendidas-de-manera-eficiente-y-efectiva
+    title: El modelo de datos actual se caracteriza por su arquitectura **modular,
+      desacoplada y orientada al cliente**. Esta estructura permite la existencia
+      de instancias dedicadas por función, país o sistema fuente, lo que garantiza
+      una trazabilidad completa desde el origen en SAP hasta la entrega final en Necor@.
+      Esta orientación modular no solo facilita la gestión y el mantenimiento del
+      sistema, sino que también asegura que las necesidades específicas de cada cliente
+      y región sean atendidas de manera eficiente y efectiva.
+  id: '5'
+  slug: 2-3-plataforma-necor-extendida-sub-masql20142-necoranet-sub
+  title: '**2.3. Plataforma Necor@ extendida (<sub>MASQL20142\NECORANET</sub>)**'
+- children:
+  - children:
+    - children: []
+      id: 6.1.1
+      slug: 3-1-1-caracteristicas-generales
+      title: 3.1.1. Características generales
+    - children: []
+      id: 6.1.2
+      slug: 3-1-2-contenido-migrado
+      title: 3.1.2. Contenido migrado
+    - children: []
+      id: 6.1.3
+      slug: 3-1-3-v6-y-creacion-de-v6-2
+      title: 3.1.3. V6 y creación de V6_2
+    - children: []
+      id: 6.1.4
+      slug: 3-1-4-antecedentes-del-proyecto-host
+      title: 3.1.4. Antecedentes del proyecto HOST
+    - children: []
+      id: 6.1.5
+      slug: 3-1-5-interfaces-ssis-en-entorno-host-consolidado-awd-alhd
+      title: 3.1.5. Interfaces SSIS en entorno HOST consolidado (AWD/ALHD)
+    id: '6.1'
+    slug: 3-1-masql20171-hostdb2
+    title: 3.1. MASQL20171\HOSTDB2
+  - children:
+    - children: []
+      id: 6.2.1
+      slug: 3-2-1-caracteristicas-generales
+      title: 3.2.1. Características generales
+    - children: []
+      id: 6.2.2
+      slug: 3-2-2-contexto-y-dependencias
+      title: 3.2.2. Contexto y dependencias
+    id: '6.2'
+    slug: 3-2-masql20142-sql20142-masql20222
+    title: 3.2. MASQL20142\SQL20142 – (MASQL20222)
+  - children: []
+    id: '6.3'
+    slug: la-instancia-alberga-exclusivamente-la-base-de-datos-necor-nc-empleada-por-los-modulos-de-ingenieria-y-aplicaciones-internas-como-ecadat-su-integracion-con-sap-se-limita-a-las-operaciones-de-catalogo-de-materiales-mediante-hojascatalogo-los-enlaces-externos-son-reducidos-la-transferencia-principal-se-dirige-a-necoranet-para-consolidacion-de-datos
+    title: La instancia alberga exclusivamente la base de datos Necor@NC, empleada
+      por los módulos de ingeniería y aplicaciones internas como ECADAT. Su integración
+      con SAP se limita a las operaciones de catálogo de materiales mediante HojasCatálogo.
+      Los enlaces externos son reducidos; la transferencia principal se dirige a **NECORANET**
+      para consolidación de datos.
+  - children:
+    - children: []
+      id: 6.4.1
+      slug: 3-3-1-caracteristicas-generales
+      title: 3.3.1. Características generales
+    - children: []
+      id: 6.4.2
+      slug: 3-3-2-contexto-y-dependencias
+      title: 3.3.2. Contexto y dependencias
+    id: '6.4'
+    slug: 3-3-masql20142-necoranet-masql20222
+    title: 3.3. MASQL20142\NECORANET – (MASQL20222)
+  - children:
+    - children: []
+      id: 6.5.1
+      slug: 3-4-1-caracteristicas-generales
+      title: 3.4.1. Características generales
+    - children: []
+      id: 6.5.2
+      slug: 3-4-2-contexto-y-dependencias
+      title: 3.4.2. Contexto y dependencias
+    id: '6.5'
+    slug: 3-4-masql20221-sqlturk
+    title: 3.4. MASQL20221\SQLTURK
+  - children:
+    - children: []
+      id: 6.6.1
+      slug: 3-5-1-caracteristicas-generales
+      title: 3.5.1. Características generales
+    - children: []
+      id: 6.6.2
+      slug: 3-5-2-contexto-y-dependencias
+      title: 3.5.2. Contexto y dependencias
+    id: '6.6'
+    slug: 3-5-masql20221-sqlnorway
+    title: 3.5. MASQL20221\SQLNORWAY
+  - children:
+    - children: []
+      id: 6.7.1
+      slug: 3-6-1-caracteristicas-generales
+      title: 3.6.1. Características generales
+    - children: []
+      id: 6.7.2
+      slug: 3-6-2-funciones-y-contexto
+      title: 3.6.2. Funciones y contexto
+    - children: []
+      id: 6.7.3
+      slug: 3-6-4-incidencias-y-acciones-correctivas-principales
+      title: 3.6.4. Incidencias y acciones correctivas principales
+    - children: []
+      id: 6.7.4
+      slug: 3-6-5-lecciones-aprendidas-y-recomendaciones
+      title: 3.6.5. Lecciones aprendidas y recomendaciones
+    id: '6.7'
+    slug: 3-6-maservf9-antiguo-manecnet
+    title: 3.6. MASERVF9 – (Antiguo MANECNET)
+  id: '6'
+  slug: 3-detalle-tecnico-por-servidor-instancia
+  title: 3. Detalle técnico por servidor/instancia
+- children:
+  - children: []
+    id: '7.1'
+    slug: 4-1-origen-de-datos
+    title: 4.1. Origen de datos
+  - children: []
+    id: '7.2'
+    slug: 4-2-interfaces-de-carga-principales
+    title: 4.2. Interfaces de carga principales
+  - children: []
+    id: '7.3'
+    slug: 4-3-reglas-de-negocio-y-transformacion
+    title: 4.3. Reglas de negocio y transformación
+  - children:
+    - children: []
+      id: 7.4.1
+      slug: 4-4-1-integracion-ampliada-del-modelo-funcional-foran-windchill-sap
+      title: 4.4.1. Integración ampliada del modelo funcional – Foran \<-\> Windchill
+        \<-\> SAP
+    id: '7.4'
+    slug: 4-4-consolidacion-y-publicacion-de-datos
+    title: 4.4. Consolidación y publicación de datos
+  - children: []
+    id: '7.5'
+    slug: 4-5-validacion-de-calidad-y-revision
+    title: 4.5. Validación de calidad y revisión
+  - children: []
+    id: '7.6'
+    slug: 4-6-escenarios-operativos
+    title: 4.6. Escenarios operativos
+  - children: []
+    id: '7.7'
+    slug: 4-7-supervision-operativa-y-alertado
+    title: 4.7. Supervisión operativa y alertado
+  - children: []
+    id: '7.8'
+    slug: 4-8-consideraciones-de-mejora
+    title: 4.8. Consideraciones de mejora
+  id: '7'
+  slug: 4-arquitectura-funcional-del-flujo-f100
+  title: 4. Arquitectura funcional del flujo F100
+- children: []
+  id: '8'
+  slug: 5-calidad-y-riesgos-actuales
+  title: 5. Calidad y riesgos actuales
+- children: []
+  id: '9'
+  slug: 6-proximos-pasos-recomendados
+  title: 6. Próximos pasos recomendados
+- children:
+  - children: []
+    id: '10.1'
+    slug: anexo-tecnico-inventario-actual-de-bases-de-datos-por-instancia
+    title: Anexo técnico – Inventario actual de bases de datos por instancia
+  - children: []
+    id: '10.2'
+    slug: anexo-inventario-de-jobs-por-instancia
+    title: Anexo – Inventario de Jobs por instancia
+  id: '10'
+  slug: 7-referencias-internas-y-fuentes-consultadas
+  title: 7. Referencias internas y fuentes consultadas
