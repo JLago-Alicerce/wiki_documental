@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Any
 
 import yaml
 
@@ -14,21 +14,24 @@ def _load_map_slugs(path: Path) -> set[str]:
     return {item.get("slug") for item in data if item.get("slug")}
 
 
+def _extract_slugs(entries: List[Dict[str, Any]]) -> set[str]:
+    slugs: set[str] = set()
+    for entry in entries:
+        slug = entry.get("slug")
+        if slug:
+            slugs.add(slug)
+        children = entry.get("children", [])
+        if children:
+            slugs.update(_extract_slugs(children))
+    return slugs
+
+
 def _load_index_slugs(path: Path) -> set[str]:
     if not path.exists():
         return set()
     with path.open("r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or []
-    slugs: set[str] = set()
-    for entry in data:
-        slug = entry.get("slug")
-        if slug:
-            slugs.add(slug)
-        for child in entry.get("children", []):
-            child_slug = child.get("slug")
-            if child_slug:
-                slugs.add(child_slug)
-    return slugs
+    return _extract_slugs(data)
 
 
 def compare_map_index(map_path: Path, index_path: Path) -> Dict[str, List[str]]:

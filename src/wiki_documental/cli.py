@@ -83,11 +83,19 @@ def map() -> None:
     typer.echo(f"Headings map saved to {out_file}")
 
 
+from .processing.index_builder import build_index_from_map
+
+
 @app.command()
-def index() -> None:
-    """Create index.yaml grouped by level 1 headings if not present."""
+def index(
+    overwrite: bool = typer.Option(
+        False, "--overwrite", "-o", help="Overwrite existing index.yaml"
+    ),
+    flat: bool = typer.Option(False, "--flat", help="Generate flat two-level index"),
+) -> None:
+    """Create index.yaml from map.yaml."""
     out_file = cfg["paths"]["work"] / "index.yaml"
-    if out_file.exists():
+    if out_file.exists() and not overwrite:
         typer.echo("index.yaml already exists")
         return
     map_path = cfg["paths"]["work"] / "map.yaml"
@@ -96,17 +104,21 @@ def index() -> None:
             map_data = yaml.safe_load(f) or []
     else:
         map_data = build_headings_map(cfg["paths"]["work"] / "md_raw")
-    index_data = []
-    current = None
-    for item in map_data:
-        if item.get("level") == 1:
-            current = {"title": item["title"], "slug": item["slug"], "children": []}
-            index_data.append(current)
-        else:
-            if current is not None:
-                current["children"].append(
-                    {"level": item["level"], "title": item["title"], "slug": item["slug"]}
-                )
+
+    if flat:
+        index_data: list[dict] = []
+        current: dict | None = None
+        for item in map_data:
+            if item.get("level") == 1:
+                current = {"title": item["title"], "slug": item["slug"], "children": []}
+                index_data.append(current)
+            else:
+                if current is not None:
+                    current["children"].append(
+                        {"level": item["level"], "title": item["title"], "slug": item["slug"]}
+                    )
+    else:
+        index_data = build_index_from_map(map_data)
     out_file.parent.mkdir(parents=True, exist_ok=True)
     with out_file.open("w", encoding="utf-8") as f:
         yaml.safe_dump(index_data, f, allow_unicode=True)
