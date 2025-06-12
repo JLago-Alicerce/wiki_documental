@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import yaml
+from .md_post import post_process_text
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 
@@ -101,11 +102,11 @@ def ingest_content(md_path: Path, index_path: Path, out_dir: Path, cutoff: float
             continue
         prefix = str(entry.get("id", "")).replace(".", "-")
         path = out_dir / f"{prefix}_{slug}.md"
+        final_text = post_process_text(header + text)
         with path.open("w", encoding="utf-8") as f:
-            f.write(header)
-            f.write(text)
+            f.write(final_text)
 
     if unclassified:
+        final_text = post_process_text(header + "".join(unclassified))
         with (out_dir / "99_unclassified.md").open("w", encoding="utf-8") as f:
-            f.write(header)
-            f.writelines(unclassified)
+            f.write(final_text)
