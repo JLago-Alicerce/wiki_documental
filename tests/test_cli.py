@@ -58,3 +58,21 @@ def test_map_command(tmp_path, monkeypatch):
     assert map_file.exists()
     data = yaml.safe_load(map_file.read_text())
     assert data[0]["slug"] == "title"
+
+
+def test_index_overwrite(tmp_path, monkeypatch):
+    map_data = [
+        {"level": 1, "title": "A", "slug": "a"},
+        {"level": 2, "title": "B", "slug": "b"},
+        {"level": 3, "title": "C", "slug": "c"},
+    ]
+    work = tmp_path
+    (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True))
+    (work / "index.yaml").write_text("old")
+    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
+
+    result = runner.invoke(app, ["index", "--overwrite"])
+    assert result.exit_code == 0
+    data = yaml.safe_load((work / "index.yaml").read_text())
+    assert data[0]["id"] == "1"
+    assert data[0]["children"][0]["children"][0]["id"] == "1.1.1"
