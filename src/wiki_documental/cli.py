@@ -5,6 +5,7 @@ from rich.console import Console
 from . import ensure_pandoc
 from .config import cfg
 from .processing.normalize_docx import normalize_styles
+from .processing.docx_to_md import convert_docx_to_md
 
 app = typer.Typer(add_completion=False, add_help_option=True)
 
@@ -58,3 +59,13 @@ def normalize(file: Path) -> None:
     out_file = dest_dir / file.name
     normalize_styles(file, out_file)
     typer.echo(f"Normalized DOCX saved to {out_file}")
+
+
+@app.command()
+def convert(file: Path) -> None:
+    """Convert DOCX to Markdown using Pandoc."""
+    dest_dir = cfg["paths"]["work"] / "md_raw"
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    out_file = dest_dir / f"{file.stem}.md"
+    convert_docx_to_md(file, out_file)
+    typer.echo(f"Converted markdown saved to {out_file}")
