@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "wiki_documental"
+version = "1.0.0"
+description = "Sistema automatizado de ingesta documental para generación de wiki navegable con Docsify"
+authors = ["Jose Manuel Lago <jose.lago.varela@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+python-docx = "^1.1"
+PyYAML = "^6.0"
+rich = "^13.7"
+python-slugify = "^8.0"
+tqdm = "^4.66"
+
+[tool.poetry.extras]
+pdf = ["pdfminer.six", "pdf2image", "pytesseract"]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-cov = "^5.0"
