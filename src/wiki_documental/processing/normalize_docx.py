@@ -4,6 +4,8 @@ from pathlib import Path
 
 from docx import Document
 
+from .style_map import HEADINGS_RULES
+
 
 def _remove_toc_paragraphs(document: Document) -> None:
     """Delete paragraphs that belong to a table of contents."""
@@ -20,13 +22,12 @@ def normalize_styles(doc_path: Path, out_path: Path) -> None:
     _remove_toc_paragraphs(document)
     for paragraph in document.paragraphs:
         for run in paragraph.runs:
-            size = run.font.size
-            bold = run.bold
-            if bold and size and size.pt >= 14:
-                paragraph.style = "Heading 1"
-                break
-            if bold and size and size.pt >= 12:
-                paragraph.style = "Heading 2"
-                break
+            for style, rule in HEADINGS_RULES.items():
+                if rule(run):
+                    paragraph.style = style
+                    break
+            else:
+                continue
+            break
     out_path.parent.mkdir(parents=True, exist_ok=True)
     document.save(str(out_path))
