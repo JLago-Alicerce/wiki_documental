@@ -710,6 +710,977 @@ las necesidades de migración o propuestas de soluciones actualizadas.
 > 17
 
 
+# Análisis Funcional: Necor@V6 - Órdenes de Trabajo
+
+Documento descriptivo de funcionalidades extraídas de 7 vídeos de la
+aplicación antigua en VB6 (Necor@V6).
+
+En este informe se listan las columnas del grid principal, los campos
+del formulario de detalles y las funcionalidades de las distintas
+botoneras para orientar la migración funcional.
+
+## 1. Video 1: Campos y Funcionalidades Básicas
+
+1.  Grid principal: columnas visibles
+
+- Orden (ID OT)
+
+- PDF (icono)
+
+- Descripción
+
+- Revisión
+
+- Tipo
+
+- Tarea
+
+- Situación P/A
+
+- Grupo Cote
+
+- Estado
+
+- Centro Emisor
+
+- Centro Ejecutor
+
+- Plano Origen
+
+- Actividad
+
+- Partida
+
+- Precio Objetivo
+
+- AV. Plan (%)
+
+- Grado de Definición (%)
+
+- H.E. Previstas
+
+- H.E. Lanzadas
+
+- H.E. Consumidas
+
+2.  Campos en detalle (al cargar)
+
+- Establecimiento
+
+- Obra
+
+- Centro Emisor / Centro Ejecutor
+
+- Tipo Orden
+
+- Tarea
+
+- Sección
+
+- Grupo Cote
+
+- Zona / Bloque / Módulo
+
+- Prod. Intermedio
+
+- Descripción Corta / Larga
+
+- Situación P/A (Aprobada, Realizada, Lanzada)
+
+- I.P.A. (checkbox)
+
+- Materiales (checkbox)
+
+- Horas Presup. / Reales / H.E. Previstas / H.E. Lanzadas / H.E.
+  Consumidas / H.E. Imputadas
+
+- Avance (%)
+
+- Grado de Definición (%)
+
+- Últimas revisiones (Lanzada / Aprobada / Configuración)
+
+- Aviso de Revisión Pendiente
+
+- Cuenta / Partida de cargo
+
+- Av. Tasa (%) / Av. Pint (%)
+
+- Moneda / Usuario Creador / Fecha Creación / Responsable / Fecha Límite
+  / Estado / Observaciones
+
+3.  Funcionalidades principales
+
+- Visualizar listado de OTs con filtros y ordenamiento
+
+- Crear OT
+
+- Modificar OT
+
+- Eliminar OT
+
+- Consolidar horas e importes
+
+- Cambio de estado (Aprobada, Realizada, Lanzada)
+
+- Exportar/Imprimir OT
+
+- Carga Masiva
+
+- Consultas adicionales
+
+## 2. Video 2: Pestaña Revisiones
+
+4.  Grid principal: columnas visibles
+
+- Orden (ID OT)
+
+- PDF
+
+- Descripción
+
+- Revisión
+
+- Tipo
+
+- Tarea
+
+- Situación P/A
+
+- Grupo Cote
+
+- Estado
+
+- Centro Emisor
+
+- Centro Ejecutor
+
+- Plano Origen
+
+- Actividad
+
+- Partida
+
+- Precio Objetivo
+
+- AV. Plan (%)
+
+- Grado de Definición (%)
+
+- H.E. Previstas
+
+- H.E. Lanzadas
+
+- H.E. Consumidas
+
+5.  Campos en detalle (al cargar)
+
+- Añade campos en Revisiones: I.P.A. (checkbox)
+
+- Situación P/A: Producción (checkbox), Configuración (checkbox)
+
+- Materiales (checkbox)
+
+- Horas Presupuestadas
+
+- H.E. Previstas / H.E. Lanzadas / H.E. Consumidas / H.E. Imputadas
+
+- Av. Tasa (%)
+
+- Av. Pint (%)
+
+- Situación Serv. (checkbox)
+
+- Tipo Avance (checkbox)
+
+- Aviso de Revisión Pendiente
+
+- Cuenta / Partida de cargo
+
+6.  Funcionalidades principales
+
+- Checkboxes para fases (Producción, Configuración)
+
+- Botones: Nuevo, Modificar, Plano Origen, Imprimir
+
+- Validación modal al no existir datos en Revisiones
+
+## 3. Video 3: Confirmación de pestaña Lista de Materiales
+
+7.  Grid principal: columnas visibles
+
+- Orden (ID OT)
+
+- PDF
+
+- Descripción
+
+- Revisión
+
+- Tipo
+
+- Tarea
+
+- Situación P/A
+
+- Grupo Cote
+
+- Estado
+
+- Centro Emisor
+
+- Centro Ejecutor
+
+- Plano Origen
+
+- Actividad
+
+- Partida
+
+- Precio Objetivo
+
+- AV. Plan (%)
+
+- Grado de Definición (%)
+
+- H.E. Previstas
+
+- H.E. Lanzadas
+
+- H.E. Consumidas
+
+8.  Campos en detalle (al cargar)
+
+- Pestaña Lista de Materiales presente (sin nuevos campos este vídeo)
+
+9.  Funcionalidades principales
+
+- Acceso visual a pestaña Lista de Materiales
+
+## 4. Video 4: Pestaña Referencias
+
+10. Grid principal: columnas visibles
+
+- Orden (ID OT)
+
+- PDF
+
+- Descripción
+
+- Revisión
+
+- Tipo
+
+- Tarea
+
+- Situación P/A
+
+- Grupo Cote
+
+- Estado
+
+- Centro Emisor
+
+- Centro Ejecutor
+
+- Plano Origen
+
+- Actividad
+
+- Partida
+
+- Precio Objetivo
+
+- AV. Plan (%)
+
+- Grado de Definición (%)
+
+- H.E. Previstas
+
+- H.E. Lanzadas
+
+- H.E. Consumidas
+
+11. Campos en detalle (al cargar)
+
+- Campos modal Referencias: Obra, OT, PDF, G.D., Descripción Larga,
+  FA/CRA, GDC, Bloque, Módulo, Zona, Sit, GIN, SitPA, U.R. Realiz.,
+  U.RevisPA, FFPressFin, FPenvProd
+
+12. Funcionalidades principales
+
+- Botones del modal: Buscar, Limpiar, Imprimir, Salir
+
+## 5. Video 5: Menú Contextual de Acciones Avanzadas
+
+13. Grid principal: columnas visibles
+
+- Orden (ID OT)
+
+- PDF
+
+- Descripción
+
+- Revisión
+
+- Tipo
+
+- Tarea
+
+- Situación P/A
+
+- Grupo Cote
+
+- Estado
+
+- Centro Emisor
+
+- Centro Ejecutor
+
+- Plano Origen
+
+- Actividad
+
+- Partida
+
+- Precio Objetivo
+
+- AV. Plan (%)
+
+- Grado de Definición (%)
+
+- H.E. Previstas
+
+- H.E. Lanzadas
+
+- H.E. Consumidas
+
+14. Campos en detalle (al cargar)
+
+- Menú contextual: Cambio de Situación Masiva, Cambio a Producción,
+  Cambio de Tipo de Avance, Duplicar OT, Envío a SAP, Crear OTs desde
+  Planos, Alta Productos/Entregar
+
+15. Funcionalidades principales
+
+- Opciones rápidas de gestión: duplicar, integración SAP, generar OTs
+  desde planos
+
+## 6. Video 6: Pestaña Operaciones y Consultas
+
+16. Grid principal: columnas visibles
+
+- Orden (ID OT)
+
+- PDF
+
+- Descripción
+
+- Revisión
+
+- Tipo
+
+- Tarea
+
+- Situación P/A
+
+- Grupo Cote
+
+- Estado
+
+- Centro Emisor
+
+- Centro Ejecutor
+
+- Plano Origen
+
+- Actividad
+
+- Partida
+
+- Precio Objetivo
+
+- AV. Plan (%)
+
+- Grado de Definición (%)
+
+- H.E. Previstas
+
+- H.E. Lanzadas
+
+- H.E. Consumidas
+
+17. Campos en detalle (al cargar)
+
+- Campos en Operaciones: Orden, Línea, Descripción, Revisión, Clave
+  Valoración, Encargado, Avance Proveedor, Usuario Avance, Fecha Último
+  Avance, Demanda, Línea Demanda
+
+18. Funcionalidades principales
+
+- Consultas: Lista de Materiales, Productos a Entregar, Errores Avance
+  Automático
+
+- Botones: Mantenimiento, Ponderar Opera, Utilidades
+
+## 7. Video 7: Pestaña Reporte y Presupuesto
+
+19. Grid principal: columnas visibles
+
+- Orden (ID OT)
+
+- PDF
+
+- Descripción
+
+- Revisión
+
+- Tipo
+
+- Tarea
+
+- Situación P/A
+
+- Grupo Cote
+
+- Estado
+
+- Centro Emisor
+
+- Centro Ejecutor
+
+- Plano Origen
+
+- Actividad
+
+- Partida
+
+- Precio Objetivo
+
+- AV. Plan (%)
+
+- Grado de Definición (%)
+
+- H.E. Previstas
+
+- H.E. Lanzadas
+
+- H.E. Consumidas
+
+20. Campos en detalle (al cargar)
+
+- Campos en Reporte: Cargo, Partida, Presupuesto, Presup Cargo, Presup
+  Partida, Control Agrupación (Por Agrupación/Por Partida), Fecha
+  Reparto
+
+- Checkboxes: Presupuesto, Grado Definición, Órdenes bloqueadas en
+  Borrador, Reparto sin Bloquear
+
+21. Funcionalidades principales
+
+- Botones rápidos en Reporte: F7 Carga OOTT, F10 Importa OOTT, F9
+  Liberar Presupuesto
+
+
+# Análisis Funcional: Necor@V6 - Órdenes de Trabajo
+
+Informe consolidado de la interfaz de Necor@V6, describiendo las
+columnas del grid principal, los campos del formulario de detalles y las
+funcionalidades asociadas a las distintas botoneras y pestañas.
+
+## Pantalla Principal: Grilla de Órdenes de Trabajo
+
+1.  Columnas visibles en la grilla:
+
+- Orden (ID OT)
+
+- PDF (icono)
+
+- Descripción
+
+- Revisión
+
+- Tipo
+
+- Tarea
+
+- Situación P/A
+
+- Grupo Cote
+
+- Estado
+
+- Centro Emisor
+
+- Centro Ejecutor
+
+- Plano Origen
+
+- Actividad
+
+- Partida
+
+- Precio Objetivo
+
+- AV. Plan (%)
+
+- Grado de Definición (%)
+
+- H.E. Previstas
+
+- H.E. Lanzadas
+
+- H.E. Consumidas
+
+## Formulario de Detalles (Datos Generales)
+
+2.  Campos en el formulario de Detalles:
+
+- Establecimiento
+
+- Obra
+
+- Centro Emisor / Centro Ejecutor
+
+- Tipo Orden
+
+- Tarea
+
+- Sección
+
+- Grupo Cote
+
+- Zona / Bloque / Módulo
+
+- Prod. Intermedio
+
+- Descripción Corta / Larga
+
+- Situación P/A (Aprobada, Realizada, Lanzada)
+
+- I.P.A. (checkbox)
+
+- Materiales (checkbox)
+
+- Horas Presup. / Reales / H.E. Previstas / H.E. Lanzadas / H.E.
+  Consumidas / H.E. Imputadas
+
+- Avance (%)
+
+- Grado de Definición (%)
+
+- Últimas revisiones (Lanzada / Aprobada / Configuración)
+
+- Aviso de Revisión Pendiente
+
+- Cuenta / Partida de cargo
+
+- Av. Tasa (%) / Av. Pint (%)
+
+- Moneda / Usuario Creador / Fecha de Creación / Responsable / Fecha
+  Límite / Estado / Observaciones
+
+## Pestaña Revisiones
+
+3.  Campos y checkboxes en Revisiones:
+
+- I.P.A. (checkbox)
+
+- Situación P/A: Producción (checkbox), Configuración (checkbox)
+
+- Materiales (checkbox)
+
+- Horas Presupuestadas
+
+- H.E. Previstas / H.E. Lanzadas / H.E. Consumidas / H.E. Imputadas
+
+- Av. Tasa (%)
+
+- Av. Pint (%)
+
+- Situación Serv. (checkbox)
+
+- Tipo Avance (checkbox)
+
+- Aviso de Revisión Pendiente
+
+- Cuenta / Partida de cargo
+
+- Botones: Nuevo, Modificar, Plano Origen, Imprimir
+
+## Pestaña Lista de Materiales
+
+4.  Descripción:
+
+- La pestaña "Lista de Materiales" está disponible junto a otras
+  pestañas, sin mostrar campos adicionales en esta vista.
+
+## Pestaña Referencias
+
+5.  Campos del modal Referencias:
+
+- Obra
+
+- Orden de Trabajo
+
+- PDF
+
+- G.D.
+
+- Descripción Larga
+
+- FA/CRA
+
+- GDC
+
+- Bloque
+
+- Módulo
+
+- Zona
+
+- Sit
+
+- GIN
+
+- SitPA
+
+- U.R. Realiz.
+
+- U.RevisPA
+
+- FFPressFin
+
+- FPenvProd
+
+- Botones: Buscar, Limpiar, Imprimir, Salir
+
+## Menú Contextual de Acciones Avanzadas
+
+6.  Opciones del menú contextual:
+
+- Cambio de Situación Masiva
+
+- Cambio de Situación a Producción
+
+- Cambio de Tipo de Avance
+
+- Duplicar Órdenes
+
+- Envío a SAP
+
+- Crear Órdenes desde Planos (Cabecera y Componentes)
+
+- Alta Productos/Entregar
+
+## Pestaña Operaciones
+
+7.  Campos en Operaciones:
+
+- Orden
+
+- Línea
+
+- Descripción
+
+- Revisión
+
+- Clave Valoración
+
+- Encargado
+
+- Avance Proveedor
+
+- Usuario Avance
+
+- Fecha Último Avance
+
+- Demanda
+
+- Línea Demanda
+
+- Botones: Mantenimiento, Ponderar Opera, Utilidades
+
+## Pestaña Reporte y Presupuesto
+
+8.  Campos en Reporte:
+
+- Cargo
+
+- Partida
+
+- Presupuesto
+
+- Presup Cargo
+
+- Presup Partida
+
+- Control Agrupación (Por Agrupación / Por Partida)
+
+- Fecha Reparto
+
+- Checkboxes: Presupuesto, Grado Definición, Órdenes bloqueadas en
+  Borrador, Reparto sin Bloquear
+
+- Botones rápidos: F7 Carga OOTT, F10 Importa OOTT, F9 Liberar
+  Presupuesto
+
+## Checklist Consolidado de Funcionalidades
+
+| Funcionalidad             | Descripción breve                            |
+|---------------------------|----------------------------------------------|
+| Visualizar listado de OTs | Grilla con filtros y ordenamiento            |
+| Crear OT                  | Formulario nuevo con campos obligatorios     |
+| Modificar OT              | Campo Detalle y Consolidación editables      |
+| Eliminar OT               | Eliminar/logical desde detalle               |
+| Consolidar horas/importes | Campos de horas e importes                   |
+| Cambio de Estado          | Checkboxes para fases                        |
+| Exportar/Imprimir OT      | Botón Imprimir orden                         |
+| Carga Masiva              | Importar múltiples OTs                       |
+| Revisiones                | Pestaña con campos de avance y checkboxes    |
+| Lista de Materiales       | Pestaña presente sin campos adicionales      |
+| Referencias               | Listado de documentos técnicos referenciados |
+| Acciones Avanzadas        | Menú contextual con duplicar, SAP, planos    |
+| Operaciones               | Pestaña con listado de operaciones y campos  |
+| Reporte / Presupuesto     | Pestaña con presupuesto y controles          |
+
+
+# Comparativo Funcional: Órdenes de Trabajo (Necor@V6 Anterior vs. Nueva Aplicación)
+
+Fecha de creación: \[DD/MM/AAAA\]
+
+Versión: 1.1
+
+Autores y Responsables: José Lago – Coordinación de Proyecto
+
+Objetivo General: Definir las diferencias funcionales entre Necor@V6
+(VB6) y la nueva plataforma, corrigiendo detalles detectados en la
+revisión.
+
+## Índice
+
+1.  1\. Introducción
+
+2.  2\. Metodología de Comparación
+
+3.  3\. Descripción Funcional por Módulos
+
+4.  3.1. Pantalla Principal / Grilla de Órdenes
+
+5.  3.2. Formulario “Detalle” (Datos Generales)
+
+6.  3.3. Pestaña “Consolidación” (Horas e Importes)
+
+7.  3.4. Cambio de Estado (Flujo de Estados)
+
+8.  3.5. Extracción de Informe / Exportación (PDF/Excel)
+
+9.  3.6. Pestaña “Revisiones”
+
+10. 3.7. Pestaña “Lista de Materiales”
+
+11. 3.8. Pestaña “Referencias”
+
+12. 3.9. Menú Contextual de Acciones Avanzadas
+
+13. 3.10. Pestaña “Operaciones” y Consultas Relacionadas
+
+14. 3.11. Pestaña “Reporte” y Gestión de Presupuesto
+
+15. 3.12. Carga Masiva de Órdenes
+
+16. 4\. Resumen de Brechas y Pendientes de Migración
+
+17. 5\. Plan de Acción y Próximos Pasos
+
+18. 6\. Anexos
+
+## 1. Introducción
+
+Contexto del Proyecto: La empresa migra la gestión de Órdenes de Trabajo
+desde Necor@V6 (VB6) a la nueva plataforma consolidada.
+
+Alcance del Documento: Contrastar funcionalidad de Necor@V6 con la nueva
+aplicación, identificando brechas y validando migración completa.
+
+Fuentes de Información: Análisis Funcional Necor@V6 y Análisis Funcional
+NuevaApp. Revisión de vídeos y capturas de pantalla. Objetivo: Validar
+presencia de todas las funcionalidades principales a nivel de negocio.
+
+## 2. Metodología de Comparación
+
+1\. Identificación de Módulos y Funcionalidades Clave: Basado en
+estructura de ambas aplicaciones.
+
+2\. Estructura de la Tabla de Comparación:
+
+\- Funcionalidad / Campo
+
+\- Descripción en Necor@V6 (App Anterior)
+
+\- Descripción en la Nueva Aplicación
+
+\- Estado de Migración (Migrado / Pendiente / Nuevo)
+
+\- Observaciones / Comentarios
+
+3\. Proceso de Revisión: Reunión con áreas de Desarrollo, QA y Negocio
+para validar cada ítem.
+
+## 3. Descripción Funcional por Módulos
+
+### 3.1. Pantalla Principal / Grilla de Órdenes
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Columnas de la grilla | Orden (ID OT), PDF (icono), Descripción, Revisión, Tipo, Tarea, Situación P/A, Grupo Cote, Estado, Centro Emisor, Centro Ejecutor, Plano L/M, Actividad, Partida, Precio Objetivo, % AV Plan, Grado de Definición, H.E. Previstas, H.E. Lanzadas, H.E. Consumidas | Orden, PDF, Descripción, Revisión, Tipo, Tarea, Situación P/A, Grupo Cote, Estado, Centro Emisor, Centro Ejecutor, Plano Origen, Actividad, Partida, Precio Objetivo, % AV Plan, Grado de Definición, H.E. Previstas, H.E. Lanzadas, H.E. Consumidas | Migrado | Se mantiene totalidad de columnas; se validó que “Plano Origen” renombrado como Plano L/M. |
+| Filtrado / Búsqueda Rápida | Filtro por “Situación P/A”, barra de búsqueda por Descripción y Partida | Filtro por “Situación P/A”, “Revisión”, buscador por Descripción, Estado, Grupo | Migrado | Nuevo filtro por Revisión agregado. |
+| Ordenamiento de Columnas | Reordenable por ID OT, Tipo, Obra | Reordenable por todos los encabezados, agrupar por Centros Emisor/Ejecutor | Migrado | Se agregó función de agrupación por Centros. |
+
+### 3.2. Formulario “Detalle” (Datos Generales)
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Establecimiento | Desplegable “Establecimiento” (ej. “2 – ASTILLERO FERROL”) | No aplica (se ingresa automáticamente desde usuario) | Migrado | Campo removido en UI; se asume contexto del usuario. |
+| Obra | Desplegable “Obra” (ej. “0212 – F105”) | Mismo desplegable con vínculo a proyecto | Migrado |  |
+| Centro Emisor / Centro Ejecutor | Campos separados con valores numéricos | Combina y autocompleta según Grupo Cote | Migrado | Validar consistencia de datos en migración. |
+| Tipo Orden | Desplegable con códigos (B, G, etc.) | Desplegable con opciones ampliadas según perfil | Migrado | Confirmar que todos los valores históricos estén presentes. |
+| Tarea | Desplegable / automática según plantilla | Asignación dinámica basada en Grupo Cote | Migrado |  |
+| Sección / Grupo Cote | Campos editables manualmente | Autocompletan la descripción de Grupo Cote | Migrado |  |
+| Zona / Bloque / Módulo | Tres desplegables independientes | Autocompletar “Zona” al seleccionar “Bloque” | Migrado |  |
+| Prod. Intermedio | Selección múltiple (“TUB”) | Selección múltiple con búsqueda interna | Migrado |  |
+| Descripción Corta / Larga | Campos de texto libre con mínimo validación | Validación de longitud y autocompletar en largo | Migrado |  |
+| Situación P/A | Checkboxes “Aprobada”, “Realizada”, “Lanzada” | Reemplazado por desplegable “Situación P/A” con valores “Producción”, “Configuración”, “Bloqueada” | Migrado | Actualizar procedimientos de flujo de estado. |
+| I.P.A. / Materiales | Checkbox I.P.A. y selección de Materiales básico | Checkbox con validación de stock en tiempo real | Migrado |  |
+| Horas Presup. / Reales / H.E. Previstas / Lanzadas / Consumidas / Imputadas | Campos numéricos estáticos | Cálculo automático, validación de máximo, desglose en pestaña “Consolidación” | Migrado | Se renombró “Horas Presup.” a “Horas Presup. vs Real”. |
+| Avance (%) | Calculado tras consolidar | Actualización en tiempo real al modificar horas | Migrado |  |
+| Grado de Definición (%) | Valor numérico simple (“03”) | Tooltip explicativo y validación de rango | Migrado |  |
+| Últimas Revisiones (Lanzada / Aprobada / Configuración) | Campos fecha solo lectura | Se registra historial en pestaña “Revisiones” | Migrado |  |
+| Aviso de Revisión Pendiente | Señalización manual | Checkbox específico en “Revisiones” | Nuevo | Nuevo módulo “Revisiones”. |
+| Cuenta / Partida de cargo | Campo libre o desplegable simple | Desplegable con validación de finanzas | Migrado |  |
+| Av. Tasa (%) / Av. Pint (%) | No disponible en formulario principal | Mostrado en “Revisiones” | Migrado |  |
+| Moneda | Desplegable básico (EUR, USD) | Integración con cotizaciones diarias | Migrado |  |
+| Usuario Creador / Fecha Creación | Solo lectura | Incluye también “Usuario Modificador” y “Fecha Última Modificación” | Migrado |  |
+| Responsable | Desplegable usuarios | Validación: no cambio si OT está cerrada | Migrado |  |
+| Fecha Límite | Campo fecha sin validación de pasadas | Validación para evitar fechas previas | Migrado |  |
+| Estado | Desplegable: BORRADOR, APROBADO, EN CURSO, CERRADO | Reemplazado por “Situación P/A” | Migrado | Verificar mapeo de estados antiguos. |
+| Observaciones / Notas Internas | Campo texto libre | Permite adjuntar documentos (PDF, imágenes) | Migrado |  |
+
+### 3.3. Pestaña “Consolidación” (Horas e Importes)
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Horas reales imputadas | Actualización estática tras consolidar | Validación automática de máximo según Horas Previstas, calculo en tiempo real | Migrado |  |
+| Horas presupuestadas (Objetivo) | Editable en consolidación | Renombrado como “Horas Presup. vs Real”, porcentaje desviación | Migrado |  |
+| Importes (Horas Real / Consolidada) | Cálculo básico sobre tarifa recurso | Desglose por Cargo / Partida en pestaña “Reporte” | Migrado |  |
+| Avance (actualización) | Porcentaje tras consolidar informe | Actualización en tiempo real tras operación | Migrado |  |
+| Consolidación Masiva | Agrupa varias OTs en consolidación | Botón “Carga Masiva” con pre-filtro y validación de plantilla | Migrado |  |
+
+### 3.4. Cambio de Estado (Flujo de Estados)
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Botón “Cambio de situación” | Menú desplegable para nuevo estado; actualiza Fecha de Cierre | Desplegable “Situación P/A” permite cambio masivo y bloqueos | Migrado |  |
+| Transición “Aprobado” → “En Curso” | Cambio manual desde formulario | Validación: solo Supervisor puede cambiar, restricción de roles | Migrado |  |
+| Transición “En Curso” → “Cerrado” | Bloquea horas reales y presupuestarias | Validación de operaciones abiertas, bloqueo automático | Migrado |  |
+
+### 3.5. Extracción de Informe / Exportación (PDF/Excel)
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Botón “Generar Informe” | Descarga PDF/Excel resumen horas, estado e importes | Opción “Informe Resumido” o “Detalle”, formato unificado | Migrado |  |
+| Reporte Consolidado de Presupuesto | No disponible | Pestaña “Reporte” con desglose Cargo / Partida, filtros y agrupaciones | Nuevo | Requiere formación a usuarios. |
+
+### 3.6. Pestaña “Revisiones”
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Pestaña “Revisiones” | No existía módulo específico | Campos I.P.A., Tipo Avance, Avances y checkboxes, historial de revisiones | Nuevo | Validar cumplimiento de auditoría. |
+
+### 3.7. Pestaña “Lista de Materiales”
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Pestaña “Lista de Materiales” | No documentada en app anterior | Tab con columnas: Material, Cantidad, Unidad, Ubicación, etc., con búsqueda | Nuevo | Definir columnas exactas. |
+
+### 3.8. Pestaña “Referencias”
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Submódulo “Referencias” | Listado básico de documentos técnicos | Modal con columnas: Obra, OT, PDF, G.D., Descripción Larga, FA/CRA, GDC, Bloque, Módulo, Zona, Sit, GIN, SitPA, U.R. Realiz., U.RevisPA, FFPressFin, FPenvProd | Migrado |  |
+| Botones: “Buscar”, “Limpiar”, “Imprimir”, “Salir” | No aplica | Disponibles en modal de Referencias | Migrado |  |
+
+### 3.9. Menú Contextual de Acciones Avanzadas
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Menú “Acciones Avanzadas” | Cambio de situación masivo básico | Incluye: Cambio de Situación Masiva, Cambio a Producción, Tipo Avance, Duplicar OT, Envío a SAP, Crear desde Planos, Alta Productos/Entregar | Migrado |  |
+| “Duplicar Órdenes” | No disponible | Duplica una o varias OTs seleccionadas | Nuevo |  |
+| “Envío a SAP” | No disponible | Envía masivo a ERP SAP con validaciones | Nuevo | Coordinar con equipo SAP. |
+| “Crear Órdenes desde Planos” | No disponible | Genera OTs a partir de planos cargados | Nuevo | Validar formatos de planos. |
+
+### 3.10. Pestaña “Operaciones” y Consultas
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Pestaña “Operaciones” | Gestión básica en consolidación | Listado de operaciones con columnas: Orden, Línea, Descripción, Revisión, Clave Valoración, Encargado, Avance Proveedor, Usuario Avance, Fecha Último Avance, Demanda, Línea Demanda | Migrado |  |
+| Botones “Mantenimiento”, “Ponderar Opera”, “Utilidades” | No aplicable | Disponibles para editar y calcular datos de línea | Migrado |  |
+| Consultas Complementarias | No disponible | Modal: Lista Materiales, Productos a Entregar, Errores Avance Automático | Migrado | Validar roles y permisos. |
+
+### 3.11. Pestaña “Reporte” y Gestión de Presupuesto
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Pestaña “Reporte” | No disponible | Tab con columnas: Cargo, Partida, Presupuesto, Presup Cargo, Presup Partida, Control Agrupación (Por Agrupación / Por Partida), Fecha Reparto | Nuevo |  |
+| Menu “Consulta de Presupuesto” | No disponible | Modal con listado de partidas y agrupaciones | Nuevo |  |
+| Checkboxes y Filtros | No disponible | Filtros: Presupuesto, Grado Definición, Órdenes bloqueadas, Reparto sin Bloquear | Nuevo |  |
+| Botones rápidos: F7, F10, F9 | No disponible | F7 Carga OOTT, F10 Importa OOTT, F9 Liberar Presupuesto | Nuevo |  |
+
+### 3.12. Carga Masiva de Órdenes
+
+| Funcionalidad / Campo | Necor@V6 (App Anterior) | Nueva Aplicación | Estado de Migración | Observaciones |
+|----|----|----|----|----|
+| Carga Masiva de OTs | Consolidación masiva básica | Carga de archivos Excel/CSV con validación al vuelo | Migrado | Definir guía de plantilla. |
+
+## 4. Resumen de Brechas y Pendientes de Migración
+
+- Verificar mapeo de estados “Situación” vs “Situación P/A”.
+
+- Validar campos de “Revisiones” conforme a auditoría.
+
+- Definir columnas exactas en “Lista de Materiales”.
+
+- Probar integración “Envío a SAP” y coordinar con ERP.
+
+- Validar mapeo “Cargo”/“Partida” en reporte.
+
+- Documentar y validar plantilla de “Carga Masiva”.
+
+- Planificar formación de nuevos módulos.
+
+## 5. Plan de Acción y Próximos Pasos
+
+19. Asignar responsables a cada brecha con fechas límite.
+
+20. Programar pruebas de validación de cada módulo.
+
+21. Actualizar documentación de usuario y guías.
+
+22. Revisar con área SAP las pruebas de envío masivo.
+
+23. Realizar sesión de formación para usuarios finales.
+
+24. Agendar reunión de cierre de brechas.
+
+## 6. Anexos
+
+1\. Capturas Principales: Se incluyen en documento de diapositiva A3.
+
+2\. Glosario de Términos: OT, I.P.A., Cargo, Partida.
+
+3\. Tabla Maestra de Campos: En hoja de cálculo adjunta.
+
+
 ÍNDICE
 
 # 1. Objeto del documento 
@@ -2777,5 +3748,186 @@ Stats</th>
 <tbody>
 </tbody>
 </table>
+
+
+Este informe recoge el análisis funcional de la pantalla 'Órdenes de
+Trabajo' perteneciente a la versión VB6 de la aplicación Necor@V6. A
+partir del estudio visual de las interfaces, se han identificado los
+elementos clave, flujos de usuario y funcionalidades accesibles sin
+acceder al detalle interno del código ni procesos ocultos.
+
+# 1. Elementos de Interfaz Identificados
+
+Se identifican los siguientes elementos visibles en la pantalla
+principal de Órdenes de Trabajo:
+
+\- Menú superior con opciones de gestión (Nuevo, Editar, Eliminar,
+Imprimir).
+
+\- Panel lateral izquierdo con filtros de búsqueda (Estado, Cliente,
+Fecha).
+
+\- Rejilla central con listado de órdenes con columnas: ID, Cliente,
+Fecha, Estado, etc.
+
+\- Botones de acción en la parte inferior: 'Guardar', 'Cancelar',
+'Generar PDF'.
+
+# 2. Flujos de Usuario Observados
+
+Ejemplo de flujo típico de trabajo observado:
+
+1\. Selección de una orden desde la rejilla principal.
+
+2\. Edición de los campos 'Cliente' y 'Fecha de ejecución'.
+
+3\. Clic en botón 'Guardar' para registrar los cambios.
+
+4\. Opción de generar PDF mediante botón inferior derecho.
+
+
+Este documento presenta un análisis funcional detallado de la pantalla
+'Órdenes de Trabajo' de la aplicación Necor@V6 desarrollada en Visual
+Basic 6. El objetivo es documentar las funcionalidades disponibles desde
+la perspectiva del usuario, describiendo elementos de interfaz, acciones
+posibles y flujos operativos detectados. Este informe es independiente
+de cualquier comparación con versiones más recientes del software.
+
+# 1. Elementos de Interfaz Identificados
+
+La pantalla principal de gestión de órdenes de trabajo está compuesta
+por los siguientes elementos visuales:
+
+\- Menú superior con botones: Nuevo, Editar, Borrar, Imprimir, Salir.
+
+\- Panel lateral izquierdo con filtros de búsqueda: Estado, Cliente,
+Fecha, Tipo de orden.
+
+\- Rejilla central con listado de órdenes activas (columnas: Nº Orden,
+Cliente, Fecha Inicio, Fecha Fin, Estado, Técnico asignado).
+
+\- Panel inferior con campos de observaciones generales y totales.
+
+\- Botonera inferior con funciones: Guardar, Cancelar, Generar PDF,
+Cerrar.
+
+# 2. Flujos Funcionales Observados
+
+\- Acceso a la pantalla de órdenes de trabajo desde el menú principal.
+
+\- Creación de una nueva orden: pulsar 'Nuevo', completar campos,
+guardar.
+
+\- Búsqueda de órdenes por filtros (cliente, estado, fecha).
+
+\- Edición de orden: seleccionar fila → pulsar 'Editar' → modificar
+campos → pulsar 'Guardar'.
+
+\- Eliminación de orden: seleccionar fila → pulsar 'Borrar'.
+
+\- Impresión o generación de documento: botón 'Imprimir' o 'Generar
+PDF'.
+
+\- Acceso a datos extendidos desde pestañas internas: Tareas,
+Materiales, Historial.
+
+\- Cierre de la orden mediante campo de estado o botón específico.
+
+# 3. Pestañas y Funcionalidades Asociadas
+
+\- General: Campos principales como Nº orden, cliente, fechas,
+observaciones y estado.
+
+\- Tareas: Listado editable de tareas asignadas con tiempos y técnicos.
+
+\- Materiales: Consumo de materiales con cantidad y coste.
+
+\- Historial: Visualización de eventos registrados sobre la orden.
+
+\- Facturación: Datos de cobro asociados si está habilitado.
+
+# 4. Observaciones Funcionales
+
+La aplicación presenta una estructura clara basada en pestañas, lo que
+permite una navegación organizada. Los botones son consistentes en su
+ubicación, aunque las acciones no siempre presentan mensajes de
+confirmación visibles. Algunas acciones requieren selección previa desde
+la tabla central, sin lo cual el botón no está habilitado.
+
+
+Este informe recoge el análisis funcional individual de la pantalla
+'Órdenes de Trabajo' perteneciente a la aplicación Necor@V6 desarrollada
+en Visual Basic 6. Se documentan las funcionalidades observadas, los
+flujos de usuario, y se acompañan capturas de pantalla obtenidas de la
+interfaz real, sin realizar comparativa aún con la versión .NET.
+
+# 1. Elementos de Interfaz Identificados
+
+\- Menú superior con botones: Nuevo, Editar, Eliminar, Imprimir.
+
+\- Panel lateral izquierdo con filtros de búsqueda por Estado, Cliente,
+Fecha.
+
+\- Zona central con rejilla de órdenes: columnas visibles como Nº OT,
+Cliente, Fecha, Estado, Técnico.
+
+\- Pestañas inferiores: General, Tareas, Materiales, Historial.
+
+\- Botonera inferior con acciones como Guardar, Cancelar, Generar PDF.
+
+# 2. Flujos Funcionales Detectados
+
+\- Creación de nueva orden mediante botón 'Nuevo' → ingreso de datos →
+Guardar.
+
+\- Edición de orden existente seleccionando en la tabla → clic en
+'Editar' → modificar campos → Guardar.
+
+\- Borrado de orden seleccionada mediante botón 'Eliminar'.
+
+\- Filtrado dinámico de resultados mediante panel izquierdo.
+
+\- Visualización de historial y tareas asignadas a través de pestañas
+inferiores.
+
+\- Generación de impresión/PDF desde botón inferior derecho.
+
+# 3. Funcionalidad por Pestañas
+
+A continuación se resume el contenido observado en cada pestaña de la
+pantalla:
+
+\- General: Contiene los datos básicos de la orden: cliente, fechas,
+estado, observaciones.
+
+\- Tareas: Permite introducir tareas planificadas con tiempos, técnico,
+y descripciones.
+
+\- Materiales: Lista los materiales usados o previstos para la
+intervención.
+
+\- Historial: Visualiza eventos registrados sobre la orden como cambios
+de estado o anotaciones.
+
+# 4. Capturas Relevantes de la Interfaz
+
+Las siguientes imágenes representan pantallas clave de la aplicación
+analizada:
+
+Captura 1
+
+<img src="media/image1.png" style="width:6.5in;height:3.25in" />
+
+Captura 2
+
+<img src="media/image2.png" style="width:6.5in;height:3.25in" />
+
+Captura 3
+
+<img src="media/image3.png" style="width:6.5in;height:3.25in" />
+
+Captura 4
+
+<img src="media/image4.png" style="width:6.5in;height:3.25in" />
 
 

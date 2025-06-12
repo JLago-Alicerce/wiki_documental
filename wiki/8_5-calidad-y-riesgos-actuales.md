@@ -1,6 +1,6 @@
 ---
 source: tmp_full.md
-created: 2025-06-12T13:03:21.397965
+created: 2025-06-12T13:13:44.674670
 ---
 # 5. Calidad y riesgos actuales 
 
@@ -37,4 +37,21 @@ CRC y logs que aseguran trazabilidad, pero aún no existe una cobertura
 total de pruebas automatizadas ni de alertas proactivas de rendimiento.
 Se recomienda avanzar en esas áreas como parte del plan de evolución
 técnica.
+
+# 3. Funcionalidad por Pestañas
+
+A continuación se resume el contenido observado en cada pestaña de la
+pantalla:
+
+\- General: Contiene los datos básicos de la orden: cliente, fechas,
+estado, observaciones.
+
+\- Tareas: Permite introducir tareas planificadas con tiempos, técnico,
+y descripciones.
+
+\- Materiales: Lista los materiales usados o previstos para la
+intervención.
+
+\- Historial: Visualiza eventos registrados sobre la orden como cambios
+de estado o anotaciones.
 

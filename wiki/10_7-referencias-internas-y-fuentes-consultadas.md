@@ -1,6 +1,6 @@
 ---
 source: tmp_full.md
-created: 2025-06-12T13:03:21.397965
+created: 2025-06-12T13:13:44.674670
 ---
 # 7. Referencias internas y fuentes consultadas 
 
@@ -951,4 +951,72 @@ Stats</th>
 </tbody>
 </table>
 
+
+Este informe recoge el análisis funcional de la pantalla 'Órdenes de
+Trabajo' perteneciente a la versión VB6 de la aplicación Necor@V6. A
+partir del estudio visual de las interfaces, se han identificado los
+elementos clave, flujos de usuario y funcionalidades accesibles sin
+acceder al detalle interno del código ni procesos ocultos.
+
+# 1. Elementos de Interfaz Identificados
+
+Se identifican los siguientes elementos visibles en la pantalla
+principal de Órdenes de Trabajo:
+
+\- Menú superior con opciones de gestión (Nuevo, Editar, Eliminar,
+Imprimir).
+
+\- Panel lateral izquierdo con filtros de búsqueda (Estado, Cliente,
+Fecha).
+
+\- Rejilla central con listado de órdenes con columnas: ID, Cliente,
+Fecha, Estado, etc.
+
+\- Botones de acción en la parte inferior: 'Guardar', 'Cancelar',
+'Generar PDF'.
+
+# 1. Elementos de Interfaz Identificados
+
+La pantalla principal de gestión de órdenes de trabajo está compuesta
+por los siguientes elementos visuales:
+
+\- Menú superior con botones: Nuevo, Editar, Borrar, Imprimir, Salir.
+
+\- Panel lateral izquierdo con filtros de búsqueda: Estado, Cliente,
+Fecha, Tipo de orden.
+
+\- Rejilla central con listado de órdenes activas (columnas: Nº Orden,
+Cliente, Fecha Inicio, Fecha Fin, Estado, Técnico asignado).
+
+\- Panel inferior con campos de observaciones generales y totales.
+
+\- Botonera inferior con funciones: Guardar, Cancelar, Generar PDF,
+Cerrar.
+
+# 3. Pestañas y Funcionalidades Asociadas
+
+\- General: Campos principales como Nº orden, cliente, fechas,
+observaciones y estado.
+
+\- Tareas: Listado editable de tareas asignadas con tiempos y técnicos.
+
+\- Materiales: Consumo de materiales con cantidad y coste.
+
+\- Historial: Visualización de eventos registrados sobre la orden.
+
+\- Facturación: Datos de cobro asociados si está habilitado.
+
+# 1. Elementos de Interfaz Identificados
+
+\- Menú superior con botones: Nuevo, Editar, Eliminar, Imprimir.
+
+\- Panel lateral izquierdo con filtros de búsqueda por Estado, Cliente,
+Fecha.
+
+\- Zona central con rejilla de órdenes: columnas visibles como Nº OT,
+Cliente, Fecha, Estado, Técnico.
+
+\- Pestañas inferiores: General, Tareas, Materiales, Historial.
+
+\- Botonera inferior con acciones como Guardar, Cancelar, Generar PDF.
 

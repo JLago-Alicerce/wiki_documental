@@ -1,6 +1,6 @@
 ---
 source: tmp_full.md
-created: 2025-06-12T13:03:21.397965
+created: 2025-06-12T13:13:44.674670
 ---
 # 3. Detalle técnico por servidor/instancia 
 
