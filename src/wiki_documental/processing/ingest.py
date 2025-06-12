@@ -62,7 +62,13 @@ def _parse_sections(md_path: Path) -> List[tuple[str, List[str]]]:
     return sections
 
 
-def ingest_content(md_path: Path, index_path: Path, out_dir: Path, cutoff: float = 0.5) -> None:
+def ingest_content(
+    md_path: Path,
+    index_path: Path,
+    out_dir: Path,
+    cutoff: float = 0.5,
+    doc_source: str | Path | None = None,
+) -> None:
     """Fragment markdown file according to index.yaml and store pieces."""
     with index_path.open("r", encoding="utf-8") as f:
         index_data = yaml.safe_load(f) or []
@@ -91,7 +97,12 @@ def ingest_content(md_path: Path, index_path: Path, out_dir: Path, cutoff: float
 
     out_dir.mkdir(parents=True, exist_ok=True)
     created = datetime.utcnow().isoformat()
-    header = f"---\nsource: {md_path.name}\ncreated: {created}\n---\n"
+    header_lines = ["---", f"source: {md_path.name}"]
+    if doc_source is not None:
+        header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
+    header_lines.append(f"created: {created}")
+    header_lines.append("---\n")
+    header = "\n".join(header_lines)
 
     for entry in entries:
         slug = entry["slug"]

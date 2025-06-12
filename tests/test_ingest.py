@@ -16,7 +16,7 @@ def test_ingest_content(tmp_path):
     index_path.write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
 
     out_dir = tmp_path / "wiki"
-    ingest_content(md, index_path, out_dir, cutoff=0.5)
+    ingest_content(md, index_path, out_dir, cutoff=0.5, doc_source="estado_actual")
 
     first = out_dir / "1_x.md"
     second = out_dir / "2_z.md"
@@ -29,6 +29,7 @@ def test_ingest_content(tmp_path):
     end = lines.index("---", 1)
     meta = yaml.safe_load("\n".join(lines[1:end]))
     assert meta["source"] == md.name
+    assert meta["doc_source"] == "estado_actual.docx"
     assert lines[end + 1].startswith("#")
     assert "## Y" in content
     assert "### Zeta" in content

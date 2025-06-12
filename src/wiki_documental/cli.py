@@ -122,7 +122,8 @@ def full() -> None:
 
     console.print("[bold]Ingesting content...[/bold]")
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
-    ingest_content(tmp_full, index_path, wiki_dir, cutoff=cutoff)
+    doc_source = docx_files[0].stem if docx_files else None
+    ingest_content(tmp_full, index_path, wiki_dir, cutoff=cutoff, doc_source=doc_source)
 
     console.print("[bold]Generating sidebar...[/bold]")
     build_sidebar(index_path, wiki_dir / "_sidebar.md")
@@ -245,7 +246,8 @@ def ingest(file: Path) -> None:
     index_path = cfg["paths"]["work"] / "index.yaml"
     wiki_dir = cfg["paths"]["wiki"]
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
-    ingest_content(file, index_path, wiki_dir, cutoff=cutoff)
+    doc_source = file.stem
+    ingest_content(file, index_path, wiki_dir, cutoff=cutoff, doc_source=doc_source)
     typer.echo("Content ingested")
 
 
