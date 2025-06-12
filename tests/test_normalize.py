@@ -7,9 +7,15 @@ from wiki_documental.processing.normalize_docx import normalize_styles
 def test_normalize_styles(tmp_path):
     sample = tmp_path / "sample.docx"
     doc = Document()
-    run = doc.add_paragraph().add_run("Title")
-    run.bold = True
-    run.font.size = Pt(16)
+
+    run_h1 = doc.add_paragraph().add_run("Title H1")
+    run_h1.bold = True
+    run_h1.font.size = Pt(16)
+
+    run_h2 = doc.add_paragraph().add_run("Title H2")
+    run_h2.bold = True
+    run_h2.font.size = Pt(12)
+
     doc.add_paragraph("Body text")
     doc.save(sample)
 
@@ -18,4 +24,5 @@ def test_normalize_styles(tmp_path):
 
     doc = Document(out)
     assert doc.paragraphs[0].style.name == "Heading 1"
-    assert doc.paragraphs[1].style.name == "Normal"
+    assert doc.paragraphs[1].style.name == "Heading 2"
+    assert doc.paragraphs[2].style.name == "Normal"
