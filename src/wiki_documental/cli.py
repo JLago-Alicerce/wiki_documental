@@ -6,6 +6,8 @@ from . import ensure_pandoc
 from .config import cfg
 from .processing.normalize_docx import normalize_styles
 from .processing.docx_to_md import convert_docx_to_md
+from .processing.headings_map import build_headings_map, save_map_yaml
+import yaml
 
 app = typer.Typer(add_completion=False, add_help_option=True)
 
@@ -69,3 +71,43 @@ def convert(file: Path) -> None:
     out_file = dest_dir / f"{file.stem}.md"
     convert_docx_to_md(file, out_file)
     typer.echo(f"Converted markdown saved to {out_file}")
+
+
+@app.command()
+def map() -> None:
+    """Generate YAML map of markdown headings."""
+    md_folder = cfg["paths"]["work"] / "md_raw"
+    map_data = build_headings_map(md_folder)
+    out_file = cfg["paths"]["work"] / "map.yaml"
+    save_map_yaml(map_data, out_file)
+    typer.echo(f"Headings map saved to {out_file}")
+
+
+@app.command()
+def index() -> None:
+    """Create index.yaml grouped by level 1 headings if not present."""
+    out_file = cfg["paths"]["work"] / "index.yaml"
+    if out_file.exists():
+        typer.echo("index.yaml already exists")
+        return
+    map_path = cfg["paths"]["work"] / "map.yaml"
+    if map_path.exists():
+        with map_path.open("r", encoding="utf-8") as f:
+            map_data = yaml.safe_load(f) or []
+    else:
+        map_data = build_headings_map(cfg["paths"]["work"] / "md_raw")
+    index_data = []
+    current = None
+    for item in map_data:
+        if item.get("level") == 1:
+            current = {"title": item["title"], "slug": item["slug"], "children": []}
+            index_data.append(current)
+        else:
+            if current is not None:
+                current["children"].append(
+                    {"level": item["level"], "title": item["title"], "slug": item["slug"]}
+                )
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    with out_file.open("w", encoding="utf-8") as f:
+        yaml.safe_dump(index_data, f, allow_unicode=True)
+    typer.echo(f"Index saved to {out_file}")
