@@ -28,7 +28,7 @@ def test_pipeline_full(tmp_path, monkeypatch):
 
     def fake_run(cmd, capture_output=True, text=True):
         md = Path(cmd[-1])
-        md.write_text("# Title\nBody")
+        md.write_text("# Title\nBody", encoding="utf-8")
         class R:
             returncode = 0
             stderr = ""

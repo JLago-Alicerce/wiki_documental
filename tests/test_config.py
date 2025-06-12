@@ -18,10 +18,10 @@ def test_load_config_creates_directories(tmp_path, monkeypatch):
         "  ocr: false\n"
         "  cutoff_similarity: 0.5\n"
     )
-    (root / "config.yaml").write_text(config_yaml)
+    (root / "config.yaml").write_text(config_yaml, encoding="utf-8")
 
     fake_file = root / "src/wiki_documental/config.py"
-    fake_file.write_text("")
+    fake_file.write_text("", encoding="utf-8")
     monkeypatch.setattr(config, "__file__", str(fake_file))
 
     cfg = config.load_config()

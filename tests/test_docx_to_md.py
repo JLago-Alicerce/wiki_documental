@@ -15,7 +15,7 @@ def test_convert_docx_to_md(tmp_path, monkeypatch):
     _create_sample_docx(docx_file, "Hello")
 
     def fake_run(cmd, capture_output=True, text=True):
-        md_file.write_text("Hello")
+        md_file.write_text("Hello", encoding="utf-8")
         class Result:
             returncode = 0
             stderr = ""
@@ -27,4 +27,4 @@ def test_convert_docx_to_md(tmp_path, monkeypatch):
     )
     convert_docx_to_md(docx_file, md_file)
     assert md_file.exists()
-    assert md_file.read_text() == "Hello"
+    assert md_file.read_text(encoding="utf-8") == "Hello"

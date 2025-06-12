@@ -26,11 +26,11 @@ def test_build_sidebar(tmp_path):
         }
     ]
     index_path = tmp_path / "index.yaml"
-    index_path.write_text(yaml.safe_dump(index, allow_unicode=True))
+    index_path.write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
     out_file = tmp_path / "_sidebar.md"
     build_sidebar(index_path, out_file)
 
-    lines = out_file.read_text().splitlines()
+    lines = out_file.read_text(encoding="utf-8").splitlines()
     assert lines[0] == "* [Inicio](README.md)"
     assert lines[1] == "* [Contexto](1_contexto.md)"
     assert lines[2] == "  * [Funcion](1-1_funcion.md)"

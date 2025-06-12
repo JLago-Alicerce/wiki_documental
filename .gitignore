@@ -37,3 +37,7 @@ dist/
 build/
 *.egg-info/
 
+work/normalized/20221115_TraspasoConocimientos.docx
+inputs/_originals/EstadoActualPlataformaBBD_V0306_10_32.docx
+inputs/_originals/20221115_TraspasoConocimientos.docx
+work/normalized/EstadoActualPlataformaBBD_V0306_10_32.docx
