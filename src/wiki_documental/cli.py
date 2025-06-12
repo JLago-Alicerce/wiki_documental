@@ -1,7 +1,10 @@
 import typer
+from pathlib import Path
 from rich.console import Console
 
 from . import ensure_pandoc
+from .config import cfg
+from .processing.normalize_docx import normalize_styles
 
 app = typer.Typer(add_completion=False, add_help_option=True)
 
@@ -45,3 +48,13 @@ def full() -> None:
 def reset() -> None:
     """Reset wiki state (placeholder)."""
     typer.echo("Running reset placeholder")
+
+
+@app.command()
+def normalize(file: Path) -> None:
+    """Normalize styles in a DOCX file."""
+    dest_dir = cfg["paths"]["work"] / "normalized"
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    out_file = dest_dir / file.name
+    normalize_styles(file, out_file)
+    typer.echo(f"Normalized DOCX saved to {out_file}")
