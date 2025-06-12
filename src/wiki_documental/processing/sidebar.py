@@ -6,8 +6,19 @@ from typing import List, Dict
 import yaml
 
 
-def build_sidebar(index_path: Path, output_path: Path) -> None:
-    """Crea _sidebar.md jerárquico a partir de index.yaml."""
+def build_sidebar(index_path: Path, output_path: Path, depth: int = 1) -> None:
+    """Crea _sidebar.md jerárquico a partir de index.yaml.
+
+    Parameters
+    ----------
+    index_path : Path
+        Ruta al archivo ``index.yaml``.
+    output_path : Path
+        Ruta del ``_sidebar.md`` a generar.
+    depth : int, optional
+        Profundidad máxima de títulos a incluir. ``1`` solo agrega los
+        encabezados de primer nivel.
+    """
 
     with index_path.open("r", encoding="utf-8") as f:
         index_data: List[Dict[str, object]] = yaml.safe_load(f) or []
@@ -23,7 +34,8 @@ def build_sidebar(index_path: Path, output_path: Path) -> None:
             file_name = f"{identifier}_{slug}.md"
             lines.append(f"{indent}* [{title}]({file_name})\n")
             children = entry.get("children") or []
-            add_entries(children, level + 1)
+            if level + 1 < depth:
+                add_entries(children, level + 1)
 
     add_entries(index_data, 0)
 

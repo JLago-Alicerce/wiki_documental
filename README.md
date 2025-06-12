@@ -81,3 +81,7 @@ Split a consolidated Markdown file into sections defined in `index.yaml`. Each s
 ### `wiki sidebar`
 
 Generate a `_sidebar.md` file for Docsify based on `index.yaml`.
+
+Options:
+
+- `--depth` – maximum heading level to include in the sidebar (default `1`).

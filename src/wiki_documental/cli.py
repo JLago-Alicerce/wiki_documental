@@ -241,10 +241,14 @@ def ingest(file: Path) -> None:
 
 
 @app.command()
-def sidebar() -> None:
+def sidebar(
+    depth: int = typer.Option(
+        1, "--depth", "-d", help="Maximum heading level to include"
+    )
+) -> None:
     """Generate _sidebar.md for Docsify."""
     index_path = cfg["paths"]["work"] / "index.yaml"
     output_path = cfg["paths"]["wiki"] / "_sidebar.md"
-    build_sidebar(index_path, output_path)
+    build_sidebar(index_path, output_path, depth=depth)
     typer.echo("Sidebar generated")
 
