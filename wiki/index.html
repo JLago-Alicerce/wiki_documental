@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>wiki_documental</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css" />
+    <link rel="stylesheet" href="assets/altia_theme.css" />
+  </head>
+  <body>
+    <div id="app">Cargando documentación…</div>
+    <script>
+      window.$docsify = {
+        name: 'wiki_documental',
+        loadSidebar: true,
+        subMaxLevel: 3,
+        search: {
+          placeholder: 'Buscar...',
+          noData: 'Sin resultados',
+          depth: 3
+        }
+      }
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  </body>
+</html>
