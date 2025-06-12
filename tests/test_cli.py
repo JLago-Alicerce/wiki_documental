@@ -43,7 +43,7 @@ def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
     doc.save(doc_path)
 
     def fake_run(cmd, capture_output=True, text=True):
-        Path(cmd[-1]).write_text("# Title\nText")
+        Path(cmd[-1]).write_text("# Title\nText", encoding="utf-8")
         class Result:
             returncode = 0
             stderr = ""
@@ -81,13 +81,13 @@ import yaml
 def test_map_command(tmp_path, monkeypatch):
     md_folder = tmp_path / "md_raw"
     md_folder.mkdir()
-    (md_folder / "sample.md").write_text("# Title\n")
+    (md_folder / "sample.md").write_text("# Title\n", encoding="utf-8")
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": tmp_path}})
     result = runner.invoke(app, ["map"])
     assert result.exit_code == 0
     map_file = tmp_path / "map.yaml"
     assert map_file.exists()
-    data = yaml.safe_load(map_file.read_text())
+    data = yaml.safe_load(map_file.read_text(encoding="utf-8"))
     assert data[0]["slug"] == "title"
 
 
@@ -98,13 +98,13 @@ def test_index_overwrite(tmp_path, monkeypatch):
         {"level": 3, "title": "C", "slug": "c"},
     ]
     work = tmp_path
-    (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True))
-    (work / "index.yaml").write_text("old")
+    (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
+    (work / "index.yaml").write_text("old", encoding="utf-8")
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["index", "--overwrite"])
     assert result.exit_code == 0
-    data = yaml.safe_load((work / "index.yaml").read_text())
+    data = yaml.safe_load((work / "index.yaml").read_text(encoding="utf-8"))
     assert data[0]["id"] == "1"
     assert data[0]["children"][0]["children"][0]["id"] == "1.1.1"
 
@@ -114,7 +114,7 @@ def test_sidebar_command(tmp_path, monkeypatch):
         {"id": "1", "title": "A", "slug": "a", "children": []}
     ]
     work = tmp_path
-    (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True))
+    (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
 
@@ -122,6 +122,6 @@ def test_sidebar_command(tmp_path, monkeypatch):
     assert result.exit_code == 0
     sidebar = work / "_sidebar.md"
     assert sidebar.exists()
-    content = sidebar.read_text().splitlines()
+    content = sidebar.read_text(encoding="utf-8").splitlines()
     assert content[1] == "* [A](1_a.md)"
 
