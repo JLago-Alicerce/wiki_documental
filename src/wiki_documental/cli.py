@@ -7,6 +7,7 @@ from .config import cfg
 from .processing.normalize_docx import normalize_styles
 from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
+from .processing.ingest import ingest_content
 import yaml
 
 app = typer.Typer(add_completion=False, add_help_option=True)
@@ -147,4 +148,14 @@ def verify(force: bool = typer.Option(False, "--force", "-f", help="Continue eve
     console.print(table)
     if not force:
         raise typer.Exit(code=1)
+
+
+@app.command()
+def ingest(file: Path) -> None:
+    """Fragment a consolidated Markdown file into wiki sections."""
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    wiki_dir = cfg["paths"]["wiki"]
+    cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
+    ingest_content(file, index_path, wiki_dir, cutoff=cutoff)
+    typer.echo("Content ingested")
 
