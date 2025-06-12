@@ -6,7 +6,7 @@ from wiki_documental.processing.ingest import ingest_content
 
 def test_ingest_content(tmp_path):
     md = tmp_path / "full.md"
-    md.write_text("# X\ntext1\n## Y\ntext2\n# Z\ntext3\n")
+    md.write_text("# X\ntext1\n## Y\ntext2\n### Zeta\ntext3\n# Z\ntext4\n")
 
     index = [
         {"id": "1", "title": "X", "slug": "x", "children": []},
@@ -18,7 +18,12 @@ def test_ingest_content(tmp_path):
     out_dir = tmp_path / "wiki"
     ingest_content(md, index_path, out_dir, cutoff=0.5)
 
-    assert (out_dir / "1_x.md").exists()
-    assert (out_dir / "2_z.md").exists()
-    assert (out_dir / "99_unclassified.md").exists()
+    first = out_dir / "1_x.md"
+    second = out_dir / "2_z.md"
+    assert first.exists()
+    assert second.exists()
+    assert not (out_dir / "99_unclassified.md").exists()
+    content = first.read_text()
+    assert "## Y" in content
+    assert "### Zeta" in content
 
