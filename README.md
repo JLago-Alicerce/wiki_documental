@@ -85,3 +85,9 @@ Generate a `_sidebar.md` file for Docsify based on `index.yaml`.
 Options:
 
 - `--depth` – maximum heading level to include in the sidebar (default `1`).
+
+### Branding
+
+You can customize the wiki's branding by editing `wiki/index.html`.
+Update the `<title>` tag and `window.$docsify.name` to display your own name
+and adjust the look by modifying the theme CSS if needed.
