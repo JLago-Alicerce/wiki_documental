@@ -25,6 +25,7 @@ def _flatten_index(entries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 
 def _parse_sections(md_path: Path) -> List[tuple[str, List[str]]]:
+    """Return list of sections split by level 1 headings."""
     sections: List[tuple[str, List[str]]] = []
     with md_path.open("r", encoding="utf-8") as f:
         lines = f.readlines()
@@ -35,12 +36,19 @@ def _parse_sections(md_path: Path) -> List[tuple[str, List[str]]]:
     for line in lines:
         m = HEADING_RE.match(line)
         if m:
-            if current_title is None and intro:
-                sections.append(("__intro__", intro))
-            if current_title is not None:
-                sections.append((current_title, buffer))
-            current_title = m.group(2).strip()
-            buffer = [line]
+            level = len(m.group(1))
+            if level == 1:
+                if current_title is None and intro:
+                    sections.append(("__intro__", intro))
+                if current_title is not None:
+                    sections.append((current_title, buffer))
+                current_title = m.group(2).strip()
+                buffer = [line]
+            else:
+                if current_title is None:
+                    intro.append(line)
+                else:
+                    buffer.append(line)
         else:
             if current_title is None:
                 intro.append(line)

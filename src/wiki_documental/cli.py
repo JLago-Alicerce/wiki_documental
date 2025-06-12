@@ -8,6 +8,7 @@ from .processing.normalize_docx import normalize_styles
 from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
 from .processing.ingest import ingest_content
+from .processing.sidebar import build_sidebar
 import yaml
 
 app = typer.Typer(add_completion=False, add_help_option=True)
@@ -158,4 +159,13 @@ def ingest(file: Path) -> None:
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
     ingest_content(file, index_path, wiki_dir, cutoff=cutoff)
     typer.echo("Content ingested")
+
+
+@app.command()
+def sidebar() -> None:
+    """Generate _sidebar.md for Docsify."""
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    output_path = cfg["paths"]["wiki"] / "_sidebar.md"
+    build_sidebar(index_path, output_path)
+    typer.echo("Sidebar generated")
 
