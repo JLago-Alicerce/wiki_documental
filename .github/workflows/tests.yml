@@ -13,4 +13,4 @@ jobs:
       - name: Install deps
         run: poetry install --with dev
       - name: Run tests
-        run: pytest -q
+        run: poetry run pytest -q
