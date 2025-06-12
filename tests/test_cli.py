@@ -4,6 +4,7 @@ from docx.shared import Pt
 
 from typer.testing import CliRunner
 
+import wiki_documental
 from wiki_documental.cli import app
 
 runner = CliRunner()
@@ -12,7 +13,7 @@ runner = CliRunner()
 def test_version_option():
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert "1.0.0" in result.stdout
+    assert wiki_documental.__version__ in result.stdout
 
 
 def test_full_calls_ensure_pandoc(monkeypatch):

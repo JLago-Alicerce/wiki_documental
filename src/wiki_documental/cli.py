@@ -2,7 +2,7 @@ import typer
 from pathlib import Path
 from rich.console import Console
 
-from . import ensure_pandoc
+from . import ensure_pandoc, __version__
 from .config import cfg
 from .processing.normalize_docx import normalize_styles
 from .processing.docx_to_md import convert_docx_to_md
@@ -12,8 +12,6 @@ from .processing.sidebar import build_sidebar
 import yaml
 
 app = typer.Typer(add_completion=False, add_help_option=True)
-
-__version__ = "1.0.0"
 
 
 def _version_callback(value: bool) -> None:
