@@ -111,3 +111,28 @@ def index() -> None:
     with out_file.open("w", encoding="utf-8") as f:
         yaml.safe_dump(index_data, f, allow_unicode=True)
     typer.echo(f"Index saved to {out_file}")
+
+from .processing.verify_pre_ingest import compare_map_index
+from rich.table import Table
+
+
+@app.command()
+def verify(force: bool = typer.Option(False, "--force", "-f", help="Continue even if differences are found.")) -> None:
+    """Verify map.yaml and index.yaml consistency."""
+    map_path = cfg["paths"]["work"] / "map.yaml"
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    diffs = compare_map_index(map_path, index_path)
+    console = Console()
+    if not diffs["missing_in_index"] and not diffs["missing_in_map"]:
+        console.print("Map and index are consistent.")
+        raise typer.Exit()
+
+    table = Table(title="Differences")
+    table.add_column("Type")
+    table.add_column("Slugs")
+    table.add_row("Missing in index", ", ".join(diffs["missing_in_index"]) or "-")
+    table.add_row("Missing in map", ", ".join(diffs["missing_in_map"]) or "-")
+    console.print(table)
+    if not force:
+        raise typer.Exit(code=1)
+
