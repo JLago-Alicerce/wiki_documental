@@ -68,7 +68,7 @@ def test_pipeline_full_with_image(tmp_path, monkeypatch):
 
     def fake_run(cmd, capture_output=True, text=True):
         md = Path(cmd[-1])
-        md.write_text("# Title\n![alt](media/img.png)", encoding="utf-8")
+        md.write_text("# Title\n![alt](media\\img.png)", encoding="utf-8")
         media_dir = None
         for part in cmd:
             if part.startswith("--extract-media="):
@@ -92,5 +92,7 @@ def test_pipeline_full_with_image(tmp_path, monkeypatch):
     img_file = paths["wiki"] / "assets" / "media" / "img.png"
     assert img_file.exists()
     md_files = list(paths["wiki"].glob("*.md"))
-    assert any("assets/media/img.png" in f.read_text(encoding="utf-8") for f in md_files)
-    assert all("assets/assets/media" not in f.read_text(encoding="utf-8") for f in md_files)
+    contents = [f.read_text(encoding="utf-8") for f in md_files]
+    assert any("assets/media/img.png" in c for c in contents)
+    assert all("assets/assets/media" not in c for c in contents)
+    assert all("\\" not in c for c in contents)

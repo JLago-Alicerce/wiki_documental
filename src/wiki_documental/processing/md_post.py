@@ -13,6 +13,14 @@ def fix_image_links(text: str) -> str:
     return IMAGE_PREFIX_RE.sub(r"\1assets/media/", text)
 
 
+def normalize_image_paths(md_text: str) -> str:
+    """Normalize image paths replacing backslashes and absolute drive paths."""
+
+    md_text = md_text.replace("\\", "/")
+    md_text = re.sub(r"[a-zA-Z]:/[^)]*", "assets/media/", md_text)
+    return md_text
+
+
 ASSET_LINK_RE = re.compile(r"!\[[^\]]*\]\((assets/media/[^)]+)\)")
 
 
