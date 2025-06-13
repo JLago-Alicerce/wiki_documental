@@ -170,6 +170,14 @@ def full() -> None:
             shutil.rmtree(dest)
         shutil.copytree(media_src, dest)
 
+    content_files = [f for f in wiki_dir.glob("*.md") if f.name not in ("_sidebar.md", "README.md")]
+    readme = wiki_dir / "README.md"
+    if not readme.exists() or not content_files:
+        readme.write_text(
+            "# Conocimiento Técnico Navantia\n\nEsta wiki fue generada automáticamente. Consulta el menú lateral para navegar.",
+            encoding="utf-8",
+        )
+
     console.print(f"\N{check mark} Wiki generada correctamente en: {wiki_dir / 'index.html'}")
 
 
