@@ -3,6 +3,7 @@ from wiki_documental.processing.md_post import (
     clean_markdown,
     fix_image_links,
     warn_missing_images,
+    normalize_image_paths,
 )
 
 
@@ -47,3 +48,11 @@ def test_fix_image_links_and_warning(tmp_path, capsys):
 def test_fix_image_links_no_duplicate():
     text = '![alt](assets/media/img.png)'
     assert fix_image_links(text) == text
+
+
+def test_normalize_image_paths():
+    text = '![alt](assets\\media\\img.png) and ![](C:/temp/foo.png)'
+    result = normalize_image_paths(text)
+    assert '\\' not in result
+    assert 'C:/' not in result
+    assert 'assets/media/img.png' in result

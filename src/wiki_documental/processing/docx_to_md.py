@@ -1,7 +1,7 @@
 from pathlib import Path
 import subprocess
 from wiki_documental.utils.system import ensure_pandoc
-from .md_post import fix_image_links
+from .md_post import fix_image_links, normalize_image_paths
 
 
 def convert_docx_to_md(
@@ -18,5 +18,6 @@ def convert_docx_to_md(
         raise RuntimeError(f"Pandoc error: {result.stderr}")
     text = md_path.read_text(encoding="utf-8")
     text = fix_image_links(text)
+    text = normalize_image_paths(text)
     assert "assets/assets/media/" not in text, "❌ Doble ruta assets detectada"
     md_path.write_text(text, encoding="utf-8")
