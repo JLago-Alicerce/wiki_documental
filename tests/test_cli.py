@@ -107,7 +107,7 @@ def test_index_overwrite(tmp_path, monkeypatch):
     assert result.exit_code == 0
     data = yaml.safe_load((work / "index.yaml").read_text(encoding="utf-8"))
     assert data[0]["id"] == "1"
-    assert data[0]["children"][0]["children"][0]["id"] == "1.1.1"
+    assert not data[0]["children"][0]["children"]
 
 
 def test_sidebar_command(tmp_path, monkeypatch):

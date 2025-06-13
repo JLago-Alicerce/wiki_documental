@@ -79,3 +79,10 @@ footer {
 .app-nav {
     z-index: 1100 !important;
 }
+
+.fragment-meta {
+    font-size: 0.9em;
+    color: #666;
+    text-align: right;
+    margin-top: -10px;
+}

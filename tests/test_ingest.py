@@ -30,7 +30,8 @@ def test_ingest_content(tmp_path):
     meta = yaml.safe_load("\n".join(lines[1:end]))
     assert meta["source"] == md.name
     assert meta["doc_source"] == "estado_actual.docx"
-    assert lines[end + 1].startswith("#")
+    assert lines[end + 1].startswith("<div class=\"fragment-meta\"")
+    assert any(line.startswith("#") for line in lines[end + 1:])
     assert "## Y" in content
     assert "### Zeta" in content
 

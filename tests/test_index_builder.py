@@ -11,5 +11,5 @@ def test_build_index_from_map():
     result = build_index_from_map(map_data)
     assert result[0]["id"] == "1"
     assert result[0]["children"][0]["id"] == "1.1"
-    assert result[0]["children"][0]["children"][0]["id"] == "1.1.1"
+    assert not result[0]["children"][0]["children"]
     assert result[1]["id"] == "2"

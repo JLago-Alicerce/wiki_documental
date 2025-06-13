@@ -164,7 +164,15 @@ def ingest_content(
         header_lines.append("---\n")
         header = "\n".join(header_lines)
 
-        final_text = post_process_text(header + text)
+        meta_parts = [f"source: {md_path.name}"]
+        if sources:
+            meta_parts.append("doc: " + ", ".join(sorted(sources)))
+        meta_parts.append(f"created: {created}")
+        meta_line = (
+            f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
+        )
+
+        final_text = post_process_text(header + meta_line + text)
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
@@ -199,7 +207,15 @@ def ingest_content(
         header_lines.append("---\n")
         header = "\n".join(header_lines)
 
-        final_text = post_process_text(header + "".join(unclassified))
+        meta_parts = [f"source: {md_path.name}"]
+        if sources:
+            meta_parts.append("doc: " + ", ".join(sorted(sources)))
+        meta_parts.append(f"created: {created}")
+        meta_line = (
+            f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
+        )
+
+        final_text = post_process_text(header + meta_line + "".join(unclassified))
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"

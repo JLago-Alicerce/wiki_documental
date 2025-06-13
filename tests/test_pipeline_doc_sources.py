@@ -65,3 +65,4 @@ def test_full_multiple_doc_sources(tmp_path, monkeypatch):
     end = lines.index("---", 1)
     meta = yaml.safe_load("\n".join(lines[1:end]))
     assert sorted(meta["doc_source"]) == ["DocA.docx", "DocB.docx"]
+    assert lines[end + 1].startswith("<div class=\"fragment-meta\"")
