@@ -40,5 +40,10 @@ def test_fix_image_links_and_warning(tmp_path, capsys):
     warn_missing_images(fixed, tmp_path)
     captured = capsys.readouterr()
     assert 'assets/media/img.png' in fixed
-    assert 'assets/media/img2.jpg' in fixed
-    assert 'img2.jpg' in captured.out
+    assert '../media/img2.jpg' in fixed
+    assert 'img2.jpg' not in captured.out
+
+
+def test_fix_image_links_no_duplicate():
+    text = '![alt](assets/media/img.png)'
+    assert fix_image_links(text) == text
