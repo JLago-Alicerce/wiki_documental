@@ -34,6 +34,18 @@ def reset_environment(cfg: dict) -> None:
         rmtree(media_dir)
         console.log(f"Removed directory {media_dir}")
 
+    work_dir = Path(cfg["paths"]["work"])
+    paths_to_clean = [
+        work_dir / "md_raw",
+        work_dir / "normalized",
+        work_dir / "tmp",
+        work_dir / "media",
+    ]
+    for path in paths_to_clean:
+        if path.exists():
+            rmtree(path)
+            console.log(f"Removed directory {path}")
+
 
 def _version_callback(value: bool) -> None:
     if value:
@@ -92,11 +104,10 @@ def full() -> None:
             raise typer.Exit(code=1)
 
     console.print("[bold]Converting DOCX to Markdown...[/bold]")
-    media_dir = md_raw_dir
     for docx in track(norm_dir.glob("*.docx"), description="Convert"):
         out = md_raw_dir / f"{docx.stem}.md"
         try:
-            convert_docx_to_md(docx, out, media_dir)
+            convert_docx_to_md(docx, out, wiki_dir)
         except Exception as exc:  # pragma: no cover - defensive
             console.print(f"Error converting {docx.name}: {exc}", style="red")
             raise typer.Exit(code=1)
@@ -184,7 +195,7 @@ def convert(file: Path) -> None:
     dest_dir = cfg["paths"]["work"] / "md_raw"
     dest_dir.mkdir(parents=True, exist_ok=True)
     out_file = dest_dir / f"{file.stem}.md"
-    convert_docx_to_md(file, out_file, dest_dir)
+    convert_docx_to_md(file, out_file, cfg["paths"]["wiki"])
     typer.echo(f"Converted markdown saved to {out_file}")
 
 
