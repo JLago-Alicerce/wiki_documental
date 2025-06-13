@@ -37,7 +37,19 @@ dist/
 build/
 *.egg-info/
 
-work/normalized/20221115_TraspasoConocimientos.docx
-inputs/_originals/EstadoActualPlataformaBBD_V0306_10_32.docx
-inputs/_originals/20221115_TraspasoConocimientos.docx
-work/normalized/EstadoActualPlataformaBBD_V0306_10_32.docx
+# DOCX originales
+inputs/_originals/*.docx
+
+# DOCX normalizados (no finales)
+work/normalized/*.docx
+
+# Archivos derivados de Pandoc
+work/md_raw/*.md
+work/media/
+work/tmp/
+work/*.yaml
+work/*.csv
+
+# Reclasificaciones y backups
+wiki/99_unclassified.*
+report_reclassify.csv

@@ -1,4 +1,3 @@
-# wiki_documental
+# Conocimiento Técnico Navantia
 
-Bienvenido a la wiki generada automáticamente.
-Aquí aparecerá la documentación estructurada a partir de tus documentos Word y PDF.
+Esta wiki fue generada automáticamente. Consulta el menú lateral para navegar.

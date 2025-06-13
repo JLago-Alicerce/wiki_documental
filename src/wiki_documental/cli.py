@@ -1,5 +1,7 @@
+import shutil
 import typer
 from pathlib import Path
+from shutil import rmtree
 from rich.console import Console
 
 from . import ensure_pandoc, __version__
@@ -9,10 +11,40 @@ from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
 from .processing.ingest import ingest_content
 from .processing.sidebar import build_sidebar
+from .processing.reclassify import reclassify_unclassified
 from rich.progress import track
 import yaml
 
 app = typer.Typer(add_completion=False, add_help_option=True)
+
+
+def reset_environment(cfg: dict) -> None:
+    """Remove generated artifacts from wiki and work directories."""
+    console = Console()
+    paths = [cfg["paths"]["wiki"], cfg["paths"]["work"]]
+    for path in paths:
+        for pattern in ["*.md", "*.yaml", "*.csv"]:
+            for f in Path(path).rglob(pattern):
+                if f.name == "index.html":
+                    continue
+                f.unlink()
+                console.log(f"Deleted {f}")
+    media_dir = Path(cfg["paths"]["wiki"]) / "assets" / "media"
+    if media_dir.exists():
+        rmtree(media_dir)
+        console.log(f"Removed directory {media_dir}")
+
+    work_dir = Path(cfg["paths"]["work"])
+    paths_to_clean = [
+        work_dir / "md_raw",
+        work_dir / "normalized",
+        work_dir / "tmp",
+        work_dir / "media",
+    ]
+    for path in paths_to_clean:
+        if path.exists():
+            rmtree(path)
+            console.log(f"Removed directory {path}")
 
 
 def _version_callback(value: bool) -> None:
@@ -75,7 +107,7 @@ def full() -> None:
     for docx in track(norm_dir.glob("*.docx"), description="Convert"):
         out = md_raw_dir / f"{docx.stem}.md"
         try:
-            convert_docx_to_md(docx, out)
+            convert_docx_to_md(docx, out, wiki_dir)
         except Exception as exc:  # pragma: no cover - defensive
             console.print(f"Error converting {docx.name}: {exc}", style="red")
             raise typer.Exit(code=1)
@@ -120,18 +152,40 @@ def full() -> None:
 
     console.print("[bold]Ingesting content...[/bold]")
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
-    ingest_content(tmp_full, index_path, wiki_dir, cutoff=cutoff)
+
+    for md in track(sorted(md_raw_dir.glob("*.md")), description="Ingest"):
+        ingest_content(md, index_path, wiki_dir, cutoff=cutoff, doc_source=md.stem)
 
     console.print("[bold]Generating sidebar...[/bold]")
     build_sidebar(index_path, wiki_dir / "_sidebar.md")
+
+    media_src = md_raw_dir / "media"
+    if media_src.exists():
+        dest = wiki_dir / "assets" / "media"
+        double_media = dest / "media"
+        if double_media.exists():
+            for img in double_media.iterdir():
+                shutil.move(img, dest)
+            shutil.rmtree(double_media)
+        if dest.exists():
+            shutil.rmtree(dest)
+        shutil.copytree(media_src, dest)
+
+    content_files = [f for f in wiki_dir.glob("*.md") if f.name not in ("_sidebar.md", "README.md")]
+    readme = wiki_dir / "README.md"
+    if not readme.exists() or not content_files:
+        readme.write_text(
+            "# Conocimiento Técnico Navantia\n\nEsta wiki fue generada automáticamente. Consulta el menú lateral para navegar.",
+            encoding="utf-8",
+        )
 
     console.print(f"\N{check mark} Wiki generada correctamente en: {wiki_dir / 'index.html'}")
 
 
 @app.command()
 def reset() -> None:
-    """Reset wiki state (placeholder)."""
-    typer.echo("Running reset placeholder")
+    """Reset wiki and work directories removing generated files."""
+    reset_environment(cfg)
 
 
 @app.command()
@@ -150,7 +204,7 @@ def convert(file: Path) -> None:
     dest_dir = cfg["paths"]["work"] / "md_raw"
     dest_dir.mkdir(parents=True, exist_ok=True)
     out_file = dest_dir / f"{file.stem}.md"
-    convert_docx_to_md(file, out_file)
+    convert_docx_to_md(file, out_file, cfg["paths"]["wiki"])
     typer.echo(f"Converted markdown saved to {out_file}")
 
 
@@ -236,15 +290,42 @@ def ingest(file: Path) -> None:
     index_path = cfg["paths"]["work"] / "index.yaml"
     wiki_dir = cfg["paths"]["wiki"]
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
-    ingest_content(file, index_path, wiki_dir, cutoff=cutoff)
+    doc_source = file.stem
+    ingest_content(file, index_path, wiki_dir, cutoff=cutoff, doc_source=doc_source)
     typer.echo("Content ingested")
 
 
 @app.command()
-def sidebar() -> None:
+def sidebar(
+    depth: int = typer.Option(
+        1, "--depth", "-d", help="Maximum heading level to include"
+    )
+) -> None:
     """Generate _sidebar.md for Docsify."""
     index_path = cfg["paths"]["work"] / "index.yaml"
     output_path = cfg["paths"]["wiki"] / "_sidebar.md"
-    build_sidebar(index_path, output_path)
+    build_sidebar(index_path, output_path, depth=depth)
     typer.echo("Sidebar generated")
+
+
+@app.command()
+def reclassify(
+    threshold: float = typer.Option(0.3, "--threshold", "-t", help="Match threshold")
+) -> None:
+    """Reclassify sections from 99_unclassified.md."""
+    wiki_dir = cfg["paths"]["wiki"]
+    unclassified = wiki_dir / "99_unclassified.md"
+    if not unclassified.exists():
+        raise typer.Exit(code=1)
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    reclassify_unclassified(unclassified, index_path, wiki_dir, threshold=threshold)
+    typer.echo("Reclassification completed")
+
+
+@app.command("package")
+def package_static() -> None:
+    """Empaqueta la wiki generada en un archivo ZIP entregable."""
+    from scripts.package_static import main as pack
+
+    pack()
 

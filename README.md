@@ -28,11 +28,11 @@ Example hierarchical entry:
 
 ### `wiki full`
 
-Run the entire conversion pipeline (placeholder). It currently just checks that Pandoc is installed and prints a message.
+Run the entire conversion pipeline from DOCX originals to a Docsify wiki.
 
 ### `wiki reset`
 
-Reset the working directory (placeholder for future clean-up logic).
+Remove all generated Markdown, YAML and CSV files from the `work` and `wiki` directories. The command also deletes `work/md_raw`, `work/normalized`, `work/tmp` and any `media` folders to ensure a completely clean state while preserving `index.html` and other static assets.
 
 ### `wiki normalize`
 
@@ -81,3 +81,13 @@ Split a consolidated Markdown file into sections defined in `index.yaml`. Each s
 ### `wiki sidebar`
 
 Generate a `_sidebar.md` file for Docsify based on `index.yaml`.
+
+Options:
+
+- `--depth` – maximum heading level to include in the sidebar (default `1`).
+
+### Branding
+
+You can customize the wiki's branding by editing `wiki/index.html`.
+Update the `<title>` tag and `window.$docsify.name` to display your own name
+and adjust the look by modifying the theme CSS if needed.

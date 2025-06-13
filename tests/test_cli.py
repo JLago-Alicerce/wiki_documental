@@ -89,6 +89,7 @@ def test_map_command(tmp_path, monkeypatch):
     assert map_file.exists()
     data = yaml.safe_load(map_file.read_text(encoding="utf-8"))
     assert data[0]["slug"] == "title"
+    assert data[0]["id"] == "1"
 
 
 def test_index_overwrite(tmp_path, monkeypatch):
@@ -106,7 +107,7 @@ def test_index_overwrite(tmp_path, monkeypatch):
     assert result.exit_code == 0
     data = yaml.safe_load((work / "index.yaml").read_text(encoding="utf-8"))
     assert data[0]["id"] == "1"
-    assert data[0]["children"][0]["children"][0]["id"] == "1.1.1"
+    assert not data[0]["children"][0]["children"]
 
 
 def test_sidebar_command(tmp_path, monkeypatch):
@@ -117,11 +118,41 @@ def test_sidebar_command(tmp_path, monkeypatch):
     (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
+    (work / "README.md").write_text("intro", encoding="utf-8")
 
     result = runner.invoke(app, ["sidebar"])
     assert result.exit_code == 0
     sidebar = work / "_sidebar.md"
     assert sidebar.exists()
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content[1] == "* [A](1_a.md)"
+    assert content == ["* [Inicio](README.md)", "* [A](1_a.md)"]
+
+
+def test_sidebar_command_depth(tmp_path, monkeypatch):
+    index = [
+        {
+            "id": "1",
+            "title": "A",
+            "slug": "a",
+            "children": [
+                {
+                    "id": "1.1",
+                    "title": "B",
+                    "slug": "b",
+                    "children": [],
+                }
+            ],
+        }
+    ]
+    work = tmp_path
+    (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
+    paths = {"work": work, "wiki": work}
+    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
+    (work / "README.md").write_text("intro", encoding="utf-8")
+
+    result = runner.invoke(app, ["sidebar", "--depth", "2"])
+    assert result.exit_code == 0
+    sidebar = work / "_sidebar.md"
+    content = sidebar.read_text(encoding="utf-8").splitlines()
+    assert content[2] == "  * [B](1-1_b.md)"
 

@@ -14,3 +14,5 @@ jobs:
         run: poetry install --with dev
       - name: Run tests
         run: poetry run pytest -q
+      - name: Check sidebar links
+        run: poetry run python scripts/check_sidebar_links.py
