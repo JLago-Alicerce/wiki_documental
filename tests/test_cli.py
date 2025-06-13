@@ -118,6 +118,7 @@ def test_sidebar_command(tmp_path, monkeypatch):
     (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
+    (work / "README.md").write_text("intro", encoding="utf-8")
 
     result = runner.invoke(app, ["sidebar"])
     assert result.exit_code == 0
@@ -147,6 +148,7 @@ def test_sidebar_command_depth(tmp_path, monkeypatch):
     (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
+    (work / "README.md").write_text("intro", encoding="utf-8")
 
     result = runner.invoke(app, ["sidebar", "--depth", "2"])
     assert result.exit_code == 0

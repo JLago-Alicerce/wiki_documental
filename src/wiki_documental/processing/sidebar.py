@@ -23,7 +23,10 @@ def build_sidebar(index_path: Path, output_path: Path, depth: int = 1) -> None:
     with index_path.open("r", encoding="utf-8") as f:
         index_data: List[Dict[str, object]] = yaml.safe_load(f) or []
 
-    lines: List[str] = ["* [Inicio](README.md)\n"]
+    lines: List[str] = []
+    readme = output_path.parent / "README.md"
+    if readme.exists():
+        lines.append("* [Inicio](README.md)\n")
 
     def add_entries(entries: List[Dict[str, object]], level: int) -> None:
         indent = "  " * level
