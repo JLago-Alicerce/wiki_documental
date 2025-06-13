@@ -28,11 +28,11 @@ Example hierarchical entry:
 
 ### `wiki full`
 
-Run the entire conversion pipeline (placeholder). It currently just checks that Pandoc is installed and prints a message.
+Run the entire conversion pipeline from DOCX originals to a Docsify wiki.
 
 ### `wiki reset`
 
-Reset the working directory (placeholder for future clean-up logic).
+Remove generated Markdown, YAML and CSV files from the `work` and `wiki` directories while preserving `index.html` and other static assets.
 
 ### `wiki normalize`
 

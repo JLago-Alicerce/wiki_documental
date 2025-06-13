@@ -1,6 +1,7 @@
 import shutil
 import typer
 from pathlib import Path
+from shutil import rmtree
 from rich.console import Console
 
 from . import ensure_pandoc, __version__
@@ -15,6 +16,23 @@ from rich.progress import track
 import yaml
 
 app = typer.Typer(add_completion=False, add_help_option=True)
+
+
+def reset_environment(cfg: dict) -> None:
+    """Remove generated artifacts from wiki and work directories."""
+    console = Console()
+    paths = [cfg["paths"]["wiki"], cfg["paths"]["work"]]
+    for path in paths:
+        for pattern in ["*.md", "*.yaml", "*.csv"]:
+            for f in Path(path).rglob(pattern):
+                if f.name == "index.html":
+                    continue
+                f.unlink()
+                console.log(f"Deleted {f}")
+    media_dir = Path(cfg["paths"]["wiki"]) / "assets" / "media"
+    if media_dir.exists():
+        rmtree(media_dir)
+        console.log(f"Removed directory {media_dir}")
 
 
 def _version_callback(value: bool) -> None:
@@ -146,8 +164,8 @@ def full() -> None:
 
 @app.command()
 def reset() -> None:
-    """Reset wiki state (placeholder)."""
-    typer.echo("Running reset placeholder")
+    """Reset wiki and work directories removing generated files."""
+    reset_environment(cfg)
 
 
 @app.command()
