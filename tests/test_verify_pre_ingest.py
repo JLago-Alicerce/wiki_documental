@@ -26,6 +26,26 @@ def test_compare_map_index(tmp_path):
     assert diffs == {"missing_in_index": [], "missing_in_map": []}
 
 
+def test_compare_map_index_ignore_deep(tmp_path):
+    map_data = [
+        {"level": 1, "title": "H1", "slug": "h1"},
+        {"level": 2, "title": "H1.1", "slug": "h1-1"},
+        {"level": 3, "title": "H1.1.1", "slug": "h1-1-1"},
+    ]
+    index_data = [
+        {"title": "H1", "slug": "h1", "children": [
+            {"level": 2, "title": "H1.1", "slug": "h1-1"}
+        ]}
+    ]
+    map_file = tmp_path / "map.yaml"
+    index_file = tmp_path / "index.yaml"
+    map_file.write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
+    index_file.write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
+
+    diffs = compare_map_index(map_file, index_file)
+    assert diffs == {"missing_in_index": [], "missing_in_map": []}
+
+
 
 def test_verify_cli(tmp_path, monkeypatch):
     map_data = [{"level": 1, "title": "A", "slug": "a"}]

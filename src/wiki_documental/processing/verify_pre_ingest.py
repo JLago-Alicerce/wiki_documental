@@ -6,19 +6,29 @@ from typing import Dict, List, Any
 import yaml
 
 
+def _slug_level(slug: str) -> int:
+    """Return heading level from slug based on hyphen count."""
+    return slug.count("-") + 1
+
+
 def _load_map_slugs(path: Path) -> set[str]:
     if not path.exists():
         return set()
     with path.open("r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or []
-    return {item.get("slug") for item in data if item.get("slug")}
+    slugs: set[str] = set()
+    for item in data:
+        slug = item.get("slug")
+        if slug and _slug_level(slug) <= 2:
+            slugs.add(slug)
+    return slugs
 
 
 def _extract_slugs(entries: List[Dict[str, Any]]) -> set[str]:
     slugs: set[str] = set()
     for entry in entries:
         slug = entry.get("slug")
-        if slug:
+        if slug and _slug_level(slug) <= 2:
             slugs.add(slug)
         children = entry.get("children", [])
         if children:
