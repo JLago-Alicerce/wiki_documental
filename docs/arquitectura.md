@@ -28,7 +28,7 @@ Se actualiza tras cada cambio relevante mediante tareas formales.
 |--------|---------|----------------|------------|
 | `cli.py` | Entrada principal del sistema | ✅ (`wiki ...`) | ✅ |
 | `config.py` | Carga de rutas y opciones (`cfg`) | ✅ (interno) | ✅ |
-| `reset` | Limpia entorno de trabajo | ✅ (próxima TASK SYS‑03) | 💜 |
+| `reset` | Limpia entorno de trabajo | ✅ | ✅ |
 | `reclassify.py` | CLI: `wiki reclassify` | ✅ | ✅ |
 | `check_sidebar_links.py` | Verifica enlaces en CI | ❌ (solo script) | ✅ |
 

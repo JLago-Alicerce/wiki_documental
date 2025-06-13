@@ -32,7 +32,7 @@ Run the entire conversion pipeline from DOCX originals to a Docsify wiki.
 
 ### `wiki reset`
 
-Remove generated Markdown, YAML and CSV files from the `work` and `wiki` directories while preserving `index.html` and other static assets.
+Remove all generated Markdown, YAML and CSV files from the `work` and `wiki` directories. The command also deletes `work/md_raw`, `work/normalized`, `work/tmp` and any `media` folders to ensure a completely clean state while preserving `index.html` and other static assets.
 
 ### `wiki normalize`
 
