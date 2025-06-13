@@ -52,3 +52,19 @@ inputs/_originals/PUMA.B.GEN.22981.r01.Piloto.Definicion.docx
 inputs/_originals/PUMA.R.GEN.0000000.r00.DataModel.doc
 inputs/_originals/PUMA.R.GEN.217679.r00.PUMA.Cambio.Solucion.Proyectos.En.Curso.docx
 inputs/_originals/PUMA.R.GEN.229119.r00.DefiniciónArquitectura.docx
+# DOCX originales
+inputs/_originals/*.docx
+
+# DOCX normalizados (no finales)
+work/normalized/*.docx
+
+# Archivos derivados de Pandoc
+work/md_raw/*.md
+work/media/
+work/tmp/
+work/*.yaml
+work/*.csv
+
+# Reclasificaciones y backups
+wiki/99_unclassified.*
+report_reclassify.csv
