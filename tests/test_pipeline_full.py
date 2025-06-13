@@ -93,3 +93,4 @@ def test_pipeline_full_with_image(tmp_path, monkeypatch):
     assert img_file.exists()
     md_files = list(paths["wiki"].glob("*.md"))
     assert any("assets/media/img.png" in f.read_text(encoding="utf-8") for f in md_files)
+    assert all("assets/assets/media" not in f.read_text(encoding="utf-8") for f in md_files)

@@ -161,6 +161,7 @@ def ingest_content(
 
         final_text = post_process_text(header + text)
         final_text = fix_image_links(final_text)
+        assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
         warn_missing_images(final_text, out_dir)
         with path.open("w", encoding="utf-8") as f:
             f.write(final_text)
@@ -194,6 +195,7 @@ def ingest_content(
 
         final_text = post_process_text(header + "".join(unclassified))
         final_text = fix_image_links(final_text)
+        assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
         warn_missing_images(final_text, out_dir)
         with (out_dir / "99_unclassified.md").open("w", encoding="utf-8") as f:
             f.write(final_text)
