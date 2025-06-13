@@ -23,7 +23,9 @@ posteriores.
 
 # 2. Descripción del sistema actual 
 
-> <img src="media/image2.jpg" style="width:8.13681in;height:5.02083in" />
+> <img
+> src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image2.jpg"
+> style="width:8.13681in;height:5.02083in" />
 
 La arquitectura actual de bases de datos de Navantia, ilustrada en el
 esquema proporcionado, presenta un ecosistema estructurado en instancias
@@ -332,7 +334,9 @@ y se estructuró en dos fases:
 
 - Desactivación de IBM y licencias: **Q4 2020**.
 
-<img src="media/image3.jpg" style="width:6.33819in;height:1.39583in" />
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image3.jpg"
+style="width:6.33819in;height:1.39583in" />
 
 ### 3.1.5. Interfaces SSIS en entorno HOST consolidado (AWD/ALHD)
 
@@ -706,7 +710,9 @@ NAS-P9</th>
 
 3.6.3. Cronología de migración y normalización
 
-<img src="media/image1.jpg" style="width:7.18472in;height:1.78403in" />
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image1.jpg"
+style="width:7.18472in;height:1.78403in" />
 
 Figura 3.6-2 presenta la cronología del proceso de migración desde
 MANECNET a MASERVF9 y la estabilización del flujo de materiales, que se
@@ -807,7 +813,9 @@ SOAP-UI</th>
 
 # 4. Arquitectura funcional del flujo F100 
 
-<img src="media/image5.jpg" style="width:9.39375in;height:4.075in" />
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image5.jpg"
+style="width:9.39375in;height:4.075in" />
 
 El flujo funcional denominado **F100** constituye el núcleo del proceso
 de **carga estructurada de datos de obras** en el ecosistema de bases de
@@ -983,7 +991,9 @@ y de ingeniería, y es fundamental para comprender los orígenes, destinos
 y relaciones de la información técnica que alimenta el ecosistema de
 bases de datos y reporting.
 
-<img src="media/image4.jpg" style="width:7.18472in;height:2.86667in" />
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image4.jpg"
+style="width:7.18472in;height:2.86667in" />
 
 ## 4.5. Validación de calidad y revisión
 

@@ -1,43 +1,8 @@
-> NOVIEMBRE 2022
-
-PLAN DE TRANSFERENCIA DE
-
-CONOCIMIENTOS
-
-\[\*(
-
-Confidencial Navantia
-
-)\*\]
-
-\[\*(
-
-Navantia Confidential
-
-)\*\]
-
-**CONFIDENCIAL NAVANTIA**
-
-ESTE DOCUMENTO Y LA INFORMACIÓN QUE CONTIENE SON PROPIEDAD DE NAVANTIA.
-
-NO PUEDE SER REPRODUCIDO PARCIAL O TOTALMENTE NI DIVULGADO A TERCEROS
-
-SIN AUTORIZACIÓN ESCRITA DE NAVANTIA. UNA VEZ FINALIZADA LA RAZÓN DE SU
-
-TRANSFERENCIA, DEBERÁ SER DEVUELTO A NAVANTIA.
-
-**NAVANTIA CONFIDENTIAL**
-
-THIS DOCUMENT AND THE INFORMATION HEREIN IS PROPERTY OF NAVANTIA.
-
-IT CANNOT BE PARTIALLY OR TOTALLY REPRODUCED NOR DISCLOSED TO THIRD
-
-PARTIES WITHOUT WRITTEN PERMISSION FROM NAVANTIA. ONCE THE REASON FOR
-
-WHICH IT WAS TRANSFERED IS OVER, IT MUST BE RETURNED TO NAVANTIA.
-
-**INFORMACIÓN CLASIFICADA POR NAVANTIA**
-
+---
+source: tmp_full.md
+doc_source: 20221115_TraspasoConocimientos.docx
+created: 2025-06-12T15:50:41.268772
+---
 # ÍNDICE
 
 ### 1 Objetivos del documento
@@ -710,3 +675,139 @@ style="width:9.39097in;height:1.97708in" />
 </table>
 
 > 17
+
+
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image2.emf"
+style="width:4.11165in;height:2.06996in" /><img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image3.png"
+style="width:2.22535in;height:1.69601in"
+alt="C:\Users\adelarocha\AppData\Local\Microsoft\Windows\INetCache\Content.Word\NAVANTIA VERT COLOR RGB.PNG" />
+
+**SEGUIMIENTO TRAS la TRANSFERENCIA DE CONOCIMIEntos**
+
+NovieMbre 2022
+
+ÍNDICE
+
+[1 Objetivos del documento
+[4](#objetivos-del-documento)](#objetivos-del-documento)
+
+[2 Servicio de soporte general
+[5](#servicio-de-soporte-general)](#servicio-de-soporte-general)
+
+> [2.1 Descripción general
+> [5](#descripción-general)](#descripción-general)
+>
+> [2.2 Situación actual [5](#situación-actual)](#situación-actual)
+>
+> [2.3 Medidas tomadas durante y tras el traspaso de conocimientos
+> [6](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos)](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos)
+>
+> [2.4 Acciones a realizar en el futuro inmediato
+> [6](#acciones-a-realizar-en-el-futuro-inmediato)](#acciones-a-realizar-en-el-futuro-inmediato)
+>
+> [2.5 Responsables principales
+> [6](#responsables-principales)](#responsables-principales)
+
+[3 Proyectos históricos / PDB
+[7](#proyectos-históricos-pdb)](#proyectos-históricos-pdb)
+
+> [3.1 Descripción general
+> [7](#descripción-general-1)](#descripción-general-1)
+>
+> [3.2 Situación actual [7](#situación-actual-1)](#situación-actual-1)
+>
+> [3.3 Medidas tomadas durante y tras el traspaso de conocimientos
+> [7](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-1)](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-1)
+>
+> [3.4 Acciones a realizar en el futuro inmediato
+> [8](#acciones-a-realizar-en-el-futuro-inmediato-1)](#acciones-a-realizar-en-el-futuro-inmediato-1)
+>
+> [3.5 Responsables principales
+> [8](#responsables-principales-1)](#responsables-principales-1)
+
+[4 Interfaces con Clientes Externos
+[9](#interfaces-con-clientes-externos)](#interfaces-con-clientes-externos)
+
+> [4.1 Descripción general
+> [9](#descripción-general-2)](#descripción-general-2)
+>
+> [4.2 Situación actual [9](#situación-actual-2)](#situación-actual-2)
+>
+> [4.3 Medidas tomadas durante y tras el traspaso de conocimientos
+> [9](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-2)](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-2)
+>
+> [4.4 Acciones a realizar en el futuro inmediato
+> [10](#acciones-a-realizar-en-el-futuro-inmediato-2)](#acciones-a-realizar-en-el-futuro-inmediato-2)
+>
+> [4.5 Responsables principales
+> [10](#responsables-principales-2)](#responsables-principales-2)
+
+[5 Soporte y mantenimiento InterArma – Galia
+[11](#soporte-y-mantenimiento-interarma-galia)](#soporte-y-mantenimiento-interarma-galia)
+
+> [5.1 Descripción general
+> [11](#descripción-general-3)](#descripción-general-3)
+>
+> [5.2 Situación actual [11](#situación-actual-3)](#situación-actual-3)
+>
+> [5.3 Medidas tomadas durante y tras el traspaso de conocimientos
+> [12](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-3)](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-3)
+>
+> [5.4 Acciones a realizar en el futuro inmediato
+> [12](#acciones-a-realizar-en-el-futuro-inmediato-3)](#acciones-a-realizar-en-el-futuro-inmediato-3)
+>
+> [5.5 Responsables principales
+> [12](#responsables-principales-3)](#responsables-principales-3)
+
+[6 Integración con SAP [13](#integración-con-sap)](#integración-con-sap)
+
+> [6.1 Descripción general
+> [13](#descripción-general-4)](#descripción-general-4)
+>
+> [6.2 Situación actual [13](#situación-actual-4)](#situación-actual-4)
+>
+> [6.3 Medidas tomadas durante y tras el traspaso de conocimientos
+> [13](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-4)](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-4)
+>
+> [6.4 Acciones a realizar en el futuro inmediato
+> [14](#acciones-a-realizar-en-el-futuro-inmediato-4)](#acciones-a-realizar-en-el-futuro-inmediato-4)
+>
+> [6.5 Responsables principales
+> [14](#responsables-principales-4)](#responsables-principales-4)
+
+[7 Migración de aplicaciones a arquitectura RADAR
+[15](#migración-de-aplicaciones-a-arquitectura-radar)](#migración-de-aplicaciones-a-arquitectura-radar)
+
+> [7.1 Descripción general
+> [15](#descripción-general-5)](#descripción-general-5)
+>
+> [7.2 Situación actual [15](#situación-actual-5)](#situación-actual-5)
+>
+> [7.3 Medidas tomadas durante y tras el traspaso de conocimientos
+> [16](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-5)](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-5)
+>
+> [7.4 Acciones a realizar en el futuro inmediato
+> [16](#acciones-a-realizar-en-el-futuro-inmediato-5)](#acciones-a-realizar-en-el-futuro-inmediato-5)
+>
+> [7.5 Responsables principales
+> [16](#responsables-principales-5)](#responsables-principales-5)
+
+[8 Gestión de la obsolescencia
+[17](#gestión-de-la-obsolescencia)](#gestión-de-la-obsolescencia)
+
+> [8.1 Descripción general
+> [17](#descripción-general-6)](#descripción-general-6)
+>
+> [8.2 Situación actual [17](#situación-actual-6)](#situación-actual-6)
+>
+> [8.3 Medidas tomadas durante y tras el traspaso de conocimientos
+> [17](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-6)](#medidas-tomadas-durante-y-tras-el-traspaso-de-conocimientos-6)
+>
+> [8.4 Acciones a realizar en el futuro inmediato
+> [17](#acciones-a-realizar-en-el-futuro-inmediato-6)](#acciones-a-realizar-en-el-futuro-inmediato-6)
+>
+> [8.5 Responsables principales
+> [17](#responsables-principales-6)](#responsables-principales-6)
+

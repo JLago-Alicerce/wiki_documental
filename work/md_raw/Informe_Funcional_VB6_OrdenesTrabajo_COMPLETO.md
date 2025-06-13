@@ -59,16 +59,24 @@ analizada:
 
 Captura 1
 
-<img src="media/image1.png" style="width:6.5in;height:3.25in" />
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image1.png"
+style="width:6.5in;height:3.25in" />
 
 Captura 2
 
-<img src="media/image2.png" style="width:6.5in;height:3.25in" />
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image2.png"
+style="width:6.5in;height:3.25in" />
 
 Captura 3
 
-<img src="media/image3.png" style="width:6.5in;height:3.25in" />
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image3.png"
+style="width:6.5in;height:3.25in" />
 
 Captura 4
 
-<img src="media/image4.png" style="width:6.5in;height:3.25in" />
+<img
+src="C:\PROYECTOS_GPT\wiki_documental\work\md_raw\assets/media/assets/media/image4.png"
+style="width:6.5in;height:3.25in" />
