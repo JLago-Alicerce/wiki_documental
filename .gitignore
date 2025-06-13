@@ -37,21 +37,6 @@ dist/
 build/
 *.egg-info/
 
-work/normalized/20221115_TraspasoConocimientos.docx
-inputs/_originals/EstadoActualPlataformaBBD_V0306_10_32.docx
-inputs/_originals/20221115_TraspasoConocimientos.docx
-work/normalized/EstadoActualPlataformaBBD_V0306_10_32.docx
-inputs/_originals/COpia_20221115_TraspasoConocimientos - copia.docx
-inputs/_originals/DTI-MIGRACION-HOST - 201909.docx
-inputs/_originals/DTI-MIGRACION-HOST- Acta Reunion Seguimiento - 20200114.docx
-inputs/_originals/DTI-MIGRACION-HOST- Acta Reunion Seguimiento - 20200904.docx
-inputs/_originals/Plan de Pruebas-v.01.00.docx
-inputs/_originals/DTI-MIGRACION-HOST-R03.docx
-inputs/_originals/PropuestaTecnica_Navantia_ActivosHistoricos_JR_v2.docx
-inputs/_originals/PUMA.B.GEN.22981.r01.Piloto.Definicion.docx
-inputs/_originals/PUMA.R.GEN.0000000.r00.DataModel.doc
-inputs/_originals/PUMA.R.GEN.217679.r00.PUMA.Cambio.Solucion.Proyectos.En.Curso.docx
-inputs/_originals/PUMA.R.GEN.229119.r00.DefiniciónArquitectura.docx
 # DOCX originales
 inputs/_originals/*.docx
 
