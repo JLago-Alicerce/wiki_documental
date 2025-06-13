@@ -152,8 +152,9 @@ def full() -> None:
 
     console.print("[bold]Ingesting content...[/bold]")
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
-    doc_source = docx_files[0].stem if docx_files else None
-    ingest_content(tmp_full, index_path, wiki_dir, cutoff=cutoff, doc_source=doc_source)
+
+    for md in track(sorted(md_raw_dir.glob("*.md")), description="Ingest"):
+        ingest_content(md, index_path, wiki_dir, cutoff=cutoff, doc_source=md.stem)
 
     console.print("[bold]Generating sidebar...[/bold]")
     build_sidebar(index_path, wiki_dir / "_sidebar.md")
