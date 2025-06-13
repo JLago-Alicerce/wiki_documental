@@ -312,3 +312,11 @@ def reclassify(
     reclassify_unclassified(unclassified, index_path, wiki_dir, threshold=threshold)
     typer.echo("Reclassification completed")
 
+
+@app.command("package")
+def package_static() -> None:
+    """Empaqueta la wiki generada en un archivo ZIP entregable."""
+    from scripts.package_static import main as pack
+
+    pack()
+
