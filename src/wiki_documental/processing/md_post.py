@@ -4,20 +4,27 @@ import re
 from typing import List
 from pathlib import Path
 
-IMAGE_PREFIX_RE = re.compile(r"(!\[[^\]]*\]\()\.?/??media/")
+IMAGE_PREFIX_RE = re.compile(r"(!\[[^\]]*\]\()\.?/??(?:assets/)?media/")
 
 
 def fix_image_links(text: str) -> str:
     """Normalize media links ensuring the assets prefix."""
-
-    return IMAGE_PREFIX_RE.sub(r"\1assets/media/", text)
+    text = IMAGE_PREFIX_RE.sub(r"\1assets/media/", text)
+    text = re.sub(r"(assets/)+media/", "assets/media/", text)
+    text = re.sub(r"(media/)+", "media/", text)
+    return text
 
 
 def normalize_image_paths(md_text: str) -> str:
     """Normalize image paths replacing backslashes and absolute drive paths."""
 
     md_text = md_text.replace("\\", "/")
-    md_text = re.sub(r"[a-zA-Z]:/[^)]*", "assets/media/", md_text)
+    def repl(match: re.Match[str]) -> str:
+        path = match.group(1)
+        name = Path(path).name.replace("\\", "/")
+        return f"(assets/media/{name})"
+
+    md_text = re.sub(r"\(([a-zA-Z]:[^)]+)\)", repl, md_text)
     return md_text
 
 
