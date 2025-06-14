@@ -57,3 +57,17 @@ def test_normalize_image_paths():
     assert 'C:/' not in result
     assert 'assets/media/img.png' in result
     assert '../media/imagenes/foo.png' in result
+
+
+def test_fix_image_links_html():
+    text = '<img src="media/img.png" /> <img src="C:/path/to/assets/media/x.png" />'
+    result = fix_image_links(text)
+    assert '<img src="assets/media/img.png"' in result
+    assert '<img src="assets/media/x.png"' in result
+
+
+def test_normalize_image_paths_html():
+    text = '<img src="C:/temp/foo.png" />'
+    result = normalize_image_paths(text)
+    assert 'C:/' not in result
+    assert '<img src="assets/media/foo.png"' in result
