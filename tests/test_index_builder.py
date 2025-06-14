@@ -1,4 +1,4 @@
-from wiki_documental.processing.index_builder import build_index_from_map
+from wiki.processing.index_builder import build_index_from_map
 
 
 def test_build_index_from_map():

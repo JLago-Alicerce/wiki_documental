@@ -1,8 +1,8 @@
 import yaml
 from typer.testing import CliRunner
 
-from wiki_documental.cli import app
-from wiki_documental.processing.verify_pre_ingest import (
+from wiki.cli import app
+from wiki.processing.verify_pre_ingest import (
     compare_map_index,
     extract_sidebar_slugs,
     verify_pre_ingest,
@@ -58,8 +58,8 @@ def test_verify_cli(tmp_path, monkeypatch):
     work = tmp_path
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["verify"])
     assert result.exit_code == 0
@@ -73,8 +73,8 @@ def test_verify_cli_with_diffs(tmp_path, monkeypatch):
     work = tmp_path
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["verify"])
     assert result.exit_code == 1
@@ -87,8 +87,8 @@ def test_verify_cli_fix(tmp_path, monkeypatch):
     work = tmp_path
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["verify", "--fix"])
     assert result.exit_code == 0

@@ -1,5 +1,5 @@
 import yaml
-from wiki_documental.processing.sidebar import build_sidebar
+from wiki.processing.sidebar import build_sidebar
 
 
 def _sample_map():

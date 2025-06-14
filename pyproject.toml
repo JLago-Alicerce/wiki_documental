@@ -6,6 +6,10 @@ authors = ["Jose Manuel Lago <jose.lago.varela@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
+[[tool.poetry.packages]]
+include = "wiki"
+from = "src"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 python-docx = "^1.1"
@@ -27,4 +31,4 @@ pytest-cov = "^5.0"
 types-python-slugify = "^8.0"
 
 [tool.poetry.scripts]
-wiki = "wiki_documental.cli:app"
+wiki = "wiki.cli:app"

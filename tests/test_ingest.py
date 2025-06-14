@@ -1,7 +1,7 @@
 from pathlib import Path
 import yaml
 
-from wiki_documental.processing.ingest import ingest_content
+from wiki.processing.ingest import ingest_content
 
 
 def test_ingest_content(tmp_path):

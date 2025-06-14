@@ -1,4 +1,4 @@
-from wiki_documental.processing.md_post import (
+from wiki.processing.md_post import (
     post_process_text,
     clean_markdown,
     fix_image_links,

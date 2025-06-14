@@ -64,7 +64,7 @@ def reset_environment(cfg: dict) -> None:
 
 def _version_callback(value: bool) -> None:
     if value:
-        typer.echo(f"wiki_documental {__version__}")
+        typer.echo(f"wiki {__version__}")
         raise typer.Exit()
 
 

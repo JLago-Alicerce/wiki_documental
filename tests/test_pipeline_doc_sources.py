@@ -4,7 +4,7 @@ from docx.shared import Pt
 from pathlib import Path
 from typer.testing import CliRunner
 
-from wiki_documental.cli import app
+from wiki.cli import app
 
 runner = CliRunner()
 
@@ -39,23 +39,23 @@ def test_full_multiple_doc_sources(tmp_path, monkeypatch):
         return R()
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.processing.docx_to_md.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.ensure_pandoc", lambda: None)
 
     def fake_build_headings_map(_):
         return [{"level": 1, "title": "Introducción", "slug": "introduccion"}]
 
     monkeypatch.setattr(
-        "wiki_documental.processing.headings_map.build_headings_map",
+        "wiki.processing.headings_map.build_headings_map",
         fake_build_headings_map,
     )
 
     monkeypatch.setattr(
-        "wiki_documental.cli.cfg",
+        "wiki.cli.cfg",
         {"paths": paths, "options": {"cutoff_similarity": 0.5}},
     )
     monkeypatch.setattr(
-        "wiki_documental.config.cfg",
+        "wiki.config.cfg",
         {"paths": paths, "options": {"cutoff_similarity": 0.5}},
     )
 
