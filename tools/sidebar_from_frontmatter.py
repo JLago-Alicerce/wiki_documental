@@ -39,11 +39,12 @@ def _collect_pages(root: Path) -> List[Dict[str, Any]]:
         if meta.get("sidebar", True) is False:
             continue
         title = meta.get("title")
-        raw_path = meta.get("path")
-        path = Path(str(raw_path)).name if raw_path else None
+        path = meta.get("path")
         if not title or not path:
+            if not path:
+                print(f"Missing 'path' in {md}")
             continue
-        if path == "99_unclassified.md":
+        if str(path) == "99_unclassified.md":
             continue
         pages.append(
             {
