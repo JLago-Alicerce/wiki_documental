@@ -73,3 +73,18 @@ def test_verify_cli_with_diffs(tmp_path, monkeypatch):
     result = runner.invoke(app, ["verify"])
     assert result.exit_code == 1
 
+
+def test_verify_cli_fix(tmp_path, monkeypatch):
+    map_data = [{"level": 1, "title": "A", "slug": "a"}]
+    index_data = [{"title": "B", "slug": "b", "children": []}]
+
+    work = tmp_path
+    (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
+    (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
+    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
+
+    result = runner.invoke(app, ["verify", "--fix"])
+    assert result.exit_code == 0
+    index_result = yaml.safe_load((work / "index.yaml").read_text(encoding="utf-8"))
+    assert index_result[0]["slug"] == "a"
+

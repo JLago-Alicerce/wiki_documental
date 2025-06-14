@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict, List, Any
 
 import yaml
+from .index_builder import build_index_from_map
 
 
 def _slug_level(slug: str) -> int:
@@ -52,3 +53,15 @@ def compare_map_index(map_path: Path, index_path: Path) -> Dict[str, List[str]]:
         "missing_in_index": sorted(map_slugs - index_slugs),
         "missing_in_map": sorted(index_slugs - map_slugs),
     }
+
+
+def repair_index(map_path: Path, index_path: Path) -> None:
+    """Rebuild index.yaml from map.yaml."""
+    if not map_path.exists():
+        return
+    with map_path.open("r", encoding="utf-8") as f:
+        map_data: List[Dict[str, Any]] = yaml.safe_load(f) or []
+    index_data = build_index_from_map(map_data)
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    with index_path.open("w", encoding="utf-8") as f:
+        yaml.safe_dump(index_data, f, allow_unicode=True)
