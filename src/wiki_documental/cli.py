@@ -1,23 +1,31 @@
 import shutil
-import os
-from typing import Annotated
-import typer
 from pathlib import Path
 from shutil import rmtree
-from rich.console import Console
+from typing import Annotated
 
-from . import ensure_pandoc, __version__
+import yaml
+import typer
+from rich.console import Console
+from rich.progress import track
+from rich.table import Table
+from wiki.index_builder import build_search_index
+
+from . import __version__, ensure_pandoc
 from . import config
-cfg = config.cfg
-from .processing.normalize_docx import normalize_styles
 from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
+from .processing.index_builder import build_index_from_map
 from .processing.ingest import ingest_content
-from .processing.sidebar import build_sidebar
+from .processing.normalize_docx import normalize_styles
 from .processing.reclassify import reclassify_unclassified
-from wiki.index_builder import build_search_index
-from rich.progress import track
-import yaml
+from .processing.sidebar import build_sidebar
+from .processing.verify_pre_ingest import (
+    compare_map_index,
+    repair_index,
+    verify_pre_ingest,
+)
+
+cfg = config.cfg
 
 DEFAULT_CONFIG_PATH = Path("config.yaml")
 
@@ -239,9 +247,6 @@ def map() -> None:
     typer.echo(f"Headings map saved to {out_file}")
 
 
-from .processing.index_builder import build_index_from_map
-
-
 @app.command()
 def index(
     overwrite: bool = typer.Option(
@@ -279,14 +284,6 @@ def index(
     with out_file.open("w", encoding="utf-8") as f:
         yaml.safe_dump(index_data, f, allow_unicode=True)
     typer.echo(f"Index saved to {out_file}")
-
-from .processing.verify_pre_ingest import (
-    compare_map_index,
-    repair_index,
-    verify_pre_ingest,
-)
-from rich.table import Table
-
 
 @app.command()
 def verify(

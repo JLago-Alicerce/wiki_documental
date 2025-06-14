@@ -22,9 +22,9 @@ def build_index_from_map(map_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]
         if not title_clean.strip():
             continue
         counters[level] = counters.get(level, 0) + 1
-        for l in list(counters.keys()):
-            if l > level:
-                del counters[l]
+        for level_key in list(counters.keys()):
+            if level_key > level:
+                del counters[level_key]
         id_parts = [str(counters[i]) for i in range(1, level + 1) if i in counters]
         entry = {
             "id": ".".join(id_parts),

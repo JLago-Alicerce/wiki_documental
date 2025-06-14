@@ -1,8 +1,8 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
-from .utils.system import ensure_pandoc
-from .config import cfg  # noqa: F401
+from .utils.system import ensure_pandoc as ensure_pandoc
+
 
 try:  # pragma: no cover - best effort when package isn't installed
     __version__ = version("wiki_documental")
