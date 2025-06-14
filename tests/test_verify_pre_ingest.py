@@ -4,6 +4,7 @@ from typer.testing import CliRunner
 from wiki_documental.cli import app
 from wiki_documental.processing.verify_pre_ingest import (
     compare_map_index,
+    extract_sidebar_slugs,
     verify_pre_ingest,
 )
 
@@ -105,3 +106,51 @@ def test_verify_pre_ingest_non_strict(tmp_path):
 
     ok = verify_pre_ingest(map_file, index_file, strict=False)
     assert ok is True
+
+
+def test_extract_sidebar_slugs_nested(tmp_path):
+    sidebar = tmp_path / "_sidebar.md"
+    sidebar.write_text(
+        """* [Root](root.md)
+* Sec
+  * [Child](child.md)
+  * Sub
+    * [Deep](deep.md)
+""",
+        encoding="utf-8",
+    )
+    slugs = extract_sidebar_slugs(sidebar)
+    assert slugs == {"root", "child", "deep"}
+
+
+def test_verify_pre_ingest_with_docs_and_sidebar(tmp_path):
+    map_data = [
+        {"level": 1, "title": "Root", "slug": "root"},
+        {"level": 1, "title": "Child", "slug": "child"},
+    ]
+    index_data = [
+        {"title": "Root", "slug": "root", "children": []},
+        {"title": "Child", "slug": "child", "children": []},
+    ]
+    map_file = tmp_path / "map.yaml"
+    index_file = tmp_path / "index.yaml"
+    map_file.write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
+    index_file.write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
+
+    docs_dir = tmp_path / "wiki"
+    docs_dir.mkdir()
+    (docs_dir / "root.md").write_text("root", encoding="utf-8")
+    # missing child.md to trigger diff
+    (docs_dir / "extra.md").write_text("extra", encoding="utf-8")
+
+    sidebar = docs_dir / "_sidebar.md"
+    sidebar.write_text("* [Root](root.md)\n* [Missing](missing.md)\n", encoding="utf-8")
+
+    ok = verify_pre_ingest(
+        map_file,
+        index_file,
+        docs_dir=docs_dir,
+        sidebar_path=sidebar,
+        strict=True,
+    )
+    assert ok is False
