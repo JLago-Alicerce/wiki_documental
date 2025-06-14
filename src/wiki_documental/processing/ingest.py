@@ -160,6 +160,7 @@ def ingest_content(
                     header_lines.append(f"  - {s}")
         elif doc_source is not None:
             header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
+        header_lines.append(f"path: {path.name}")
         header_lines.append(f"created: {created}")
         header_lines.append("---\n")
         header = "\n".join(header_lines)
@@ -182,7 +183,8 @@ def ingest_content(
         print(f"Saved {path}")
 
     if unclassified:
-        meta = _read_front_matter(out_dir / "99_unclassified.md")
+        unclass_path = out_dir / "99_unclassified.md"
+        meta = _read_front_matter(unclass_path)
         created = meta.get("created", datetime.now(timezone.utc).isoformat())
         existing_sources = meta.get("doc_source")
         sources: List[str] = []
@@ -204,6 +206,7 @@ def ingest_content(
                     header_lines.append(f"  - {s}")
         elif doc_source is not None:
             header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
+        header_lines.append(f"path: {unclass_path.name}")
         header_lines.append(f"created: {created}")
         header_lines.append("---\n")
         header = "\n".join(header_lines)
@@ -221,6 +224,6 @@ def ingest_content(
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
         warn_missing_images(final_text, out_dir)
-        with (out_dir / "99_unclassified.md").open("w", encoding="utf-8") as f:
+        with unclass_path.open("w", encoding="utf-8") as f:
             f.write(final_text)
-        print(f"Saved {out_dir / '99_unclassified.md'}")
+        print(f"Saved {unclass_path}")
