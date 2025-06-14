@@ -21,7 +21,7 @@ def test_build_sidebar_default_depth(tmp_path):
     lines = out_file.read_text(encoding="utf-8").splitlines()
     assert lines == [
         "* [Inicio](README.md)",
-        "* [Contexto](/wiki/contexto.md)",
+        "* [Contexto](contexto.md)",
     ]
 
 
@@ -35,9 +35,9 @@ def test_build_sidebar_depth_3(tmp_path):
 
     lines = out_file.read_text(encoding="utf-8").splitlines()
     assert lines[0] == "* [Inicio](README.md)"
-    assert lines[1] == "* [Contexto](/wiki/contexto.md)"
-    assert lines[2] == "  * [Funcion](/wiki/funcion.md)"
-    assert lines[3] == "    * [Detalles](/wiki/detalles.md)"
+    assert lines[1] == "* [Contexto](contexto.md)"
+    assert lines[2] == "  * [Funcion](funcion.md)"
+    assert lines[3] == "    * [Detalles](detalles.md)"
 
 
 def test_build_sidebar_without_readme(tmp_path):
@@ -48,4 +48,4 @@ def test_build_sidebar_without_readme(tmp_path):
     build_sidebar(map_path, out_file)
 
     lines = out_file.read_text(encoding="utf-8").splitlines()
-    assert lines == ["* [Contexto](/wiki/contexto.md)"]
+    assert lines == ["* [Contexto](contexto.md)"]

@@ -53,7 +53,7 @@ def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
     monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
-    def fake_build_sidebar(_idx, _out, depth=1):
+    def fake_build_sidebar(_idx, _out, depth=1, relative_links=True):
         sidebar_depth["value"] = depth
         (_out).write_text("sidebar", encoding="utf-8")
 
@@ -130,7 +130,7 @@ def test_sidebar_command(tmp_path, monkeypatch):
     sidebar = work / "_sidebar.md"
     assert sidebar.exists()
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content == ["* [Inicio](README.md)", "* [A](/wiki/a.md)"]
+    assert content == ["* [Inicio](README.md)", "* [A](a.md)"]
 
 
 def test_sidebar_command_depth(tmp_path, monkeypatch):
@@ -148,13 +148,13 @@ def test_sidebar_command_depth(tmp_path, monkeypatch):
     assert result.exit_code == 0
     sidebar = work / "_sidebar.md"
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content[2] == "  * [B](/wiki/b.md)"
+    assert content[2] == "  * [B](b.md)"
 
 
 def test_full_depth_option(monkeypatch, tmp_path):
     sidebar_depth = {"value": None}
 
-    def fake_build_sidebar(_idx, _out, depth=1):
+    def fake_build_sidebar(_idx, _out, depth=1, relative_links=True):
         sidebar_depth["value"] = depth
         (_out).write_text("sidebar", encoding="utf-8")
 

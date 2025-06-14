@@ -85,6 +85,7 @@ Generate a `_sidebar.md` file for Docsify based on `index.yaml`.
 Options:
 
 - `--depth` – maximum heading level to include in the sidebar (default `1`).
+- `--relative-links/--absolute-links` – generate links without the `/wiki/` prefix (default `--relative-links`).
 
 ### Branding
 
