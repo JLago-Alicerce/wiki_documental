@@ -16,19 +16,26 @@ def fix_image_links(text: str) -> str:
 
 
 def normalize_image_paths(md_text: str) -> str:
-    """Normalize image paths replacing backslashes and absolute drive paths."""
+    """Normalize image paths replacing backslashes and absolute drive paths.
+
+    Absolute drive paths like ``C:/foo/bar.png`` are rewritten to use a
+    relative ``../media/imagenes/`` prefix so the links remain portable.
+    """
 
     md_text = md_text.replace("\\", "/")
+
     def repl(match: re.Match[str]) -> str:
         path = match.group(1)
         name = Path(path).name.replace("\\", "/")
-        return f"(assets/media/{name})"
+        return f"(../media/imagenes/{name})"
 
     md_text = re.sub(r"\(([a-zA-Z]:[^)]+)\)", repl, md_text)
     return md_text
 
 
-ASSET_LINK_RE = re.compile(r"!\[[^\]]*\]\((assets/media/[^)]+)\)")
+ASSET_LINK_RE = re.compile(
+    r"!\[[^\]]*\]\(((?:assets/media|\.\./media/imagenes)/[^)]+)\)"
+)
 
 
 def warn_missing_images(text: str, wiki_dir: Path) -> None:
