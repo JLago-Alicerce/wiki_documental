@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Dict, List
@@ -136,7 +136,7 @@ def ingest_content(
         path = out_dir / f"{prefix}_{slug}.md"
 
         meta = _read_front_matter(path)
-        created = meta.get("created", datetime.utcnow().isoformat())
+        created = meta.get("created", datetime.now(timezone.utc).isoformat())
 
         existing_sources = meta.get("doc_source")
         sources: List[str] = []
@@ -183,7 +183,7 @@ def ingest_content(
 
     if unclassified:
         meta = _read_front_matter(out_dir / "99_unclassified.md")
-        created = meta.get("created", datetime.utcnow().isoformat())
+        created = meta.get("created", datetime.now(timezone.utc).isoformat())
         existing_sources = meta.get("doc_source")
         sources: List[str] = []
         if isinstance(existing_sources, list):
