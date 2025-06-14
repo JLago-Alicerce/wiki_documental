@@ -7,7 +7,8 @@ from shutil import rmtree
 from rich.console import Console
 
 from . import ensure_pandoc, __version__
-from .config import cfg
+from . import config
+cfg = config.cfg
 from .processing.normalize_docx import normalize_styles
 from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
@@ -71,6 +72,7 @@ def main(
     )
 ):
     """Wiki Documental CLI."""
+    config.init_paths()
     return
 
 

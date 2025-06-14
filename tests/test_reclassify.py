@@ -42,6 +42,7 @@ def test_reclassify_unclassified(tmp_path):
 def test_reclassify_cli(tmp_path, monkeypatch):
     work, wiki, unclassified = _setup(tmp_path)
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work, "wiki": wiki}})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work, "wiki": wiki}})
     result = runner.invoke(app, ["reclassify", "--threshold", "0.3"])
     assert result.exit_code == 0
     assert "add1" in (wiki / "1_first.md").read_text(encoding="utf-8")

@@ -3,7 +3,7 @@ from pathlib import Path
 import wiki_documental.config as config
 
 
-def test_load_config_creates_directories(tmp_path, monkeypatch):
+def test_load_config_and_init_paths(tmp_path, monkeypatch):
     root = tmp_path / "project"
     root.mkdir()
     (root / "src/wiki_documental").mkdir(parents=True)
@@ -23,8 +23,14 @@ def test_load_config_creates_directories(tmp_path, monkeypatch):
     fake_file = root / "src/wiki_documental/config.py"
     fake_file.write_text("", encoding="utf-8")
     monkeypatch.setattr(config, "__file__", str(fake_file))
+    monkeypatch.setattr(config, "BASE_DIR", root)
 
     cfg = config.load_config()
     assert isinstance(cfg["paths"]["originals"], Path)
+    for path in cfg["paths"].values():
+        assert not path.exists()
+
+    config.cfg = cfg
+    config.init_paths()
     for path in cfg["paths"].values():
         assert path.exists()

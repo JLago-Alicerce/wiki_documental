@@ -51,6 +51,7 @@ def test_package_static(tmp_path, monkeypatch):
     monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
     monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", lambda: None)
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
     monkeypatch.chdir(tmp_path)
     import sys

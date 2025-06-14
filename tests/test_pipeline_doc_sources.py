@@ -54,6 +54,10 @@ def test_full_multiple_doc_sources(tmp_path, monkeypatch):
         "wiki_documental.cli.cfg",
         {"paths": paths, "options": {"cutoff_similarity": 0.5}},
     )
+    monkeypatch.setattr(
+        "wiki_documental.config.cfg",
+        {"paths": paths, "options": {"cutoff_similarity": 0.5}},
+    )
 
     result = runner.invoke(app, ["full"])
     assert result.exit_code == 0
