@@ -179,6 +179,7 @@ def ingest_content(
         warn_missing_images(final_text, out_dir)
         with path.open("w", encoding="utf-8") as f:
             f.write(final_text)
+        print(f"Saved {path}")
 
     if unclassified:
         meta = _read_front_matter(out_dir / "99_unclassified.md")
@@ -222,3 +223,4 @@ def ingest_content(
         warn_missing_images(final_text, out_dir)
         with (out_dir / "99_unclassified.md").open("w", encoding="utf-8") as f:
             f.write(final_text)
+        print(f"Saved {out_dir / '99_unclassified.md'}")

@@ -23,7 +23,8 @@ app = typer.Typer(add_completion=False, add_help_option=True)
 def reset_environment(cfg: dict) -> None:
     """Remove generated artifacts from wiki and work directories."""
     console = Console()
-    paths = [cfg["paths"]["wiki"], cfg["paths"]["work"]]
+    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
+    paths = [wiki_dir, cfg["paths"]["work"]]
     for path in paths:
         for pattern in ["*.md", "*.yaml", "*.csv"]:
             for f in Path(path).rglob(pattern):
@@ -31,7 +32,7 @@ def reset_environment(cfg: dict) -> None:
                     continue
                 f.unlink()
                 console.log(f"Deleted {f}")
-    media_dir = Path(cfg["paths"]["wiki"]) / "assets" / "media"
+    media_dir = wiki_dir / "assets" / "media"
     if media_dir.exists():
         rmtree(media_dir)
         console.log(f"Removed directory {media_dir}")
@@ -89,7 +90,8 @@ def full() -> None:
     norm_dir = cfg["paths"]["work"] / "normalized"
     md_raw_dir = cfg["paths"]["work"] / "md_raw"
     tmp_dir = cfg["paths"]["tmp"]
-    wiki_dir = cfg["paths"]["wiki"]
+    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
+    console.log(f"Using wiki directory: {wiki_dir}")
 
     norm_dir.mkdir(parents=True, exist_ok=True)
     md_raw_dir.mkdir(parents=True, exist_ok=True)
@@ -110,6 +112,7 @@ def full() -> None:
         out = md_raw_dir / f"{docx.stem}.md"
         try:
             convert_docx_to_md(docx, out, wiki_dir)
+            console.log(f"Converted {docx.name} -> {out}")
         except Exception as exc:  # pragma: no cover - defensive
             console.print(f"Error converting {docx.name}: {exc}", style="red")
             raise typer.Exit(code=1)
@@ -215,7 +218,9 @@ def convert(file: Path) -> None:
     dest_dir = cfg["paths"]["work"] / "md_raw"
     dest_dir.mkdir(parents=True, exist_ok=True)
     out_file = dest_dir / f"{file.stem}.md"
-    convert_docx_to_md(file, out_file, cfg["paths"]["wiki"])
+    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
+    convert_docx_to_md(file, out_file, wiki_dir)
+    print(f"Saved raw markdown to {out_file}")
     typer.echo(f"Converted markdown saved to {out_file}")
 
 
@@ -299,7 +304,7 @@ def verify(force: bool = typer.Option(False, "--force", "-f", help="Continue eve
 def ingest(file: Path) -> None:
     """Fragment a consolidated Markdown file into wiki sections."""
     index_path = cfg["paths"]["work"] / "index.yaml"
-    wiki_dir = cfg["paths"]["wiki"]
+    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
     doc_source = file.stem
     ingest_content(file, index_path, wiki_dir, cutoff=cutoff, doc_source=doc_source)
@@ -314,7 +319,8 @@ def sidebar(
 ) -> None:
     """Generate _sidebar.md for Docsify."""
     index_path = cfg["paths"]["work"] / "index.yaml"
-    output_path = cfg["paths"]["wiki"] / "_sidebar.md"
+    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
+    output_path = wiki_dir / "_sidebar.md"
     build_sidebar(index_path, output_path, depth=depth)
     typer.echo("Sidebar generated")
 
@@ -324,7 +330,7 @@ def reclassify(
     threshold: float = typer.Option(0.3, "--threshold", "-t", help="Match threshold")
 ) -> None:
     """Reclassify sections from 99_unclassified.md."""
-    wiki_dir = cfg["paths"]["wiki"]
+    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
     unclassified = wiki_dir / "99_unclassified.md"
     if not unclassified.exists():
         raise typer.Exit(code=1)
