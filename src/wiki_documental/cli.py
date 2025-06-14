@@ -1,4 +1,5 @@
 import shutil
+import os
 import typer
 from pathlib import Path
 from shutil import rmtree
@@ -78,6 +79,12 @@ def full(
         help="Maximum heading level to include in _sidebar.md",
         show_default=True,
     ),
+    skip_verify: bool = typer.Option(
+        bool(not os.environ.get("CI")),
+        "--skip-verify",
+        is_flag=True,
+        help="Continue even if map and index differ",
+    ),
 ) -> None:
     """Run full wiki generation pipeline."""
     if depth < 1:
@@ -153,15 +160,10 @@ def full(
             index_data = yaml.safe_load(f) or []
 
     console.print("[bold]Verifying map and index...[/bold]")
-    diffs = compare_map_index(map_path, index_path)
-    if diffs["missing_in_index"] or diffs["missing_in_map"]:
-        table = Table(title="Differences")
-        table.add_column("Type")
-        table.add_column("Slugs")
-        table.add_row("Missing in index", ", ".join(diffs["missing_in_index"]) or "-")
-        table.add_row("Missing in map", ", ".join(diffs["missing_in_map"]) or "-")
-        console.print(table)
-        raise typer.Exit(code=1)
+    ok = verify_pre_ingest(map_path, index_path, strict=not skip_verify)
+    if not ok and skip_verify is False:
+        console.print("[red]Differences found – aborting[/red]")
+        raise typer.Exit(1)
 
     console.print("[bold]Ingesting content...[/bold]")
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
@@ -271,7 +273,11 @@ def index(
         yaml.safe_dump(index_data, f, allow_unicode=True)
     typer.echo(f"Index saved to {out_file}")
 
-from .processing.verify_pre_ingest import compare_map_index, repair_index
+from .processing.verify_pre_ingest import (
+    compare_map_index,
+    repair_index,
+    verify_pre_ingest,
+)
 from rich.table import Table
 
 
