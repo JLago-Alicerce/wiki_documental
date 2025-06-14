@@ -185,13 +185,9 @@ def full() -> None:
             shutil.rmtree(dest)
         shutil.copytree(media_src, dest)
 
-    content_files = [f for f in wiki_dir.glob("*.md") if f.name not in ("_sidebar.md", "README.md")]
-    readme = wiki_dir / "README.md"
-    if not readme.exists() or not content_files:
-        readme.write_text(
-            "# Conocimiento Técnico Navantia\n\nEsta wiki fue generada automáticamente. Consulta el menú lateral para navegar.",
-            encoding="utf-8",
-        )
+    from .processing.readme_builder import build_readme
+
+    build_readme(wiki_dir, index_path=index_path, map_path=map_path)
 
     console.print(f"\N{check mark} Wiki generada correctamente en: {wiki_dir / 'index.html'}")
 
@@ -318,11 +314,12 @@ def sidebar(
     )
 ) -> None:
     """Generate _sidebar.md for Docsify."""
-    index_path = cfg["paths"]["work"] / "index.yaml"
-    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
-    output_path = wiki_dir / "_sidebar.md"
-    build_sidebar(index_path, output_path, depth=depth)
-    typer.echo("Sidebar generated")
+index_path = cfg["paths"]["work"] / "index.yaml"
+wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
+output_path = wiki_dir / "_sidebar.md"
+build_sidebar(index_path, output_path, depth=depth)
+typer.echo("Sidebar generated")
+
 
 
 @app.command()
