@@ -5,6 +5,8 @@ from typing import List
 from pathlib import Path
 
 IMAGE_PREFIX_RE = re.compile(r"(!\[[^\]]*\]\()\.?/??(?:assets/)?media/")
+# Matches <img src="..."> HTML tags
+IMG_TAG_RE = re.compile(r"<img[^>]*?src=(['\"])([^'\"]+)\1", re.I)
 
 
 def fix_image_links(text: str) -> str:
@@ -12,6 +14,22 @@ def fix_image_links(text: str) -> str:
     text = IMAGE_PREFIX_RE.sub(r"\1assets/media/", text)
     text = re.sub(r"(assets/)+media/", "assets/media/", text)
     text = re.sub(r"(media/)+", "media/", text)
+
+    def repl(match: re.Match[str]) -> str:
+        original = match.group(0)
+        quote = match.group(1)
+        src = match.group(2)
+        new_src = src.replace("\\", "/").replace("file://", "")
+        if "assets/media/" in new_src:
+            idx = new_src.lower().rfind("assets/media/")
+            new_src = new_src[idx:]
+        elif new_src.startswith("media/"):
+            new_src = f"assets/{new_src}".lstrip("/")
+        elif re.match(r"[a-zA-Z]:/", new_src) or new_src.startswith("/"):
+            new_src = f"assets/media/{Path(new_src).name}"
+        return original.replace(src, Path(new_src).as_posix())
+
+    text = IMG_TAG_RE.sub(repl, text)
     return text
 
 
@@ -30,6 +48,13 @@ def normalize_image_paths(md_text: str) -> str:
         return f"(../media/imagenes/{name})"
 
     md_text = re.sub(r"\(([a-zA-Z]:[^)]+)\)", repl, md_text)
+
+    def repl_html(match: re.Match[str]) -> str:
+        path = match.group(1)
+        name = Path(path).name.replace("\\", "/")
+        return f'src="assets/media/{name}"'
+
+    md_text = re.sub(r'src="([a-zA-Z]:[^"]+)"', repl_html, md_text)
     return md_text
 
 
