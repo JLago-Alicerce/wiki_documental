@@ -314,11 +314,12 @@ def sidebar(
     )
 ) -> None:
     """Generate _sidebar.md for Docsify."""
-    index_path = cfg["paths"]["work"] / "index.yaml"
-    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
-    output_path = wiki_dir / "_sidebar.md"
-    build_sidebar(index_path, output_path, depth=depth)
-    typer.echo("Sidebar generated")
+index_path = cfg["paths"]["work"] / "index.yaml"
+wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
+output_path = wiki_dir / "_sidebar.md"
+build_sidebar(index_path, output_path, depth=depth)
+typer.echo("Sidebar generated")
+
 
 
 @app.command()
