@@ -11,8 +11,6 @@ from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
 from .processing.ingest import ingest_content
 from .processing.sidebar import build_sidebar
-from tools.sidebar_from_frontmatter import generate_sidebar
-from tools.update_sidebar import update_sidebar
 from .processing.reclassify import reclassify_unclassified
 from rich.progress import track
 import yaml
@@ -72,8 +70,18 @@ def main(
 
 
 @app.command()
-def full() -> None:
+def full(
+    depth: int = typer.Option(
+        2,
+        "--depth",
+        "-d",
+        help="Maximum heading level to include in _sidebar.md",
+        show_default=True,
+    ),
+) -> None:
     """Run full wiki generation pipeline."""
+    if depth < 1:
+        raise typer.BadParameter("depth must be a positive integer")
     console = Console()
     try:
         ensure_pandoc()
@@ -162,16 +170,8 @@ def full() -> None:
         ingest_content(md, index_path, wiki_dir, cutoff=cutoff, doc_source=md.stem)
 
     console.print("[bold]Generating sidebar...[/bold]")
-    template = Path(__file__).resolve().parents[2] / "wiki" / "_sidebar.md"
     sidebar_dest = wiki_dir / "_sidebar.md"
-    if not sidebar_dest.exists():
-        shutil.copy(template, sidebar_dest)
-    auto_text = generate_sidebar(wiki_dir)
-    sidebar_dir = wiki_dir.parent / "sidebar"
-    sidebar_dir.mkdir(parents=True, exist_ok=True)
-    auto_file = sidebar_dir / "_auto_index.md"
-    auto_file.write_text(auto_text, encoding="utf-8")
-    update_sidebar(sidebar_dest, auto_file)
+    build_sidebar(index_path, sidebar_dest, depth=depth)
 
     media_src = md_raw_dir / "media"
     if media_src.exists():
@@ -324,11 +324,11 @@ def sidebar(
     )
 ) -> None:
     """Generate _sidebar.md for Docsify."""
-index_path = cfg["paths"]["work"] / "index.yaml"
-wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
-output_path = wiki_dir / "_sidebar.md"
-build_sidebar(index_path, output_path, depth=depth)
-typer.echo("Sidebar generated")
+    map_path = cfg["paths"]["work"] / "map.yaml"
+    wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
+    output_path = wiki_dir / "_sidebar.md"
+    build_sidebar(map_path, output_path, depth=depth)
+    typer.echo("Sidebar generated")
 
 
 
