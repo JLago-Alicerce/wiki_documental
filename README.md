@@ -92,3 +92,9 @@ Options:
 You can customize the wiki's branding by editing `wiki/index.html`.
 Update the `<title>` tag and `window.$docsify.name` to display your own name
 and adjust the look by modifying the theme CSS if needed.
+
+### Search
+
+The wiki uses the `docsify-search` plugin (version 1.4.2) stored locally at
+`wiki/plugins/search.min.js`. Its SHA256 hash is
+`ab20792dc69dfd9cdb19479f716f69a619e577dec452739196770134dd71f297`.

@@ -3,6 +3,7 @@ from docx import Document
 from docx.shared import Pt
 
 from typer.testing import CliRunner
+import json
 
 import wiki_documental
 from wiki_documental.cli import app
@@ -195,3 +196,14 @@ def test_full_depth_option(monkeypatch, tmp_path):
 
 
 
+
+def test_build_index_command(tmp_path, monkeypatch):
+    docs = tmp_path / "wiki"
+    docs.mkdir()
+    (docs / "x.md").write_text("# T\n", encoding="utf-8")
+    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"wiki": docs}})
+    result = runner.invoke(app, ["build-index", str(docs)])
+    assert result.exit_code == 0
+    assert (docs / "search_index.json").exists()
+    data = json.loads((docs / "search_index.json").read_text(encoding="utf-8"))
+    assert data[0]["title"] == "T"
