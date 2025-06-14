@@ -162,6 +162,7 @@ def ingest_content(
             header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
         header_lines.append(f"path: {path.name}")
         header_lines.append(f"created: {created}")
+        header_lines.append("visible: true")
         header_lines.append("---\n")
         header = "\n".join(header_lines)
 
@@ -208,6 +209,7 @@ def ingest_content(
             header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
         header_lines.append(f"path: {unclass_path.name}")
         header_lines.append(f"created: {created}")
+        header_lines.append("visible: true")
         header_lines.append("---\n")
         header = "\n".join(header_lines)
 
