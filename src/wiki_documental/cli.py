@@ -14,6 +14,7 @@ from .processing.headings_map import build_headings_map, save_map_yaml
 from .processing.ingest import ingest_content
 from .processing.sidebar import build_sidebar
 from .processing.reclassify import reclassify_unclassified
+from wiki.index_builder import build_search_index
 from rich.progress import track
 import yaml
 
@@ -359,6 +360,15 @@ def reclassify(
     index_path = cfg["paths"]["work"] / "index.yaml"
     reclassify_unclassified(unclassified, index_path, wiki_dir, threshold=threshold)
     typer.echo("Reclassification completed")
+
+
+@app.command("build-index")
+def build_index_command(
+    docs_dir: Path = typer.Argument(Path("wiki"))
+) -> None:
+    """Generate search_index.json for docsify-search."""
+    build_search_index(docs_dir, docs_dir / "search_index.json")
+    typer.echo("Search index generated")
 
 
 @app.command("package")
