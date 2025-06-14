@@ -83,6 +83,11 @@ def full(
         help="Maximum heading level to include in _sidebar.md",
         show_default=True,
     ),
+    relative_links: bool = typer.Option(
+        True,
+        "--relative-links/--absolute-links",
+        help="Generate sidebar links as relative paths",
+    ),
     skip_verify: Annotated[bool, typer.Option("--skip-verify")] = False,
 ) -> None:
     """Run full wiki generation pipeline."""
@@ -172,7 +177,7 @@ def full(
 
     console.print("[bold]Generating sidebar...[/bold]")
     sidebar_dest = wiki_dir / "_sidebar.md"
-    build_sidebar(index_path, sidebar_dest, depth=depth)
+    build_sidebar(index_path, sidebar_dest, depth=depth, relative_links=relative_links)
 
     media_src = md_raw_dir / "media"
     if media_src.exists():
@@ -326,13 +331,18 @@ def ingest(file: Path) -> None:
 def sidebar(
     depth: int = typer.Option(
         1, "--depth", "-d", help="Maximum heading level to include"
-    )
+    ),
+    relative_links: bool = typer.Option(
+        True,
+        "--relative-links/--absolute-links",
+        help="Generate sidebar links as relative paths",
+    ),
 ) -> None:
     """Generate _sidebar.md for Docsify."""
     map_path = cfg["paths"]["work"] / "map.yaml"
     wiki_dir = cfg.get("paths", {}).get("wiki", Path("wiki"))
     output_path = wiki_dir / "_sidebar.md"
-    build_sidebar(map_path, output_path, depth=depth)
+    build_sidebar(map_path, output_path, depth=depth, relative_links=relative_links)
     typer.echo("Sidebar generated")
 
 

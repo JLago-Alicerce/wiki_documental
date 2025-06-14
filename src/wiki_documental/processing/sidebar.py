@@ -6,7 +6,13 @@ from typing import List, Dict
 import yaml
 
 
-def build_sidebar(map_path: Path, output_path: Path, depth: int = 1) -> None:
+def build_sidebar(
+    map_path: Path,
+    output_path: Path,
+    depth: int = 1,
+    *,
+    relative_links: bool = True,
+) -> None:
     """Generate ``_sidebar.md`` from ``map.yaml``.
 
     Parameters
@@ -17,6 +23,8 @@ def build_sidebar(map_path: Path, output_path: Path, depth: int = 1) -> None:
         Destination ``_sidebar.md`` file.
     depth : int, optional
         Maximum heading level to include. ``1`` only adds level 1 headings.
+    relative_links : bool, optional
+        Generate links without the ``/wiki/`` prefix for offline compatibility.
     """
 
     with map_path.open("r", encoding="utf-8") as f:
@@ -34,7 +42,8 @@ def build_sidebar(map_path: Path, output_path: Path, depth: int = 1) -> None:
         indent = "  " * (level - 1)
         slug = entry.get("slug")
         title = entry.get("title")
-        lines.append(f"{indent}* [{title}](/wiki/{slug}.md)\n")
+        link = f"{slug}.md" if relative_links else f"/wiki/{slug}.md"
+        lines.append(f"{indent}* [{title}]({link})\n")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as f:
