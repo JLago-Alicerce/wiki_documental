@@ -17,7 +17,7 @@ def fix_image_links(text: str) -> str:
 
     def repl(match: re.Match[str]) -> str:
         original = match.group(0)
-        quote = match.group(1)
+        _quote = match.group(1)
         src = match.group(2)
         new_src = src.replace("\\", "/").replace("file://", "")
         if "assets/media/" in new_src:
