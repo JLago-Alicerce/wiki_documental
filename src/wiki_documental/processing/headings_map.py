@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import List, Dict
 
 import yaml
-from slugify import slugify
+from ..utils import safe_slug
 
 NUMBER_RE = re.compile(r"^\d+(\.\d+)*\s+")
 
@@ -21,6 +21,7 @@ def build_headings_map(
 ) -> List[Dict[str, str | int]]:
     """Return a list of heading data dictionaries."""
     map_data: List[Dict[str, str | int]] = []
+    used_slugs: set[str] = set()
     for md_file in md_folder.rglob("*.md"):
         with md_file.open("r", encoding="utf-8") as f:
             for line in f:
@@ -30,11 +31,13 @@ def build_headings_map(
                     title = m.group(2).strip()
                     if strip_numbers and level >= from_level:
                         title = NUMBER_RE.sub("", title)
+                    slug = safe_slug(title, used_slugs, max_len=60)
+                    used_slugs.add(slug)
                     map_data.append(
                         {
                             "level": level,
                             "title": title,
-                            "slug": slugify(title, lowercase=True, max_length=60),
+                            "slug": slug,
                         }
                     )
     return map_data

@@ -58,6 +58,7 @@ def test_verify_cli(tmp_path, monkeypatch):
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["verify"])
     assert result.exit_code == 0
@@ -72,6 +73,7 @@ def test_verify_cli_with_diffs(tmp_path, monkeypatch):
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["verify"])
     assert result.exit_code == 1
@@ -85,6 +87,7 @@ def test_verify_cli_fix(tmp_path, monkeypatch):
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["verify", "--fix"])
     assert result.exit_code == 0

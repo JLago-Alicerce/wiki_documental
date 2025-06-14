@@ -4,12 +4,12 @@ from pathlib import Path
 import yaml
 
 
-ROOT = Path(__file__).resolve().parents[2]
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 
 def load_config() -> dict:
-    """Load configuration from config.yaml and ensure directories exist."""
-    cfg_file = ROOT / "config.yaml"
+    """Load configuration from config.yaml."""
+    cfg_file = BASE_DIR / "config.yaml"
     with cfg_file.open("r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f) or {}
 
@@ -17,11 +17,15 @@ def load_config() -> dict:
     if "wiki" not in paths_cfg:
         paths_cfg["wiki"] = "wiki"
     for key, rel in paths_cfg.items():
-        p = ROOT / rel
-        p.mkdir(parents=True, exist_ok=True)
-        paths_cfg[key] = p
+        paths_cfg[key] = BASE_DIR / rel
     cfg["paths"] = paths_cfg
     return cfg
+
+
+def init_paths() -> None:
+    """Create directory structure defined in ``cfg``."""
+    for p in cfg.get("paths", {}).values():
+        Path(p).mkdir(parents=True, exist_ok=True)
 
 
 cfg = load_config()

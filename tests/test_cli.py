@@ -52,6 +52,7 @@ def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
     monkeypatch.setattr("subprocess.run", fake_run)
     monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
     def fake_build_sidebar(_idx, _out, depth=1, relative_links=True):
         sidebar_depth["value"] = depth
@@ -78,6 +79,7 @@ def test_normalize_command(tmp_path, monkeypatch):
     monkeypatch.setattr(
         "wiki_documental.cli.cfg", {"paths": {"work": tmp_path}}
     )
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": tmp_path}})
     result = runner.invoke(app, ["normalize", str(sample)])
     assert result.exit_code == 0
     assert (tmp_path / "normalized" / sample.name).exists()
@@ -90,6 +92,7 @@ def test_map_command(tmp_path, monkeypatch):
     md_folder.mkdir()
     (md_folder / "sample.md").write_text("# Title\n", encoding="utf-8")
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": tmp_path}})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": tmp_path}})
     result = runner.invoke(app, ["map"])
     assert result.exit_code == 0
     map_file = tmp_path / "map.yaml"
@@ -109,6 +112,7 @@ def test_index_overwrite(tmp_path, monkeypatch):
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     (work / "index.yaml").write_text("old", encoding="utf-8")
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["index", "--overwrite"])
     assert result.exit_code == 0
@@ -123,6 +127,7 @@ def test_sidebar_command(tmp_path, monkeypatch):
     (work / "map.yaml").write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths})
     (work / "README.md").write_text("intro", encoding="utf-8")
 
     result = runner.invoke(app, ["sidebar"])
@@ -142,6 +147,7 @@ def test_sidebar_command_depth(tmp_path, monkeypatch):
     (work / "map.yaml").write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
+    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths})
     (work / "README.md").write_text("intro", encoding="utf-8")
 
     result = runner.invoke(app, ["sidebar", "--depth", "2"])
