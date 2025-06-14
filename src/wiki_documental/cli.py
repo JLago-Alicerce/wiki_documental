@@ -313,9 +313,9 @@ def sidebar(
     )
 ) -> None:
     """Generate _sidebar.md for Docsify."""
-    index_path = cfg["paths"]["work"] / "index.yaml"
+    map_path = cfg["paths"]["work"] / "map.yaml"
     output_path = cfg["paths"]["wiki"] / "_sidebar.md"
-    build_sidebar(index_path, output_path, depth=depth)
+    build_sidebar(map_path, output_path, depth=depth)
     typer.echo("Sidebar generated")
 
 
