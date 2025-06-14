@@ -53,7 +53,14 @@ def _clean_tables(document: Document, template_styles) -> None:
 def clean_document(doc_path: Path, template_path: Path, dest_path: Path) -> None:
     document = Document(str(doc_path))
     template = Document(str(template_path))
-    styles = {s.name: s.name for s in template.styles}
+
+    doc_styles = {s.name.lower(): s.name for s in document.styles if s.name}
+    styles = {}
+    for s in template.styles:
+        name = s.name
+        if not name:
+            continue
+        styles[name] = doc_styles.get(name.lower(), name)
     _remove_toc_paragraphs(document)
     for paragraph in document.paragraphs:
         _clean_paragraph(paragraph, styles)
