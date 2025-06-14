@@ -1,5 +1,6 @@
 import shutil
 import os
+from typing import Annotated
 import typer
 from pathlib import Path
 from shutil import rmtree
@@ -15,6 +16,8 @@ from .processing.sidebar import build_sidebar
 from .processing.reclassify import reclassify_unclassified
 from rich.progress import track
 import yaml
+
+DEFAULT_CONFIG_PATH = Path("config.yaml")
 
 app = typer.Typer(add_completion=False, add_help_option=True)
 
@@ -70,8 +73,9 @@ def main(
     return
 
 
-@app.command()
+@app.command("full")
 def full(
+    cfg_path: Annotated[Path, typer.Option("--cfg")] = DEFAULT_CONFIG_PATH,
     depth: int = typer.Option(
         2,
         "--depth",
@@ -79,12 +83,7 @@ def full(
         help="Maximum heading level to include in _sidebar.md",
         show_default=True,
     ),
-    skip_verify: bool = typer.Option(
-        bool(not os.environ.get("CI")),
-        "--skip-verify",
-        is_flag=True,
-        help="Continue even if map and index differ",
-    ),
+    skip_verify: Annotated[bool, typer.Option("--skip-verify")] = False,
 ) -> None:
     """Run full wiki generation pipeline."""
     if depth < 1:
@@ -161,7 +160,7 @@ def full(
 
     console.print("[bold]Verifying map and index...[/bold]")
     ok = verify_pre_ingest(map_path, index_path, strict=not skip_verify)
-    if not ok and skip_verify is False:
+    if not ok and not skip_verify:
         console.print("[red]Differences found – aborting[/red]")
         raise typer.Exit(1)
 
