@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Dict, List, Any
+import re
 
 from rich.console import Console
 from rich.table import Table
@@ -84,14 +85,73 @@ def repair_index(map_path: Path, index_path: Path) -> None:
         yaml.safe_dump(index_data, f, allow_unicode=True)
 
 
-def verify_pre_ingest(map_path: Path, index_path: Path, *, strict: bool = True) -> bool:
-    """Verify map and index coherence.
+def existing_md_slugs(docs_dir: Path) -> set[str]:
+    """Return slugs of Markdown files within ``docs_dir``."""
+    slugs: set[str] = set()
+    for md in docs_dir.rglob("*.md"):
+        if md.name == "_sidebar.md":
+            continue
+        slugs.add(md.stem)
+    return slugs
 
-    If ``strict`` is ``False`` the differences are displayed as warnings and
-    ``True`` is returned regardless of mismatches.
-    """
+
+def extract_sidebar_slugs(sidebar_path: Path) -> set[str]:
+    """Devuelve todos los slugs presentes en el _sidebar.md, manejando niveles anidados."""
+    if not sidebar_path.exists():
+        return set()
+    slugs: set[str] = set()
+    pattern = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
+    for line in sidebar_path.read_text(encoding="utf-8").splitlines():
+        m = pattern.search(line)
+        if m:
+            slug = Path(m.group(1)).stem
+            slugs.add(slug)
+    return slugs
+
+
+def compare_index_docs(index_path: Path, docs_dir: Path) -> Dict[str, List[str]]:
+    """Compare index slugs with markdown files."""
+    index_slugs = _load_index_slugs(index_path)
+    md_slugs = existing_md_slugs(docs_dir)
+    return {
+        "docs_not_in_index": sorted(md_slugs - index_slugs),
+        "index_missing_docs": sorted(index_slugs - md_slugs),
+    }
+
+
+def compare_sidebar_docs(sidebar_path: Path, docs_dir: Path) -> Dict[str, List[str]]:
+    """Return sidebar links pointing to missing documents."""
+    sidebar_slugs = extract_sidebar_slugs(sidebar_path)
+    md_slugs = existing_md_slugs(docs_dir)
+    return {"broken_sidebar_links": sorted(sidebar_slugs - md_slugs)}
+
+
+def verify_pre_ingest(
+    map_path: Path,
+    index_path: Path,
+    *,
+    strict: bool = True,
+    docs_dir: Path | None = None,
+    sidebar_path: Path | None = None,
+) -> bool:
+    """Verify map, index and sidebar coherence."""
+
     diffs = compare_map_index(map_path, index_path)
-    if not diffs["missing_in_index"] and not diffs["missing_in_map"]:
+    docs_diffs = {"docs_not_in_index": [], "index_missing_docs": []}
+    sidebar_diffs = {"broken_sidebar_links": []}
+    if docs_dir is not None and docs_dir.exists():
+        docs_diffs = compare_index_docs(index_path, docs_dir)
+        if sidebar_path is not None and sidebar_path.exists():
+            sidebar_diffs = compare_sidebar_docs(sidebar_path, docs_dir)
+
+    ok = (
+        not diffs["missing_in_index"]
+        and not diffs["missing_in_map"]
+        and not docs_diffs["docs_not_in_index"]
+        and not docs_diffs["index_missing_docs"]
+        and not sidebar_diffs["broken_sidebar_links"]
+    )
+    if ok:
         return True
 
     table = Table(title="Differences")
@@ -99,6 +159,20 @@ def verify_pre_ingest(map_path: Path, index_path: Path, *, strict: bool = True) 
     table.add_column("Slugs")
     table.add_row("Missing in index", ", ".join(diffs["missing_in_index"]) or "-")
     table.add_row("Missing in map", ", ".join(diffs["missing_in_map"]) or "-")
+    if docs_dir is not None:
+        table.add_row(
+            "Docs not in index",
+            ", ".join(docs_diffs["docs_not_in_index"]) or "-",
+        )
+        table.add_row(
+            "Index missing docs",
+            ", ".join(docs_diffs["index_missing_docs"]) or "-",
+        )
+    if sidebar_path is not None:
+        table.add_row(
+            "Sidebar broken",
+            ", ".join(sidebar_diffs["broken_sidebar_links"]) or "-",
+        )
 
     console = Console()
     if strict:
