@@ -1,6 +1,6 @@
 from pathlib import Path
 import subprocess
-from wiki_documental.utils.system import ensure_pandoc
+from wiki.utils.system import ensure_pandoc
 from .md_post import fix_image_links, normalize_image_paths
 
 

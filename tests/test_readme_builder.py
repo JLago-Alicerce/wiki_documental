@@ -1,6 +1,6 @@
 import yaml
-from wiki_documental.processing.readme_builder import build_readme
-from wiki_documental.processing.index_builder import build_index_from_map
+from wiki.processing.readme_builder import build_readme
+from wiki.processing.index_builder import build_index_from_map
 
 
 def test_build_readme_from_files(tmp_path):

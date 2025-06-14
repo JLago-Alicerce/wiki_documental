@@ -1,4 +1,4 @@
-from wiki_documental.utils import safe_slug
+from wiki.utils import safe_slug
 
 
 def test_safe_slug_uniqueness():

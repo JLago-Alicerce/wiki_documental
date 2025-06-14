@@ -1,5 +1,5 @@
 import yaml
-from wiki_documental.processing.ingest import ingest_content
+from wiki.processing.ingest import ingest_content
 
 
 def test_ingest_multiple_sources(tmp_path):

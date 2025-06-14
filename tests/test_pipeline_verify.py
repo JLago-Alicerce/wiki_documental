@@ -4,7 +4,7 @@ from docx import Document
 from docx.shared import Pt
 from typer.testing import CliRunner
 
-from wiki_documental.cli import app
+from wiki.cli import app
 
 runner = CliRunner()
 
@@ -58,11 +58,11 @@ def test_full_skip_verify(tmp_path, monkeypatch):
     _prepare_files(paths)
 
     monkeypatch.setattr("subprocess.run", _fake_run)
-    monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.processing.docx_to_md.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
     result = runner.invoke(app, ["full", "--skip-verify"])
     assert result.exit_code == 0
@@ -75,9 +75,9 @@ def test_full_strict_verify(tmp_path, monkeypatch):
     _prepare_files(paths)
 
     monkeypatch.setattr("subprocess.run", _fake_run)
-    monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.processing.docx_to_md.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
     result = runner.invoke(app, ["full"])
     assert result.exit_code == 1

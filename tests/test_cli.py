@@ -5,8 +5,8 @@ from docx.shared import Pt
 from typer.testing import CliRunner
 import json
 
-import wiki_documental
-from wiki_documental.cli import app
+import wiki
+from wiki.cli import app
 
 runner = CliRunner()
 
@@ -14,7 +14,7 @@ runner = CliRunner()
 def test_version_option():
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert wiki_documental.__version__ in result.stdout
+    assert wiki.__version__ in result.stdout
 
 
 def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
@@ -24,7 +24,7 @@ def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
     def dummy():
         called["value"] = True
 
-    monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", dummy)
+    monkeypatch.setattr("wiki.cli.ensure_pandoc", dummy)
 
     paths = {
         "originals": tmp_path / "orig",
@@ -51,15 +51,15 @@ def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
         return Result()
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.processing.docx_to_md.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
     def fake_build_sidebar(_idx, _out, depth=1, relative_links=True):
         sidebar_depth["value"] = depth
         (_out).write_text("sidebar", encoding="utf-8")
 
-    monkeypatch.setattr("wiki_documental.cli.build_sidebar", fake_build_sidebar)
+    monkeypatch.setattr("wiki.cli.build_sidebar", fake_build_sidebar)
 
     result = runner.invoke(app, ["full"])
     assert result.exit_code == 0
@@ -78,9 +78,9 @@ def test_normalize_command(tmp_path, monkeypatch):
     doc.save(sample)
 
     monkeypatch.setattr(
-        "wiki_documental.cli.cfg", {"paths": {"work": tmp_path}}
+        "wiki.cli.cfg", {"paths": {"work": tmp_path}}
     )
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": tmp_path}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": {"work": tmp_path}})
     result = runner.invoke(app, ["normalize", str(sample)])
     assert result.exit_code == 0
     assert (tmp_path / "normalized" / sample.name).exists()
@@ -92,8 +92,8 @@ def test_map_command(tmp_path, monkeypatch):
     md_folder = tmp_path / "md_raw"
     md_folder.mkdir()
     (md_folder / "sample.md").write_text("# Title\n", encoding="utf-8")
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": tmp_path}})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": tmp_path}})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"work": tmp_path}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": {"work": tmp_path}})
     result = runner.invoke(app, ["map"])
     assert result.exit_code == 0
     map_file = tmp_path / "map.yaml"
@@ -112,8 +112,8 @@ def test_index_overwrite(tmp_path, monkeypatch):
     work = tmp_path
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     (work / "index.yaml").write_text("old", encoding="utf-8")
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work}})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"work": work}})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": {"work": work}})
 
     result = runner.invoke(app, ["index", "--overwrite"])
     assert result.exit_code == 0
@@ -127,8 +127,8 @@ def test_sidebar_command(tmp_path, monkeypatch):
     work = tmp_path
     (work / "map.yaml").write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": paths})
     (work / "README.md").write_text("intro", encoding="utf-8")
 
     result = runner.invoke(app, ["sidebar"])
@@ -147,8 +147,8 @@ def test_sidebar_command_depth(tmp_path, monkeypatch):
     work = tmp_path
     (work / "map.yaml").write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths})
-    monkeypatch.setattr("wiki_documental.config.cfg", {"paths": paths})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
+    monkeypatch.setattr("wiki.config.cfg", {"paths": paths})
     (work / "README.md").write_text("intro", encoding="utf-8")
 
     result = runner.invoke(app, ["sidebar", "--depth", "2"])
@@ -165,7 +165,7 @@ def test_full_depth_option(monkeypatch, tmp_path):
         sidebar_depth["value"] = depth
         (_out).write_text("sidebar", encoding="utf-8")
 
-    monkeypatch.setattr("wiki_documental.cli.build_sidebar", fake_build_sidebar)
+    monkeypatch.setattr("wiki.cli.build_sidebar", fake_build_sidebar)
 
     paths = {
         "originals": tmp_path / "orig",
@@ -192,9 +192,9 @@ def test_full_depth_option(monkeypatch, tmp_path):
         return R()
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.processing.docx_to_md.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
     result = runner.invoke(app, ["full", "--depth", "3"])
     assert result.exit_code == 0
@@ -207,7 +207,7 @@ def test_build_index_command(tmp_path, monkeypatch):
     docs = tmp_path / "wiki"
     docs.mkdir()
     (docs / "x.md").write_text("# T\n", encoding="utf-8")
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"wiki": docs}})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"wiki": docs}})
     result = runner.invoke(app, ["build-index", str(docs)])
     assert result.exit_code == 0
     assert (docs / "search_index.json").exists()

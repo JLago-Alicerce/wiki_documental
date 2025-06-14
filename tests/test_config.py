@@ -1,12 +1,12 @@
 from pathlib import Path
 
-import wiki_documental.config as config
+import wiki.config as config
 
 
 def test_load_config_and_init_paths(tmp_path, monkeypatch):
     root = tmp_path / "project"
     root.mkdir()
-    (root / "src/wiki_documental").mkdir(parents=True)
+    (root / "src/wiki").mkdir(parents=True)
     config_yaml = (
         "paths:\n"
         "  originals: 'inputs/_originals'\n"
@@ -20,7 +20,7 @@ def test_load_config_and_init_paths(tmp_path, monkeypatch):
     )
     (root / "config.yaml").write_text(config_yaml, encoding="utf-8")
 
-    fake_file = root / "src/wiki_documental/config.py"
+    fake_file = root / "src/wiki/config.py"
     fake_file.write_text("", encoding="utf-8")
     monkeypatch.setattr(config, "__file__", str(fake_file))
     monkeypatch.setattr(config, "BASE_DIR", root)
