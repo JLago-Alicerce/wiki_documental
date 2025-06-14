@@ -56,3 +56,4 @@ def test_normalize_image_paths():
     assert '\\' not in result
     assert 'C:/' not in result
     assert 'assets/media/img.png' in result
+    assert '../media/imagenes/foo.png' in result
