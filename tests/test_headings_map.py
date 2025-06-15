@@ -13,21 +13,21 @@ def test_build_headings_map(tmp_path):
             "level": 1,
             "title": "H1",
             "slug": "h1",
-            "filename": "1_h1.md",
+            "filename": "h1.md",
         },
         {
             "id": "1.1",
             "level": 2,
             "title": "H2",
             "slug": "h2",
-            "filename": "1_1_h2.md",
+            "filename": "h2.md",
         },
         {
             "id": "1.1.1",
             "level": 3,
             "title": "H3",
             "slug": "h3",
-            "filename": "1_1-1_h3.md",
+            "filename": "h3.md",
         },
     ]
 
@@ -44,20 +44,20 @@ def test_strip_numbers(tmp_path):
             "level": 1,
             "title": "1 Intro",
             "slug": "1-intro",
-            "filename": "1_1-intro.md",
+            "filename": "1-intro.md",
         },
         {
             "id": "1.1",
             "level": 2,
             "title": "Segundo",
             "slug": "segundo",
-            "filename": "1_1_segundo.md",
+            "filename": "segundo.md",
         },
         {
             "id": "1.1.1",
             "level": 3,
             "title": "Tercero",
             "slug": "tercero",
-            "filename": "1_1-1_tercero.md",
+            "filename": "tercero.md",
         },
     ]

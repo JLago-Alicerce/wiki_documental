@@ -8,10 +8,10 @@ def test_sidebar_generation(tmp_path):
         """
 - level: 1
   title: Introducción
-  filename: 1_1-introduccion.md
+  filename: introduccion.md
 - level: 2
   title: Alcance
-  filename: 1_2-alcance.md
+  filename: alcance.md
 """,
         encoding="utf-8",
     )
@@ -21,5 +21,5 @@ def test_sidebar_generation(tmp_path):
     build_sidebar(map_file, wiki_dir, absolute_links=False)
 
     sidebar_content = (wiki_dir / "_sidebar.md").read_text(encoding="utf-8")
-    assert "* [Introducción](1_1-introduccion.md)" in sidebar_content
-    assert "  * [Alcance](1_2-alcance.md)" in sidebar_content
+    assert "* [Introducción](introduccion.md)" in sidebar_content
+    assert "  * [Alcance](alcance.md)" in sidebar_content

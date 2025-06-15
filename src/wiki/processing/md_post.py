@@ -4,7 +4,9 @@ import re
 from typing import List
 from pathlib import Path
 
-IMAGE_PREFIX_RE = re.compile(r"(!\[[^\]]*\]\()\.?/??(?:assets/)?media/")
+IMAGE_PREFIX_RE = re.compile(
+    r"(!\[[^\]]*\]\()(?:\./|\.\./)*\.?/??(?:assets/)?media/"
+)
 
 
 def fix_image_links(text: str) -> str:

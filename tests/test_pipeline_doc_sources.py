@@ -58,7 +58,7 @@ def test_full_multiple_doc_sources(tmp_path, monkeypatch):
     result = runner.invoke(app, ["full"])
     assert result.exit_code == 0
 
-    final = paths["wiki"] / "1_introduccion.md"
+    final = paths["wiki"] / "introduccion.md"
     assert final.exists()
     lines = final.read_text(encoding="utf-8").splitlines()
     assert lines[0] == "---"
