@@ -132,7 +132,11 @@ def ingest_content(
         text = "".join(content_map.get(slug, []))
         if not text.strip():
             continue
-        prefix = str(entry.get("id", "")).replace(".", "-")
+        identifier = str(entry.get("id", ""))
+        parts = identifier.split(".")
+        doc_id = parts[0]
+        section_id = "-".join(parts[1:])
+        prefix = f"{doc_id}_{section_id}" if section_id else doc_id
         path = out_dir / f"{prefix}_{slug}.md"
 
         meta = _read_front_matter(path)

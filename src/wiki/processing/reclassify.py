@@ -48,8 +48,12 @@ def reclassify_unclassified(
                 best_ratio = ratio
                 best_entry = entry
         if best_entry and best_ratio >= threshold and best_entry.get("slug"):
-            identifier = str(best_entry.get("id", "")).replace(".", "-")
-            md_file = wiki_dir / f"{identifier}_{best_entry['slug']}.md"
+            identifier = str(best_entry.get("id", ""))
+            parts = identifier.split(".")
+            doc_id = parts[0]
+            section_id = "-".join(parts[1:])
+            prefix = f"{doc_id}_{section_id}" if section_id else doc_id
+            md_file = wiki_dir / f"{prefix}_{best_entry['slug']}.md"
             md_file.parent.mkdir(parents=True, exist_ok=True)
             with md_file.open("a", encoding="utf-8") as f:
                 if lines and not lines[-1].endswith("\n"):

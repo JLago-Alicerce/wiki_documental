@@ -53,8 +53,8 @@ def test_build_sidebar_depth_3(tmp_path):
     lines = out_file.read_text(encoding="utf-8").splitlines()
     assert lines[0] == "* [Inicio](README.md)"
     assert lines[1] == "* [Contexto](1_contexto.md)"
-    assert lines[2] == "  * [Funcion](1-1_funcion.md)"
-    assert lines[3] == "    * [Detalles](1-1-1_detalles.md)"
+    assert lines[2] == "  * [Funcion](1_1_funcion.md)"
+    assert lines[3] == "    * [Detalles](1_1-1_detalles.md)"
 
 
 def test_build_sidebar_without_readme(tmp_path):
