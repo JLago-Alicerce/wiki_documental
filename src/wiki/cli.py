@@ -129,15 +129,11 @@ def full() -> None:
             map_data = yaml.safe_load(f) or []
 
     index_path = cfg["paths"]["work"] / "index.yaml"
-    if not index_path.exists():
-        console.print("[bold]Generating index...[/bold]")
-        index_data = build_index_from_map(map_data)
-        index_path.parent.mkdir(parents=True, exist_ok=True)
-        with index_path.open("w", encoding="utf-8") as f:
-            yaml.safe_dump(index_data, f, allow_unicode=True)
-    else:
-        with index_path.open("r", encoding="utf-8") as f:
-            index_data = yaml.safe_load(f) or []
+    console.print("[bold]Regenerating index before verify...[/bold]")
+    index_data = build_index_from_map(map_data)
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    with index_path.open("w", encoding="utf-8") as f:
+        yaml.safe_dump(index_data, f, allow_unicode=True)
 
     console.print("[bold]Verifying map and index...[/bold]")
     diffs = compare_map_index(map_path, index_path)
