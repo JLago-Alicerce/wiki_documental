@@ -1,9 +1,9 @@
 ---
 source: 20221115_TraspasoConocimientos.md
 doc_source: 20221115_TraspasoConocimientos.docx
-created: 2025-06-15T23:09:06.884277
+created: 2025-06-15T23:33:05.497358
 ---
-<div class="fragment-meta">source: 20221115_TraspasoConocimientos.md | doc: 20221115_TraspasoConocimientos.docx | created: 2025-06-15T23:09:06.884277</div>
+<div class="fragment-meta">source: 20221115_TraspasoConocimientos.md | doc: 20221115_TraspasoConocimientos.docx | created: 2025-06-15T23:33:05.497358</div>
 
 # ÍNDICE
 
