@@ -90,7 +90,7 @@ def test_map_command(tmp_path, monkeypatch):
     data = yaml.safe_load(map_file.read_text(encoding="utf-8"))
     assert data[0]["slug"] == "title"
     assert data[0]["id"] == "1"
-    assert data[0]["filename"] == "1_title.md"
+    assert data[0]["filename"] == "title.md"
 
 
 def test_index_overwrite(tmp_path, monkeypatch):
@@ -113,7 +113,7 @@ def test_index_overwrite(tmp_path, monkeypatch):
 
 def test_sidebar_command(tmp_path, monkeypatch):
     map_data = [
-        {"level": 1, "title": "A", "filename": "1_a.md"},
+        {"level": 1, "title": "A", "filename": "a.md"},
     ]
     work = tmp_path
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
@@ -125,12 +125,12 @@ def test_sidebar_command(tmp_path, monkeypatch):
     sidebar = work / "_sidebar.md"
     assert sidebar.exists()
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content == ["* [A](1_a.md)"]
+    assert content == ["* [A](a.md)"]
 
 
 def test_sidebar_command_absolute(tmp_path, monkeypatch):
     map_data = [
-        {"level": 1, "title": "A", "filename": "1_a.md"},
+        {"level": 1, "title": "A", "filename": "a.md"},
     ]
     work = tmp_path
     (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
@@ -141,13 +141,13 @@ def test_sidebar_command_absolute(tmp_path, monkeypatch):
     assert result.exit_code == 0
     sidebar = work / "_sidebar.md"
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content == ["* [A](/wiki/1_a.md)"]
+    assert content == ["* [A](/wiki/a.md)"]
 
 
 def test_search_index_command(tmp_path, monkeypatch):
     wiki_dir = tmp_path / "wiki"
     wiki_dir.mkdir()
-    (wiki_dir / "1_a.md").write_text("# Title\nBody", encoding="utf-8")
+    (wiki_dir / "a.md").write_text("# Title\nBody", encoding="utf-8")
     monkeypatch.setattr("wiki.cli.cfg", {"paths": {"wiki": wiki_dir}})
 
     result = runner.invoke(app, ["search-index"])

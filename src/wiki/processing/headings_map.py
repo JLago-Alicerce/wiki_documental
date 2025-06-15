@@ -44,11 +44,7 @@ def build_headings_map(
 
                     slug = safe_slug(title, used_slugs)
 
-                    parts = identifier.split(".")
-                    doc_id = parts[0]
-                    section_id = "-".join(parts[1:])
-                    prefix = f"{doc_id}_{section_id}" if section_id else doc_id
-                    filename = f"{prefix}_{slug}.md"
+                    filename = f"{slug}.md"
 
                     map_data.append(
                         {
@@ -80,11 +76,7 @@ def save_map_yaml(map_data: List[Dict[str, str | int]], path: Path) -> None:
         slug = str(item.get("slug", ""))
         filename = item.get("filename")
         if not filename and identifier and slug:
-            parts = str(identifier).split(".")
-            doc_id = parts[0]
-            section_id = "-".join(parts[1:])
-            prefix = f"{doc_id}_{section_id}" if section_id else doc_id
-            filename = f"{prefix}_{slug}.md"
+            filename = f"{slug}.md"
 
         enriched.append({"id": identifier, **item, "filename": filename})
 

@@ -19,9 +19,9 @@ def _setup(tmp_path):
         {"id": "2", "title": "Second", "slug": "second", "children": []},
     ]
     (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
-    first = wiki / "1_first.md"
+    first = wiki / "first.md"
     first.write_text("---\n---\n# First\nold\n", encoding="utf-8")
-    second = wiki / "2_second.md"
+    second = wiki / "second.md"
     second.write_text("---\n---\n# Second\n", encoding="utf-8")
     unclassified = wiki / "99_unclassified.md"
     unclassified.write_text("---\n---\n# First\nadd1\n# Unknown\nadd2\n", encoding="utf-8")
@@ -31,7 +31,7 @@ def _setup(tmp_path):
 def test_reclassify_unclassified(tmp_path):
     work, wiki, unclassified = _setup(tmp_path)
     reclassify_unclassified(unclassified, work / "index.yaml", wiki, threshold=0.3)
-    content = (wiki / "1_first.md").read_text(encoding="utf-8")
+    content = (wiki / "first.md").read_text(encoding="utf-8")
     assert "add1" in content
     report = wiki / "report_reclassify.csv"
     assert report.exists()
@@ -44,5 +44,5 @@ def test_reclassify_cli(tmp_path, monkeypatch):
     monkeypatch.setattr("wiki.cli.cfg", {"paths": {"work": work, "wiki": wiki}})
     result = runner.invoke(app, ["reclassify", "--threshold", "0.3"])
     assert result.exit_code == 0
-    assert "add1" in (wiki / "1_first.md").read_text(encoding="utf-8")
+    assert "add1" in (wiki / "first.md").read_text(encoding="utf-8")
 
