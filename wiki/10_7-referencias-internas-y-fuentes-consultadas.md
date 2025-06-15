@@ -1,9 +1,9 @@
 ---
 source: EstadoActualPlataformaBBD_V0306_10_32.md
 doc_source: EstadoActualPlataformaBBD_V0306_10_32.docx
-created: 2025-06-15T23:33:05.582326
+created: 2025-06-15T23:47:26.862110
 ---
-<div class="fragment-meta">source: EstadoActualPlataformaBBD_V0306_10_32.md | doc: EstadoActualPlataformaBBD_V0306_10_32.docx | created: 2025-06-15T23:33:05.582326</div>
+<div class="fragment-meta">source: EstadoActualPlataformaBBD_V0306_10_32.md | doc: EstadoActualPlataformaBBD_V0306_10_32.docx | created: 2025-06-15T23:47:26.862110</div>
 
 # 7. Referencias internas y fuentes consultadas 
 
