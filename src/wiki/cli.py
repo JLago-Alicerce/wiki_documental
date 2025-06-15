@@ -160,10 +160,12 @@ def full(
         table.add_row("Missing in map", ", ".join(diffs["missing_in_map"]) or "-")
         console.print(table)
 
-    if not skip_verify:
-        raise typer.Exit(code=1)
-    else:
-        console.print("[yellow]Continuando ejecución a pesar de las diferencias detectadas (--skip-verify activado)[/yellow]")
+        if not skip_verify:
+            raise typer.Exit(code=1)
+        else:
+            console.print(
+                "[yellow]Continuando ejecución a pesar de las diferencias detectadas (--skip-verify activado)[/yellow]"
+            )
 
 
     console.print("[bold]Ingesting content...[/bold]")
