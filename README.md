@@ -1,93 +1,107 @@
 # Wiki Documental
 
-This project provides utilities for organizing and extracting information from wiki-like content.
+Wiki Documental provides an automated workflow for turning a collection of DOCX files into a static wiki powered by **Docsify**.
 
-## CLI usage
+## Features
 
-### `wiki index`
+- Normalize DOCX styles before conversion.
+- Convert documents to Markdown with Pandoc extracting images.
+- Generate a hierarchical `map.yaml` and `index.yaml` from headings.
+- Verify map and index consistency.
+- Ingest consolidated Markdown into per-section files with YAML front matter.
+- Post process Markdown to clean formatting and fix image paths.
+- Create a Docsify `_sidebar.md` from the index.
+- Reclassify leftover content from `99_unclassified.md`.
+- Package the final wiki into a ZIP archive.
 
-Generates `index.yaml` from the headings map. By default the index is hierarchical and contains an `id` field representing the heading position (e.g. `1`, `1.1`, `1.1.1`).
-
-Options:
-
-- `--overwrite` – replace an existing `index.yaml` file.
-- `--flat` – create a two-level index as in previous versions.
-
-Example hierarchical entry:
-
-```yaml
-- id: "1"
-  title: Introduction
-  slug: introduction
-  children:
-    - id: "1.1"
-      title: Details
-      slug: details
-      children: []
-```
-
-### `wiki full`
-
-Run the entire conversion pipeline from DOCX originals to a Docsify wiki.
-
-### `wiki reset`
-
-Remove all generated Markdown, YAML and CSV files from the `work` and `wiki` directories. The command also deletes `work/md_raw`, `work/normalized`, `work/tmp` and any `media` folders to ensure a completely clean state while preserving `index.html` and other static assets.
-
-### `wiki normalize`
-
-Normalize a DOCX file so paragraph styles are converted into proper heading styles.
-
-Example:
+## Installation
 
 ```bash
-wiki normalize mydoc.docx
+poetry install --with dev
+```
+
+## Quick start
+
+Place your source `.docx` files in `inputs/_originals/` and run the full pipeline:
+
+```bash
+poetry run wiki full
+```
+
+The generated wiki will be placed in the `wiki/` directory. Open `wiki/index.html` in your browser to browse the result.
+
+## Directory layout
+
+- `inputs/_originals/` – original DOCX documents.
+- `work/` – intermediate files such as `md_raw`, `map.yaml` and `index.yaml`.
+- `wiki/` – final Markdown files and Docsify assets.
+- `docs/` – additional documentation (see `docs/arquitectura.md`).
+
+## CLI reference
+
+### `wiki index`
+Generate `index.yaml` from the headings map. Options:
+
+- `--overwrite` – replace an existing index.
+- `--flat` – create a two-level index.
+
+### `wiki full`
+Run the entire conversion pipeline from DOCX originals to the final wiki.
+
+### `wiki reset`
+Remove generated Markdown, YAML and CSV files from `work` and `wiki`.
+
+### `wiki normalize`
+Normalize a DOCX file so paragraph styles become proper heading levels.
+
+```bash
+poetry run wiki normalize mydoc.docx
 ```
 
 ### `wiki convert`
-
-Convert a DOCX file to Markdown using Pandoc.
-
-Example:
+Convert a single DOCX file to Markdown using Pandoc.
 
 ```bash
-wiki convert mydoc.docx
+poetry run wiki convert mydoc.docx
 ```
 
 ### `wiki map`
-
 Create `map.yaml` from the headings found in the raw Markdown files.
 
-Example:
-
-```bash
-wiki map
-```
-
 ### `wiki verify`
-
 Check that `map.yaml` and `index.yaml` contain the same slugs. Use `--force` to continue even if differences are found.
 
-Example:
-
-```bash
-wiki verify
-```
-
 ### `wiki ingest`
-
-Split a consolidated Markdown file into sections defined in `index.yaml`. Each section is stored in the wiki directory.
+Split a consolidated Markdown file into sections defined in `index.yaml`.
 
 ### `wiki sidebar`
-
 Generate a `_sidebar.md` file for Docsify based on `index.yaml`.
 
-Options:
+### `wiki reclassify`
+Try to relocate blocks stored in `99_unclassified.md` back into their section files.
 
-- `--depth` – maximum heading level to include in the sidebar (default `1`).
+### `wiki package`
+Create a ZIP file with the wiki contents in the `dist/` directory.
 
-### Branding
+## Testing
 
-You can customize the wiki's branding by editing `wiki/index.html`.
-Update the `<title>` tag and `window.$docsify.name` to display your own name
-and adjust the look by modifying the theme CSS if needed.
+Run the automated test suite with:
+
+```bash
+poetry run pytest -q
+```
+
+## Example sidebar entry
+
+```markdown
+* [Introducción](1_1-introduccion.md)
+  * [Alcance](1_2-alcance.md)
+```
+
+## Branding
+
+You can customise the wiki's appearance by editing `wiki/index.html`. Update the `<title>` tag and `window.$docsify.name` to display your own project name.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
