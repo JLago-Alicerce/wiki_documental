@@ -3,8 +3,8 @@ from docx import Document
 from docx.shared import Pt
 from docx.enum.style import WD_STYLE_TYPE
 
-from wiki_documental.processing.normalize_docx import normalize_styles
-from wiki_documental.processing.docx_to_md import convert_docx_to_md
+from wiki.processing.normalize_docx import normalize_styles
+from wiki.processing.docx_to_md import convert_docx_to_md
 
 
 def _fake_pandoc_run(cmd, capture_output=True, text=True):
@@ -46,7 +46,7 @@ def test_toc_not_in_md(tmp_path, monkeypatch):
     normalize_styles(docx_in, docx_out)
     monkeypatch.setattr("subprocess.run", _fake_pandoc_run)
     monkeypatch.setattr(
-        "wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None
+        "wiki.processing.docx_to_md.ensure_pandoc", lambda: None
     )
     convert_docx_to_md(docx_out, md_file)
     text = md_file.read_text(encoding="utf-8")

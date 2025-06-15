@@ -1,7 +1,7 @@
 from docx import Document
 from docx.shared import Pt
 
-from wiki_documental.processing.normalize_docx import normalize_styles
+from wiki.processing.normalize_docx import normalize_styles
 
 
 def test_normalize_styles(tmp_path):

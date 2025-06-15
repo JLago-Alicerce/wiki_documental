@@ -2,8 +2,8 @@ import yaml
 from pathlib import Path
 from typer.testing import CliRunner
 
-from wiki_documental.cli import app
-from wiki_documental.processing.reclassify import reclassify_unclassified
+from wiki.cli import app
+from wiki.processing.reclassify import reclassify_unclassified
 
 
 runner = CliRunner()
@@ -41,7 +41,7 @@ def test_reclassify_unclassified(tmp_path):
 
 def test_reclassify_cli(tmp_path, monkeypatch):
     work, wiki, unclassified = _setup(tmp_path)
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": {"work": work, "wiki": wiki}})
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"work": work, "wiki": wiki}})
     result = runner.invoke(app, ["reclassify", "--threshold", "0.3"])
     assert result.exit_code == 0
     assert "add1" in (wiki / "1_first.md").read_text(encoding="utf-8")

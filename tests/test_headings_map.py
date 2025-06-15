@@ -1,4 +1,4 @@
-from wiki_documental.processing.headings_map import build_headings_map
+from wiki.processing.headings_map import build_headings_map
 
 
 def test_build_headings_map(tmp_path):
