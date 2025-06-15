@@ -154,5 +154,5 @@ def test_sidebar_command_depth(tmp_path, monkeypatch):
     assert result.exit_code == 0
     sidebar = work / "_sidebar.md"
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content[2] == "  * [B](1-1_b.md)"
+    assert content[2] == "  * [B](1_1_b.md)"
 
