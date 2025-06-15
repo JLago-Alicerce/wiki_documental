@@ -76,8 +76,15 @@ def main(
 
 
 @app.command()
-def full(ctx: typer.Context) -> None:
-    """Run full wiki generation pipeline."""
+def full(
+    ctx: typer.Context,
+    skip_verify: bool = typer.Option(
+        False,
+        "--skip-verify",
+        help="Omit verification step and continue even if differences are found."
+    ),
+) -> None:
+
     console = Console()
     try:
         ensure_pandoc()
@@ -151,7 +158,12 @@ def full(ctx: typer.Context) -> None:
         table.add_row("Missing in index", ", ".join(diffs["missing_in_index"]) or "-")
         table.add_row("Missing in map", ", ".join(diffs["missing_in_map"]) or "-")
         console.print(table)
+
+    if not skip_verify:
         raise typer.Exit(code=1)
+    else:
+        console.print("[yellow]Continuando ejecución a pesar de las diferencias detectadas (--skip-verify activado)[/yellow]")
+
 
     console.print("[bold]Ingesting content...[/bold]")
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
