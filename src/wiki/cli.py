@@ -12,6 +12,7 @@ from .processing.headings_map import build_headings_map, save_map_yaml
 from .processing.ingest import ingest_content
 from .processing.sidebar import build_sidebar
 from .processing.reclassify import reclassify_unclassified
+from .processing.search_index import build_search_index
 from rich.progress import track
 import yaml
 
@@ -199,6 +200,9 @@ def full(
             encoding="utf-8",
         )
 
+    build_search_index(wiki_dir)
+    console.print("[green]Índice de búsqueda generado correctamente[/green]")
+
     console.print(f"\N{check mark} Wiki generada correctamente en: {wiki_dir / 'index.html'}")
 
 
@@ -345,4 +349,12 @@ def package_static() -> None:
     from scripts.package_static import main as pack
 
     pack()
+
+
+@app.command()
+def search_index() -> None:
+    """Genera el índice JSON para búsqueda Docsify."""
+    wiki_dir = cfg["paths"]["wiki"]
+    build_search_index(wiki_dir)
+    typer.echo("search_index.json generado en carpeta wiki/")
 

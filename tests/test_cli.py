@@ -142,3 +142,14 @@ def test_sidebar_command_absolute(tmp_path, monkeypatch):
     content = sidebar.read_text(encoding="utf-8").splitlines()
     assert content == ["* [A](/wiki/1_a.md)"]
 
+
+def test_search_index_command(tmp_path, monkeypatch):
+    wiki_dir = tmp_path / "wiki"
+    wiki_dir.mkdir()
+    (wiki_dir / "1_a.md").write_text("# Title\nBody", encoding="utf-8")
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"wiki": wiki_dir}})
+
+    result = runner.invoke(app, ["search-index"])
+    assert result.exit_code == 0
+    assert (wiki_dir / "search_index.json").exists()
+

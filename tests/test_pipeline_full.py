@@ -47,6 +47,7 @@ def test_pipeline_full(tmp_path, monkeypatch):
     assert (paths["wiki"] / "_sidebar.md").exists()
     wiki_files = list(paths["wiki"].glob("*.md"))
     assert wiki_files
+    assert (paths["wiki"] / "search_index.json").exists()
 
 
 def test_pipeline_full_with_image(tmp_path, monkeypatch):
@@ -96,3 +97,4 @@ def test_pipeline_full_with_image(tmp_path, monkeypatch):
     assert any("assets/media/img.png" in c for c in contents)
     assert all("assets/assets/media" not in c for c in contents)
     assert all("\\" not in c for c in contents)
+    assert (paths["wiki"] / "search_index.json").exists()
