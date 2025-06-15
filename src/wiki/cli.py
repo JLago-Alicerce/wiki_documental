@@ -15,7 +15,7 @@ from .processing.reclassify import reclassify_unclassified
 from rich.progress import track
 import yaml
 
-app = typer.Typer(add_completion=False, add_help_option=True)
+app = typer.Typer(add_completion=False, add_help_option=True, rich_markup_mode=None)
 
 
 def reset_environment(cfg: dict) -> None:

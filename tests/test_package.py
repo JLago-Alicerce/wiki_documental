@@ -4,7 +4,7 @@ from docx.shared import Pt
 from typer.testing import CliRunner
 from zipfile import ZipFile
 
-from wiki_documental.cli import app
+from wiki.cli import app
 
 runner = CliRunner()
 
@@ -48,9 +48,9 @@ def test_package_static(tmp_path, monkeypatch):
     _create_doc(doc_path)
 
     monkeypatch.setattr("subprocess.run", _fake_run)
-    monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.processing.docx_to_md.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
     monkeypatch.chdir(tmp_path)
     import sys
