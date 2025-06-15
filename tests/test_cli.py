@@ -111,48 +111,34 @@ def test_index_overwrite(tmp_path, monkeypatch):
 
 
 def test_sidebar_command(tmp_path, monkeypatch):
-    index = [
-        {"id": "1", "title": "A", "slug": "a", "children": []}
+    map_data = [
+        {"level": 1, "title": "A", "filename": "1_a.md"},
     ]
     work = tmp_path
-    (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
+    (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
-    (work / "README.md").write_text("intro", encoding="utf-8")
 
     result = runner.invoke(app, ["sidebar"])
     assert result.exit_code == 0
     sidebar = work / "_sidebar.md"
     assert sidebar.exists()
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content == ["* [Inicio](README.md)", "* [A](1_a.md)"]
+    assert content == ["* [A](1_a.md)"]
 
 
-def test_sidebar_command_depth(tmp_path, monkeypatch):
-    index = [
-        {
-            "id": "1",
-            "title": "A",
-            "slug": "a",
-            "children": [
-                {
-                    "id": "1.1",
-                    "title": "B",
-                    "slug": "b",
-                    "children": [],
-                }
-            ],
-        }
+def test_sidebar_command_absolute(tmp_path, monkeypatch):
+    map_data = [
+        {"level": 1, "title": "A", "filename": "1_a.md"},
     ]
     work = tmp_path
-    (work / "index.yaml").write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
+    (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
-    (work / "README.md").write_text("intro", encoding="utf-8")
 
-    result = runner.invoke(app, ["sidebar", "--depth", "2"])
+    result = runner.invoke(app, ["--absolute-links", "sidebar"])
     assert result.exit_code == 0
     sidebar = work / "_sidebar.md"
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content[2] == "  * [B](1_1_b.md)"
+    assert content == ["* [A](/wiki/1_a.md)"]
 
