@@ -90,6 +90,7 @@ def test_map_command(tmp_path, monkeypatch):
     data = yaml.safe_load(map_file.read_text(encoding="utf-8"))
     assert data[0]["slug"] == "title"
     assert data[0]["id"] == "1"
+    assert data[0]["filename"] == "1_title.md"
 
 
 def test_index_overwrite(tmp_path, monkeypatch):
