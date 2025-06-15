@@ -18,7 +18,7 @@ def test_ingest_multiple_sources(tmp_path):
     ingest_content(md_a, index_path, out_dir, cutoff=0.5, doc_source="DocA")
     ingest_content(md_b, index_path, out_dir, cutoff=0.5, doc_source="DocB")
 
-    final = out_dir / "1_introduccion.md"
+    final = out_dir / "introduccion.md"
     assert final.exists()
     content = final.read_text(encoding="utf-8")
     lines = content.splitlines()

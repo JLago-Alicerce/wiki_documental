@@ -18,8 +18,8 @@ def test_ingest_content(tmp_path):
     out_dir = tmp_path / "wiki"
     ingest_content(md, index_path, out_dir, cutoff=0.5, doc_source="estado_actual")
 
-    first = out_dir / "1_x.md"
-    second = out_dir / "2_z.md"
+    first = out_dir / "x.md"
+    second = out_dir / "z.md"
     assert first.exists()
     assert second.exists()
     assert not (out_dir / "99_unclassified.md").exists()

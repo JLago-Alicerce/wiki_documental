@@ -132,12 +132,7 @@ def ingest_content(
         text = "".join(content_map.get(slug, []))
         if not text.strip():
             continue
-        identifier = str(entry.get("id", ""))
-        parts = identifier.split(".")
-        doc_id = parts[0]
-        section_id = "-".join(parts[1:])
-        prefix = f"{doc_id}_{section_id}" if section_id else doc_id
-        path = out_dir / f"{prefix}_{slug}.md"
+        path = out_dir / f"{slug}.md"
 
         meta = _read_front_matter(path)
         created = meta.get("created", datetime.utcnow().isoformat())
@@ -154,29 +149,32 @@ def ingest_content(
             if new_src not in sources:
                 sources.append(new_src)
 
-        header_lines = ["---", f"source: {md_path.name}"]
-        if sources:
-            if len(sources) == 1:
-                header_lines.append(f"doc_source: {sources[0]}")
-            else:
-                header_lines.append("doc_source:")
-                for s in sorted(sources):
-                    header_lines.append(f"  - {s}")
-        elif doc_source is not None:
-            header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
-        header_lines.append(f"created: {created}")
-        header_lines.append("---\n")
-        header = "\n".join(header_lines)
+        if text.lstrip().startswith("---"):
+            final_text = post_process_text(text)
+        else:
+            header_lines = ["---", f"source: {md_path.name}"]
+            if sources:
+                if len(sources) == 1:
+                    header_lines.append(f"doc_source: {sources[0]}")
+                else:
+                    header_lines.append("doc_source:")
+                    for s in sorted(sources):
+                        header_lines.append(f"  - {s}")
+            elif doc_source is not None:
+                header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
+            header_lines.append(f"created: {created}")
+            header_lines.append("---\n")
+            header = "\n".join(header_lines)
 
-        meta_parts = [f"source: {md_path.name}"]
-        if sources:
-            meta_parts.append("doc: " + ", ".join(sorted(sources)))
-        meta_parts.append(f"created: {created}")
-        meta_line = (
-            f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
-        )
+            meta_parts = [f"source: {md_path.name}"]
+            if sources:
+                meta_parts.append("doc: " + ", ".join(sorted(sources)))
+            meta_parts.append(f"created: {created}")
+            meta_line = (
+                f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
+            )
 
-        final_text = post_process_text(header + meta_line + text)
+            final_text = post_process_text(header + meta_line + text)
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
@@ -197,29 +195,33 @@ def ingest_content(
             new_src = f"{Path(doc_source).stem}.docx"
             if new_src not in sources:
                 sources.append(new_src)
-        header_lines = ["---", f"source: {md_path.name}"]
-        if sources:
-            if len(sources) == 1:
-                header_lines.append(f"doc_source: {sources[0]}")
-            else:
-                header_lines.append("doc_source:")
-                for s in sorted(sources):
-                    header_lines.append(f"  - {s}")
-        elif doc_source is not None:
-            header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
-        header_lines.append(f"created: {created}")
-        header_lines.append("---\n")
-        header = "\n".join(header_lines)
+        unclassified_text = "".join(unclassified)
+        if unclassified_text.lstrip().startswith("---"):
+            final_text = post_process_text(unclassified_text)
+        else:
+            header_lines = ["---", f"source: {md_path.name}"]
+            if sources:
+                if len(sources) == 1:
+                    header_lines.append(f"doc_source: {sources[0]}")
+                else:
+                    header_lines.append("doc_source:")
+                    for s in sorted(sources):
+                        header_lines.append(f"  - {s}")
+            elif doc_source is not None:
+                header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
+            header_lines.append(f"created: {created}")
+            header_lines.append("---\n")
+            header = "\n".join(header_lines)
 
-        meta_parts = [f"source: {md_path.name}"]
-        if sources:
-            meta_parts.append("doc: " + ", ".join(sorted(sources)))
-        meta_parts.append(f"created: {created}")
-        meta_line = (
-            f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
-        )
+            meta_parts = [f"source: {md_path.name}"]
+            if sources:
+                meta_parts.append("doc: " + ", ".join(sorted(sources)))
+            meta_parts.append(f"created: {created}")
+            meta_line = (
+                f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
+            )
 
-        final_text = post_process_text(header + meta_line + "".join(unclassified))
+            final_text = post_process_text(header + meta_line + unclassified_text)
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
