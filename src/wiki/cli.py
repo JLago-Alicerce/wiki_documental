@@ -55,6 +55,7 @@ def _version_callback(value: bool) -> None:
 
 @app.callback()
 def main(
+    ctx: typer.Context,
     version: bool = typer.Option(
         None,
         "--version",
@@ -62,14 +63,20 @@ def main(
         callback=_version_callback,
         is_eager=True,
         help="Show the application version and exit.",
-    )
+    ),
+    absolute_links: bool = typer.Option(
+        False,
+        "--absolute-links",
+        help="Usar enlaces absolutos en el sidebar (/wiki/...)",
+    ),
 ):
     """Wiki Documental CLI."""
+    ctx.obj = {"absolute_links": absolute_links}
     return
 
 
 @app.command()
-def full() -> None:
+def full(ctx: typer.Context) -> None:
     """Run full wiki generation pipeline."""
     console = Console()
     try:
@@ -157,7 +164,12 @@ def full() -> None:
         ingest_content(md, index_path, wiki_dir, cutoff=cutoff, doc_source=md.stem)
 
     console.print("[bold]Generating sidebar...[/bold]")
-    build_sidebar(index_path, wiki_dir / "_sidebar.md")
+    abs_links = ctx.obj.get("absolute_links", False) if ctx.obj else False
+    build_sidebar(
+        map_path=map_path,
+        wiki_dir=wiki_dir,
+        absolute_links=abs_links,
+    )
 
     media_src = md_raw_dir / "media"
     if media_src.exists():
@@ -296,15 +308,12 @@ def ingest(file: Path) -> None:
 
 
 @app.command()
-def sidebar(
-    depth: int = typer.Option(
-        1, "--depth", "-d", help="Maximum heading level to include"
-    )
-) -> None:
+def sidebar(ctx: typer.Context) -> None:
     """Generate _sidebar.md for Docsify."""
-    index_path = cfg["paths"]["work"] / "index.yaml"
-    output_path = cfg["paths"]["wiki"] / "_sidebar.md"
-    build_sidebar(index_path, output_path, depth=depth)
+    map_path = cfg["paths"]["work"] / "map.yaml"
+    wiki_dir = cfg["paths"]["wiki"]
+    abs_links = ctx.obj.get("absolute_links", False) if ctx.obj else False
+    build_sidebar(map_path, wiki_dir, absolute_links=abs_links)
     typer.echo("Sidebar generated")
 
 
