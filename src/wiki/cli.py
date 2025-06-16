@@ -135,13 +135,9 @@ def full(
             out.write("\n\n")
 
     map_path = cfg["paths"]["work"] / "map.yaml"
-    if not map_path.exists():
-        console.print("[bold]Generating map...[/bold]")
-        map_data = build_headings_map(md_raw_dir)
-        save_map_yaml(map_data, map_path)
-    else:
-        with map_path.open("r", encoding="utf-8") as f:
-            map_data = yaml.safe_load(f) or []
+    console.print("[bold]Generating map...[/bold]")
+    map_data = build_headings_map(md_raw_dir)
+    save_map_yaml(map_data, map_path)
 
     index_path = cfg["paths"]["work"] / "index.yaml"
     console.print("[bold]Regenerating index before verify...[/bold]")
