@@ -35,3 +35,23 @@ def test_ingest_content(tmp_path):
     assert "## Y" in content
     assert "### Zeta" in content
 
+
+def test_ingest_heading_clean(tmp_path):
+    md = tmp_path / "full.md"
+    md.write_text("# 1 Introducción <sub>a</sub>\nTexto\n", encoding="utf-8")
+
+    index = [{"id": "1", "title": "Introducción", "slug": "introduccion", "children": []}]
+    index_path = tmp_path / "index.yaml"
+    index_path.write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
+
+    out_dir = tmp_path / "wiki"
+    ingest_content(md, index_path, out_dir, cutoff=0.5, doc_source="DocA")
+
+    final = out_dir / "introduccion.md"
+    assert final.exists()
+    lines = final.read_text(encoding="utf-8").splitlines()
+    end = lines.index("---", 1)
+    body = lines[end + 1:]
+    heading = next(l for l in body if l.startswith('#'))
+    assert heading == '# Introducción'
+
