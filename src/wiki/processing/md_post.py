@@ -7,11 +7,15 @@ from pathlib import Path
 IMAGE_PREFIX_RE = re.compile(
     r"(!\[[^\]]*\]\()(?:\./|\.\./)*\.?/??(?:assets/)?media/"
 )
+IMG_TAG_PREFIX_RE = re.compile(
+    r"(<img[^>]*src=\")(?:\./|\.\./)*\.?/??(?:assets/)?media/"
+)
 
 
 def fix_image_links(text: str) -> str:
     """Normalize media links ensuring the assets prefix."""
     text = IMAGE_PREFIX_RE.sub(r"\1assets/media/", text)
+    text = IMG_TAG_PREFIX_RE.sub(r"\1assets/media/", text)
     text = re.sub(r"(assets/)+media/", "assets/media/", text)
     text = re.sub(r"(media/)+", "media/", text)
     return text
@@ -27,6 +31,12 @@ def normalize_image_paths(md_text: str) -> str:
         return f"(assets/media/{name})"
 
     md_text = re.sub(r"\(([a-zA-Z]:[^)]+)\)", repl, md_text)
+    def repl_img(match: re.Match[str]) -> str:
+        path = match.group(1)
+        name = Path(path).name.replace("\\", "/")
+        return f'src="assets/media/{name}"'
+
+    md_text = re.sub(r'src="([a-zA-Z]:[^"]+)"', repl_img, md_text)
     return md_text
 
 
