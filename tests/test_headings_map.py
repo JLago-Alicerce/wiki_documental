@@ -42,9 +42,9 @@ def test_strip_numbers(tmp_path):
         {
             "id": "1",
             "level": 1,
-            "title": "1 Intro",
-            "slug": "1-intro",
-            "filename": "1-intro.md",
+            "title": "Intro",
+            "slug": "intro",
+            "filename": "intro.md",
         },
         {
             "id": "1.1",
