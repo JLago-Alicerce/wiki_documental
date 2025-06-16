@@ -1,9 +1,9 @@
 ---
 source: EstadoActualPlataformaBBD_V0306_10_32.md
 doc_source: EstadoActualPlataformaBBD_V0306_10_32.docx
-created: 2025-06-15T23:47:26.850146
+created: 2025-06-16T00:00:06.283371
 ---
-<div class="fragment-meta">source: EstadoActualPlataformaBBD_V0306_10_32.md | doc: EstadoActualPlataformaBBD_V0306_10_32.docx | created: 2025-06-15T23:47:26.850146</div>
+<div class="fragment-meta">source: EstadoActualPlataformaBBD_V0306_10_32.md | doc: EstadoActualPlataformaBBD_V0306_10_32.docx | created: 2025-06-16T00:00:06.283371</div>
 
 # 2. Descripción del sistema actual 
 

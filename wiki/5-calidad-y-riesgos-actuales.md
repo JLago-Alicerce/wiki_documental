@@ -1,9 +1,9 @@
 ---
 source: EstadoActualPlataformaBBD_V0306_10_32.md
 doc_source: EstadoActualPlataformaBBD_V0306_10_32.docx
-created: 2025-06-15T23:47:26.861111
+created: 2025-06-16T00:00:06.293340
 ---
-<div class="fragment-meta">source: EstadoActualPlataformaBBD_V0306_10_32.md | doc: EstadoActualPlataformaBBD_V0306_10_32.docx | created: 2025-06-15T23:47:26.861111</div>
+<div class="fragment-meta">source: EstadoActualPlataformaBBD_V0306_10_32.md | doc: EstadoActualPlataformaBBD_V0306_10_32.docx | created: 2025-06-16T00:00:06.293340</div>
 
 # 5. Calidad y riesgos actuales 
 
