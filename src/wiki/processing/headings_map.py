@@ -19,7 +19,7 @@ def build_headings_map(
     md_folder: Path,
     *,
     strip_numbers: bool = True,
-    from_level: int = 2,
+    from_level: int = 1,
 ) -> List[Dict[str, str | int]]:
     """Return a list of heading data dictionaries."""
     map_data: List[Dict[str, str | int]] = []
