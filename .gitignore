@@ -53,3 +53,4 @@ work/*.csv
 # Reclasificaciones y backups
 wiki/99_unclassified.*
 report_reclassify.csv
+wiki/search_index.json
