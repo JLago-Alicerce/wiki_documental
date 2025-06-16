@@ -31,6 +31,13 @@ def test_heading_cleanup():
     assert lines[2] == '### Another Title'
 
 
+def test_heading_cleanup_h1():
+    text = '# 1 Introducción <sub>draft</sub>\ncontenido\n'
+    result = clean_markdown(text)
+    lines = result.splitlines()
+    assert lines[0] == '# Introducción'
+
+
 def test_fix_image_links_and_warning(tmp_path, capsys):
     text = '![a](media/img.png) and ![](../media/img2.jpg)'
     assets = tmp_path / 'assets' / 'media'

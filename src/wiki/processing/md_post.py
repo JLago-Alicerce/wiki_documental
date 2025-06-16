@@ -50,8 +50,11 @@ def warn_missing_images(text: str, wiki_dir: Path) -> None:
             print(f"Warning: missing image {wiki_dir / rel}")
 
 
-_HEADING2_RE = re.compile(r"^##\s")
-_HEADING3_RE = re.compile(r"^###\s")
+_HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
+_NUMBER_RE = re.compile(r"^\d+(?:\.\d+)*\s+")
+_TAG_RE = re.compile(r"<[^>]+>")
+_SUB_TAG_RE = re.compile(r"<sub>.*?</sub>", flags=re.I)
+_SUP_TAG_RE = re.compile(r"<sup>.*?</sup>", flags=re.I)
 
 
 def clean_lines(lines: List[str]) -> List[str]:
@@ -62,18 +65,27 @@ def clean_lines(lines: List[str]) -> List[str]:
         if len(stripped) > 120 and set(stripped) == {"."}:
             # drop long leader dot lines
             continue
-        if _HEADING2_RE.match(stripped) or _HEADING3_RE.match(stripped):
-            # ensure blank line before secondary headings
-            if cleaned and cleaned[-1].strip() != "":
+
+        m = _HEADING_RE.match(stripped)
+        if m:
+            level = len(m.group(1))
+            prefix = m.group(1)
+            title = m.group(2)
+            if level > 1 and cleaned and cleaned[-1].strip() != "":
+                # ensure blank line before secondary headings
                 cleaned.append("\n")
-            # normalize heading text
-            parts = stripped.split(maxsplit=1)
-            prefix = parts[0]
-            title = parts[1] if len(parts) > 1 else ""
+
             title = title.replace("**", " ")
+            title = _SUB_TAG_RE.sub("", title)
+            title = _SUP_TAG_RE.sub("", title)
+            title = _TAG_RE.sub("", title)
+            title = _NUMBER_RE.sub("", title)
             title = re.sub(r"\s+", " ", title).strip()
+
             line = f"{prefix} {title}\n"
+
         cleaned.append(line)
+
     return cleaned
 
 
