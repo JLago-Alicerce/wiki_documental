@@ -173,7 +173,7 @@ def full(
     console.print("[bold]Generating sidebar...[/bold]")
     abs_links = ctx.obj.get("absolute_links", False) if ctx.obj else False
     build_sidebar(
-        map_path=map_path,
+        index_path=index_path,
         wiki_dir=wiki_dir,
         absolute_links=abs_links,
     )
@@ -320,10 +320,10 @@ def ingest(file: Path) -> None:
 @app.command()
 def sidebar(ctx: typer.Context) -> None:
     """Generate _sidebar.md for Docsify."""
-    map_path = cfg["paths"]["work"] / "map.yaml"
+    index_path = cfg["paths"]["work"] / "index.yaml"
     wiki_dir = cfg["paths"]["wiki"]
     abs_links = ctx.obj.get("absolute_links", False) if ctx.obj else False
-    build_sidebar(map_path, wiki_dir, absolute_links=abs_links)
+    build_sidebar(index_path, wiki_dir, absolute_links=abs_links)
     typer.echo("Sidebar generated")
 
 
