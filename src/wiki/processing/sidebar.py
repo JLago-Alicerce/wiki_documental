@@ -7,21 +7,27 @@ _HEADING_RE = re.compile(r"^#{1,6}\s+.+")
 
 
 def _has_valid_title(path: Path) -> bool:
-    """Return ``True`` if ``path`` contains a Markdown heading."""
+    """Devuelve ``True`` si el archivo contiene al menos un encabezado Markdown."""
     if not path.exists():
+        # Si no existe, no bloquear la generación del menú
         return True
+
     lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
     i = 0
+    # Saltar bloque YAML inicial si existe
     if lines and lines[0].strip() == "---":
         for j in range(1, len(lines)):
             if lines[j].strip() == "---":
                 i = j + 1
                 break
-    for line in lines[i:]:
+
+    # Buscar encabezado válido en las siguientes 20 líneas
+    for line in lines[i : i + 20]:
         stripped = line.strip()
         if not stripped:
             continue
-        return bool(_HEADING_RE.match(stripped))
+        if _HEADING_RE.match(stripped):
+            return True
     return False
 
 
