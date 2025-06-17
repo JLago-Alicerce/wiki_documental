@@ -16,7 +16,7 @@ Se actualiza tras cada cambio relevante mediante tareas formales.
 | `md_post.py` | Limpia puntos y corrige saltos | ✅ (post-ingestión) | N/A |
 | `normalize_docx.py` | Aplica estilos estructurados | ✅ | ❌ |
 | `reclassify.py` | Redistribuye contenido `unclassified` | ❌ (manual) | ✅ |
-| `sidebar.py` | Genera `_sidebar.md` | ✅ | ✅ |
+| `sidebar.py` | Genera `_sidebar.md` desde `index.yaml` | ✅ | ✅ |
 | `style_map.py` | Reglas de estilo de headings | ✅ (desde `normalize_docx`) | ❌ |
 | `verify_pre_ingest.py` | Verifica coherencia `map` ↔ `index` | ✅ | ❌ |
 

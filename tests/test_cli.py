@@ -112,11 +112,11 @@ def test_index_overwrite(tmp_path, monkeypatch):
 
 
 def test_sidebar_command(tmp_path, monkeypatch):
-    map_data = [
-        {"level": 1, "title": "A", "filename": "a.md"},
+    index_data = [
+        {"id": "1", "title": "A", "slug": "a", "children": []},
     ]
     work = tmp_path
-    (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
+    (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
 
@@ -129,11 +129,11 @@ def test_sidebar_command(tmp_path, monkeypatch):
 
 
 def test_sidebar_command_absolute(tmp_path, monkeypatch):
-    map_data = [
-        {"level": 1, "title": "A", "filename": "a.md"},
+    index_data = [
+        {"id": "1", "title": "A", "slug": "a", "children": []},
     ]
     work = tmp_path
-    (work / "map.yaml").write_text(yaml.safe_dump(map_data, allow_unicode=True), encoding="utf-8")
+    (work / "index.yaml").write_text(yaml.safe_dump(index_data, allow_unicode=True), encoding="utf-8")
     paths = {"work": work, "wiki": work}
     monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
 
