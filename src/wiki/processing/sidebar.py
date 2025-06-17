@@ -44,12 +44,16 @@ def _traverse_index(
             continue
         if max_slug_len and len(slug) > max_slug_len:
             continue
+        if len(title.split()) > 25:
+            continue
         filename = f"{slug}.md"
         path = wiki_dir / filename
-        if not _has_valid_title(path):
+        if not title or not _has_valid_title(path):
             continue
         link = f"/wiki/{filename}" if absolute else filename
         indent = "  " * (level - 1)
+        if len(title) > 100:
+            title = title[:97].rstrip() + "..."
         lines.append(f"{indent}* [{title}]({link})")
         children = entry.get("children") or []
         _traverse_index(
