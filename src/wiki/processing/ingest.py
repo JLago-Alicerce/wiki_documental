@@ -202,7 +202,11 @@ def ingest_content(
             f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
         )
 
-        final_text = post_process_text(header + meta_line + body)
+        body_lines = body.splitlines()
+        if not any("fragment-meta" in line for line in body_lines[:5]):
+            body = meta_line + body
+
+        final_text = post_process_text(header + body)
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
@@ -247,7 +251,11 @@ def ingest_content(
             f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
         )
 
-        final_text = post_process_text(header + meta_line + body)
+        body_lines = body.splitlines()
+        if not any("fragment-meta" in line for line in body_lines[:5]):
+            body = meta_line + body
+
+        final_text = post_process_text(header + body)
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
