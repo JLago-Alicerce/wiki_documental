@@ -1,5 +1,5 @@
 import yaml
-from wiki.processing.ingest import ingest_content
+from wiki.processing.ingest import ingest_content, _read_front_matter
 
 
 def test_ingest_multiple_sources(tmp_path):
@@ -22,8 +22,9 @@ def test_ingest_multiple_sources(tmp_path):
     assert final.exists()
     content = final.read_text(encoding="utf-8")
     lines = content.splitlines()
-    assert lines[0] == "---"
-    end = lines.index("---", 1)
-    meta = yaml.safe_load("\n".join(lines[1:end]))
+    assert lines[0] == "<!--"
+    end = lines.index("-->")
+    meta = _read_front_matter(final)
     assert sorted(meta["doc_source"]) == ["DocA.docx", "DocB.docx"]
-    assert lines[end + 1].startswith("<div class=\"fragment-meta\"")
+    visible_line = next(l for l in lines[end + 1 :] if l.strip())
+    assert visible_line.startswith("<div class=\"fragment-meta\"")

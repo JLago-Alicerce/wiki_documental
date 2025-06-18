@@ -5,6 +5,7 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from wiki.cli import app
+from wiki.processing.ingest import _read_front_matter
 
 runner = CliRunner()
 
@@ -61,8 +62,9 @@ def test_full_multiple_doc_sources(tmp_path, monkeypatch):
     final = paths["wiki"] / "introduccion.md"
     assert final.exists()
     lines = final.read_text(encoding="utf-8").splitlines()
-    assert lines[0] == "---"
-    end = lines.index("---", 1)
-    meta = yaml.safe_load("\n".join(lines[1:end]))
+    assert lines[0] == "<!--"
+    end = lines.index("-->")
+    meta = _read_front_matter(final)
     assert sorted(meta["doc_source"]) == ["DocA.docx", "DocB.docx"]
-    assert lines[end + 1].startswith("<div class=\"fragment-meta\"")
+    visible_line = next(l for l in lines[end + 1 :] if l.strip())
+    assert visible_line.startswith("<div class=\"fragment-meta\"")

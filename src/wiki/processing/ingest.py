@@ -103,18 +103,20 @@ def _read_front_matter(path: Path) -> Dict[str, Any]:
     """Return YAML front matter dict from an existing file."""
     if not path.exists():
         return {}
-    with path.open("r", encoding="utf-8") as f:
-        lines = f.readlines()
-    if not lines or lines[0].strip() != "---":
+    text = path.read_text(encoding="utf-8")
+
+    comment_match = re.match(r"<!--\n---\n(.*?)\n---\n-->", text, flags=re.DOTALL)
+    if comment_match:
+        content = comment_match.group(1)
+    elif text.startswith("---\n"):
+        # Legacy style visible front matter
+        end = text.find("\n---", 4)
+        if end == -1:
+            return {}
+        content = text[4:end]
+    else:
         return {}
-    end = None
-    for i, line in enumerate(lines[1:], start=1):
-        if line.strip() == "---":
-            end = i
-            break
-    if end is None:
-        return {}
-    content = "".join(lines[1:end])
+
     try:
         data = yaml.safe_load(content) or {}
     except Exception:
@@ -207,6 +209,7 @@ def ingest_content(
         header_lines.append(f"created: {created}")
         header_lines.append("---\n")
         header = "\n".join(header_lines)
+        hidden_yaml = f"<!--\n{header}-->\n\n"
 
         meta_parts = [f"source: {md_path.name}"]
         if sources:
@@ -220,7 +223,7 @@ def ingest_content(
         if not any("fragment-meta" in line for line in body_lines[:5]):
             body = meta_line + body
 
-        final_text = post_process_text(header + body)
+        final_text = post_process_text(hidden_yaml + body)
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
@@ -228,68 +231,66 @@ def ingest_content(
         with path.open("w", encoding="utf-8") as f:
             f.write(final_text)
 
-if unclassified_sections:
-    uc_path = out_dir / "99_unclassified.md"
-    meta = _read_front_matter(uc_path)
-    created = meta.get("created", datetime.utcnow().isoformat())
-    existing_sources = meta.get("doc_source")
-    sources: List[str] = []
-    if isinstance(existing_sources, list):
-        sources.extend(existing_sources)
-    elif isinstance(existing_sources, str):
-        sources.append(existing_sources)
-    if doc_source is not None:
-        new_src = f"{Path(doc_source).stem}.docx"
-        if new_src not in sources:
-            sources.append(new_src)
+    if unclassified_sections:
+        uc_path = out_dir / "99_unclassified.md"
+        meta = _read_front_matter(uc_path)
+        created = meta.get("created", datetime.utcnow().isoformat())
+        existing_sources = meta.get("doc_source")
+        sources: List[str] = []
+        if isinstance(existing_sources, list):
+            sources.extend(existing_sources)
+        elif isinstance(existing_sources, str):
+            sources.append(existing_sources)
+        if doc_source is not None:
+            new_src = f"{Path(doc_source).stem}.docx"
+            if new_src not in sources:
+                sources.append(new_src)
 
-    mode = "a" if uc_path.exists() else "w"
-    with uc_path.open(mode, encoding="utf-8") as f:
-        if mode == "w":
-            # Bloque YAML
-            header_lines = ["---", f"source: {md_path.name}"]
-            if sources:
-                if len(sources) == 1:
-                    header_lines.append(f"doc_source: {sources[0]}")
-                else:
-                    header_lines.append("doc_source:")
-                    for s in sorted(sources):
-                        header_lines.append(f"  - {s}")
-            elif doc_source is not None:
-                header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
-            header_lines.append(f"created: {created}")
-            header_lines.append("---\n")
-            header = "\n".join(header_lines)
+        mode = "a" if uc_path.exists() else "w"
+        with uc_path.open(mode, encoding="utf-8") as f:
+            if mode == "w":
+                header_lines = ["---", f"source: {md_path.name}"]
+                if sources:
+                    if len(sources) == 1:
+                        header_lines.append(f"doc_source: {sources[0]}")
+                    else:
+                        header_lines.append("doc_source:")
+                        for s in sorted(sources):
+                            header_lines.append(f"  - {s}")
+                elif doc_source is not None:
+                    header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
+                header_lines.append(f"created: {created}")
+                header_lines.append("---\n")
+                header = "\n".join(header_lines)
+                hidden_yaml = f"<!--\n{header}-->\n\n"
 
-            # Bloque HTML <div class="fragment-meta">
-            meta_parts = [f"source: {md_path.name}"]
-            if sources:
-                meta_parts.append("doc: " + ", ".join(sorted(sources)))
-            meta_parts.append(f"created: {created}")
-            meta_line = f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
+                meta_parts = [f"source: {md_path.name}"]
+                if sources:
+                    meta_parts.append("doc: " + ", ".join(sorted(sources)))
+                meta_parts.append(f"created: {created}")
+                meta_line = f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
 
-            # Unificación
-            header_text = header + meta_line
-            header_text = post_process_text(header_text)
-            header_text = fix_image_links(header_text)
-            header_text = normalize_image_paths(header_text)
-            assert "assets/assets/media/" not in header_text, "❌ Doble ruta assets detectada"
-            warn_missing_images(header_text, out_dir)
-            f.write(header_text)
+                header_text = hidden_yaml + meta_line
+                header_text = post_process_text(header_text)
+                header_text = fix_image_links(header_text)
+                header_text = normalize_image_paths(header_text)
+                assert "assets/assets/media/" not in header_text, "❌ Doble ruta assets detectada"
+                warn_missing_images(header_text, out_dir)
+                f.write(header_text)
 
-        # Escribir los fragmentos no clasificados
-        for sec_title, section in unclassified_sections:
-            sec_text = "".join(section)
-            sec_text = post_process_text(sec_text)
-            sec_text = fix_image_links(sec_text)
-            sec_text = normalize_image_paths(sec_text)
-            assert "assets/assets/media/" not in sec_text, "❌ Doble ruta assets detectada"
-            warn_missing_images(sec_text, out_dir)
-            f.write(sec_text)
+            # Escribir los fragmentos no clasificados
+            for sec_title, section in unclassified_sections:
+                sec_text = "".join(section)
+                sec_text = post_process_text(sec_text)
+                sec_text = fix_image_links(sec_text)
+                sec_text = normalize_image_paths(sec_text)
+                assert "assets/assets/media/" not in sec_text, "❌ Doble ruta assets detectada"
+                warn_missing_images(sec_text, out_dir)
+                f.write(sec_text)
 
-    # Registrar los títulos de secciones no clasificadas
-    log_dir = uc_path.parent.parent / "logs"
-    log_dir.mkdir(parents=True, exist_ok=True)
-    with (log_dir / "unclassified_report.txt").open("a", encoding="utf-8") as log_f:
-        for sec_title, _ in unclassified_sections:
-            log_f.write(basic_slug(sec_title) + "\n")
+        # Registrar los títulos de secciones no clasificadas
+        log_dir = uc_path.parent.parent / "logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        with (log_dir / "unclassified_report.txt").open("a", encoding="utf-8") as log_f:
+            for sec_title, _ in unclassified_sections:
+                log_f.write(basic_slug(sec_title) + "\n")
