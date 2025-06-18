@@ -356,3 +356,16 @@ def search_index() -> None:
     build_search_index(wiki_dir)
     typer.echo("search_index.json generado en carpeta wiki/")
 
+
+@app.command("clean-docx")
+def clean_docx_batch() -> None:
+    """Aplica limpieza automática a los .docx originales."""
+    from .tools.clean_docx import batch_process_directory
+
+    input_dir = Path(cfg["paths"]["originals"])
+    output_dir = Path(cfg["paths"]["work"]) / "cleaned"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    batch_process_directory(input_dir, output_dir)
+    typer.echo(f"Archivos DOCX limpios generados en: {output_dir}")
+
