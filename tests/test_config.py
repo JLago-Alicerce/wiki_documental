@@ -9,7 +9,9 @@ def test_load_config_creates_directories(tmp_path, monkeypatch):
     (root / "src/wiki").mkdir(parents=True)
     config_yaml = (
         "paths:\n"
-        "  originals: 'inputs/_originals'\n"
+        "  originals: 'work/to_process'\n"
+        "  cleaned_input: 'inputs/_originals'\n"
+        "  cleaned_output: 'work/cleaned'\n"
         "  work: 'work'\n"
         "  wiki: 'wiki'\n"
         "  tmp: 'work/tmp'\n"
