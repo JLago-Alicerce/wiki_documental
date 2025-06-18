@@ -88,7 +88,7 @@ if __name__ == "__main__":
     cfg_path = Path("config.yaml")
     cfg = safe_load(cfg_path.read_text(encoding="utf-8"))
 
-    input_dir = Path(cfg["paths"]["cleaned_input"])
-    output_dir = Path(cfg["paths"]["cleaned_output"])
+    input_dir = Path(cfg["paths"]["originals"])
+    output_dir = Path(cfg["paths"]["cleaned"])
     output_dir.mkdir(parents=True, exist_ok=True)
     batch_process_directory(input_dir, output_dir)

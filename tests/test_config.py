@@ -9,14 +9,16 @@ def test_load_config_creates_directories(tmp_path, monkeypatch):
     (root / "src/wiki").mkdir(parents=True)
     config_yaml = (
         "paths:\n"
-        "  originals: 'work/to_process'\n"
-        "  cleaned_input: 'inputs/_originals'\n"
-        "  cleaned_output: 'work/cleaned'\n"
+        "  originals: 'inputs/_originals'\n"
+        "  cleaned: 'work/cleaned'\n"
+        "  to_process: 'work/to_process'\n"
         "  work: 'work'\n"
         "  wiki: 'wiki'\n"
         "  tmp: 'work/tmp'\n"
         "\n"
         "options:\n"
+        "  allow_heading_heuristics: true\n"
+        "  fallback_to_heuristics_for_pdf: true\n"
         "  ocr: false\n"
         "  cutoff_similarity: 0.5\n"
     )

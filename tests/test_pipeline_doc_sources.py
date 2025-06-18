@@ -12,7 +12,7 @@ runner = CliRunner()
 
 def test_full_multiple_doc_sources(tmp_path, monkeypatch):
     paths = {
-        "originals": tmp_path / "orig",
+        "to_process": tmp_path / "orig",
         "work": tmp_path / "work",
         "wiki": tmp_path / "wiki",
         "tmp": tmp_path / "tmp",
@@ -20,8 +20,8 @@ def test_full_multiple_doc_sources(tmp_path, monkeypatch):
     for p in paths.values():
         p.mkdir(parents=True, exist_ok=True)
 
-    doc_a = paths["originals"] / "DocA.docx"
-    doc_b = paths["originals"] / "DocB.docx"
+    doc_a = paths["to_process"] / "DocA.docx"
+    doc_b = paths["to_process"] / "DocB.docx"
 
     for doc_path, text in [(doc_a, "A"), (doc_b, "B")]:
         doc = Document()
