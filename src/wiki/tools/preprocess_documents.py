@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import docx
 from docx.document import Document
 from docx.text.paragraph import Paragraph
@@ -51,7 +52,66 @@ def is_likely_heading(p: Paragraph) -> int:
     return 1 if base_score >= 2 else 0
 
 
-def clean_docx_styles(doc_path: Path, output_path: Path) -> bool:
+def _remove_paragraphs(paragraphs: list[Paragraph]) -> None:
+    """Remove the given paragraphs from the document."""
+    for p in paragraphs:
+        element = p._element
+        parent = element.getparent()
+        if parent is not None:
+            parent.remove(element)
+
+
+def _discard_sections(doc: Document, cfg: dict) -> bool:
+    """Delete cover, index or back cover sections based on heuristics."""
+    opts = cfg.get("options", {}).get("discard_sections", {})
+    paragraphs = list(doc.paragraphs)
+
+    def contains(text: str, words: list[str]) -> bool:
+        t = text.lower()
+        return any(w in t for w in words)
+
+    modified = False
+
+    if opts.get("portada", False) and paragraphs:
+        first_block = []
+        year_found = False
+        logo_found = False
+        for p in paragraphs:
+            if p.style.name.startswith("Heading") or len(first_block) >= 5:
+                break
+            first_block.append(p)
+            if re.search(r"\b\d{4}\b", p.text):
+                year_found = True
+            if "logo" in p.text.lower():
+                logo_found = True
+        if first_block and year_found and logo_found:
+            _remove_paragraphs(first_block)
+            print("🗑️ Portada descartada")
+            paragraphs = list(doc.paragraphs)
+            modified = True
+
+    if opts.get("indice", False) and paragraphs:
+        idx_paragraphs = [
+            p for p in paragraphs if contains(p.text, ["indice", "\xEDndice", "contenido", "contents"]) or "......" in p.text
+        ]
+        if idx_paragraphs:
+            _remove_paragraphs(idx_paragraphs)
+            print("🗑️ Índice descartado")
+            paragraphs = list(doc.paragraphs)
+            modified = True
+
+    if opts.get("contraportada", False) and paragraphs:
+        tail_paragraphs = paragraphs[-5:]
+        to_remove = [p for p in tail_paragraphs if contains(p.text, ["agradec", "logo", "fecha"])]
+        if to_remove:
+            _remove_paragraphs(to_remove)
+            print("🗑️ Contraportada descartada")
+            modified = True
+
+    return modified
+
+
+def clean_docx_styles(doc_path: Path, output_path: Path, cfg: dict | None = None) -> bool:
     try:
         doc: Document = docx.Document(doc_path)
     except Exception as e:
@@ -59,6 +119,8 @@ def clean_docx_styles(doc_path: Path, output_path: Path) -> bool:
         return False
 
     changes_made = False
+    if cfg:
+        changes_made = _discard_sections(doc, cfg)
     for p in doc.paragraphs:
         if p.style.name.startswith('Heading'):
             continue
@@ -118,14 +180,14 @@ def batch_process_directory(input_dir: Path, output_dir: Path, cfg: dict | None 
         output_file = output_dir / (file.stem + ".docx")
 
         if file.suffix.lower() == ".docx":
-            clean_docx_styles(file, output_file)
+            clean_docx_styles(file, output_file, cfg or {})
 
         elif file.suffix.lower() == ".pdf":
             try:
                 if ocr_enabled:
                     raise RuntimeError("Forzando OCR por configuración")
                 process_pdf_with_converter(file, output_file)
-                clean_docx_styles(output_file, output_file)
+                clean_docx_styles(output_file, output_file, cfg or {})
             except Exception as e:
                 print(f"\u274c Error al convertir {file.name}: {e}")
                 process_pdf_with_ocr(file, ocr_dir)
