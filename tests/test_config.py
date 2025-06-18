@@ -19,7 +19,9 @@ def test_load_config_creates_directories(tmp_path, monkeypatch):
         "options:\n"
         "  allow_heading_heuristics: true\n"
         "  fallback_to_heuristics_for_pdf: true\n"
-        "  ocr: false\n"
+        "  ocr:\n"
+        "    enabled: false\n"
+        "    include_images: true\n"
         "  cutoff_similarity: 0.5\n"
     )
     (root / "config.yaml").write_text(config_yaml, encoding="utf-8")
