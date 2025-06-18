@@ -63,3 +63,9 @@ def test_cli_preprocess_docs(tmp_path, monkeypatch):
     assert pdf_cleaned.exists()
     pdf_doc = Document(pdf_cleaned)
     assert pdf_doc.paragraphs[0].style.name == "Heading 1"
+
+    # Cleaned files should be automatically copied for processing
+    doc_copied = work / "to_process" / "sample.docx"
+    pdf_copied = work / "to_process" / "sample_pdf.docx"
+    assert doc_copied.exists()
+    assert pdf_copied.exists()
