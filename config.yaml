@@ -9,6 +9,7 @@ paths:
 options:
   allow_heading_heuristics: true
   fallback_to_heuristics_for_pdf: true
+  use_heuristic_headings: true
   ocr: true
   cutoff_similarity: 0.5
   discard_sections:
