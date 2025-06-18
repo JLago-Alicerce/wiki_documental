@@ -103,18 +103,20 @@ def _read_front_matter(path: Path) -> Dict[str, Any]:
     """Return YAML front matter dict from an existing file."""
     if not path.exists():
         return {}
-    with path.open("r", encoding="utf-8") as f:
-        lines = f.readlines()
-    if not lines or lines[0].strip() != "---":
+    text = path.read_text(encoding="utf-8")
+
+    comment_match = re.match(r"<!--\n---\n(.*?)\n---\n-->", text, flags=re.DOTALL)
+    if comment_match:
+        content = comment_match.group(1)
+    elif text.startswith("---\n"):
+        # Legacy style visible front matter
+        end = text.find("\n---", 4)
+        if end == -1:
+            return {}
+        content = text[4:end]
+    else:
         return {}
-    end = None
-    for i, line in enumerate(lines[1:], start=1):
-        if line.strip() == "---":
-            end = i
-            break
-    if end is None:
-        return {}
-    content = "".join(lines[1:end])
+
     try:
         data = yaml.safe_load(content) or {}
     except Exception:
@@ -207,6 +209,7 @@ def ingest_content(
         header_lines.append(f"created: {created}")
         header_lines.append("---\n")
         header = "\n".join(header_lines)
+        hidden_yaml = f"<!--\n{header}-->\n\n"
 
         meta_parts = [f"source: {md_path.name}"]
         if sources:
@@ -220,7 +223,7 @@ def ingest_content(
         if not any("fragment-meta" in line for line in body_lines[:5]):
             body = meta_line + body
 
-        final_text = post_process_text(header + body)
+        final_text = post_process_text(hidden_yaml + body)
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
@@ -228,7 +231,6 @@ def ingest_content(
         with path.open("w", encoding="utf-8") as f:
             f.write(final_text)
 
-    # GESTIÓN DE FRAGMENTOS NO CLASIFICADOS
     if unclassified_sections:
         uc_path = out_dir / "99_unclassified.md"
         meta = _read_front_matter(uc_path)
@@ -247,7 +249,7 @@ def ingest_content(
         mode = "a" if uc_path.exists() else "w"
         with uc_path.open(mode, encoding="utf-8") as f:
             if mode == "w":
-                # Bloque YAML
+                # Construir cabecera con YAML oculto
                 header_lines = ["---", f"source: {md_path.name}"]
                 if sources:
                     if len(sources) == 1:
@@ -261,16 +263,17 @@ def ingest_content(
                 header_lines.append(f"created: {created}")
                 header_lines.append("---\n")
                 header = "\n".join(header_lines)
+                hidden_yaml = f"<!--\n{header}-->\n\n"
 
-                # Bloque HTML <div class="fragment-meta">
+                # Construir div de metadatos visible
                 meta_parts = [f"source: {md_path.name}"]
                 if sources:
                     meta_parts.append("doc: " + ", ".join(sorted(sources)))
                 meta_parts.append(f"created: {created}")
                 meta_line = f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
 
-                # Unificación
-                header_text = header + meta_line
+                # Unificar y procesar la cabecera completa
+                header_text = hidden_yaml + meta_line
                 header_text = post_process_text(header_text)
                 header_text = fix_image_links(header_text)
                 header_text = normalize_image_paths(header_text)

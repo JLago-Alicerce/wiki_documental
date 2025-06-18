@@ -1,7 +1,7 @@
 from pathlib import Path
 import yaml
 
-from wiki.processing.ingest import ingest_content
+from wiki.processing.ingest import ingest_content, _read_front_matter
 
 
 def test_ingest_content(tmp_path):
@@ -25,12 +25,13 @@ def test_ingest_content(tmp_path):
     assert not (out_dir / "99_unclassified.md").exists()
     content = first.read_text(encoding="utf-8")
     lines = content.splitlines()
-    assert lines[0] == "---"
-    end = lines.index("---", 1)
-    meta = yaml.safe_load("\n".join(lines[1:end]))
+    assert lines[0] == "<!--"
+    end = lines.index("-->")
+    meta = _read_front_matter(first)
     assert meta["source"] == md.name
     assert meta["doc_source"] == "estado_actual.docx"
-    assert lines[end + 1].startswith("<div class=\"fragment-meta\"")
+    visible_line = next(l for l in lines[end + 1 :] if l.strip())
+    assert visible_line.startswith("<div class=\"fragment-meta\"")
     assert any(line.startswith("#") for line in lines[end + 1:])
     assert "## Y" in content
     assert "### Zeta" in content
@@ -50,8 +51,9 @@ def test_ingest_heading_clean(tmp_path):
     final = out_dir / "introduccion.md"
     assert final.exists()
     lines = final.read_text(encoding="utf-8").splitlines()
-    end = lines.index("---", 1)
+    end = lines.index("-->")
     body = lines[end + 1:]
+    body = [l for l in body if l.strip()]
     heading = next(l for l in body if l.startswith('#'))
     assert heading == '# Introducción'
 
@@ -59,7 +61,7 @@ def test_ingest_heading_clean(tmp_path):
 def test_ingest_no_duplicate_meta(tmp_path):
     md = tmp_path / "full.md"
     md.write_text(
-        "---\nsource: full.md\n---\n"
+        "<!--\n---\nsource: full.md\ncreated: 2020-01-01\n---\n-->\n\n"
         "<div class=\"fragment-meta\">source: full.md | doc: DocA.docx | created: 2020-01-01</div>\n\n"
         "# Seccion\nTexto\n",
         encoding="utf-8",
