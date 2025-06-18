@@ -11,3 +11,8 @@ options:
   fallback_to_heuristics_for_pdf: true
   ocr: false
   cutoff_similarity: 0.5
+
+menu:
+  depth_limit: 2
+  default_visible: true
+  fallback_section: "99. Documentos no indexados"
