@@ -31,12 +31,12 @@ def test_full_multiple_doc_sources(tmp_path, monkeypatch):
         doc.add_paragraph(text)
         doc.save(doc_path)
 
-    def fake_run(cmd, capture_output=True, text=True):
-        out = Path(cmd[-1])
-        out.write_text("# Introducción\nX", encoding="utf-8")
+    def fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
         class R:
             returncode = 0
             stderr = ""
+            stdout = "# Introducción\nX"
+
         return R()
 
     monkeypatch.setattr("subprocess.run", fake_run)

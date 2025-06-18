@@ -18,9 +18,7 @@ def _create_doc(path: Path) -> None:
     doc.save(path)
 
 
-def _fake_run(cmd, capture_output=True, text=True):
-    md = Path(cmd[-1])
-    md.write_text("# Title\n![alt](media/img.png)", encoding="utf-8")
+def _fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
     media_dir = None
     for part in cmd:
         if part.startswith("--extract-media="):
@@ -28,9 +26,12 @@ def _fake_run(cmd, capture_output=True, text=True):
     if media_dir is not None:
         (media_dir / "media").mkdir(parents=True, exist_ok=True)
         (media_dir / "media" / "img.png").write_text("binary", encoding="utf-8")
+
     class R:
         returncode = 0
         stderr = ""
+        stdout = "# Title\n![alt](media/img.png)"
+
     return R()
 
 

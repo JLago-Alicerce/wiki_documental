@@ -14,11 +14,12 @@ def test_convert_docx_to_md(tmp_path, monkeypatch):
     md_file = tmp_path / "sample.md"
     _create_sample_docx(docx_file, "Hello")
 
-    def fake_run(cmd, capture_output=True, text=True):
-        md_file.write_text("Hello", encoding="utf-8")
+    def fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
         class Result:
             returncode = 0
             stderr = ""
+            stdout = "Hello"
+
         return Result()
 
     monkeypatch.setattr("subprocess.run", fake_run)

@@ -7,9 +7,8 @@ from wiki.processing.normalize_docx import normalize_styles
 from wiki.processing.docx_to_md import convert_docx_to_md
 
 
-def _fake_pandoc_run(cmd, capture_output=True, text=True):
+def _fake_pandoc_run(cmd, capture_output=True, text=True, encoding="utf-8"):
     docx = Path(cmd[1])
-    md = Path(cmd[-1])
     doc = Document(docx)
     lines = []
     for p in doc.paragraphs:
@@ -21,10 +20,13 @@ def _fake_pandoc_run(cmd, capture_output=True, text=True):
         else:
             if p.text:
                 lines.append(p.text)
-    md.write_text("\n".join(lines), encoding="utf-8")
+    content = "\n".join(lines)
+
     class R:
         returncode = 0
         stderr = ""
+        stdout = content
+
     return R()
 
 

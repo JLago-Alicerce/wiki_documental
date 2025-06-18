@@ -42,11 +42,12 @@ def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
     doc.add_paragraph("Text")
     doc.save(doc_path)
 
-    def fake_run(cmd, capture_output=True, text=True):
-        Path(cmd[-1]).write_text("# Title\nText", encoding="utf-8")
+    def fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
         class Result:
             returncode = 0
             stderr = ""
+            stdout = "# Title\nText"
+
         return Result()
 
     monkeypatch.setattr("subprocess.run", fake_run)
