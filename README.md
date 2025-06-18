@@ -20,6 +20,16 @@ Wiki Documental provides an automated workflow for turning a collection of DOCX 
 poetry install --with dev
 ```
 
+Install system dependencies for PDF and OCR processing:
+
+- **Windows**: install Tesseract OCR and Poppler for Windows, then add their
+  `bin/` directories to your `PATH`.
+- **Linux**:
+
+  ```bash
+  sudo apt install tesseract-ocr poppler-utils
+  ```
+
 ## Quick start
 
 Place your source `.docx` files in `inputs/_originals/` and run the full pipeline:

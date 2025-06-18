@@ -19,9 +19,10 @@ python-slugify = "^8.0"
 tqdm = "^4.66"
 typer = {version = "^0.12", extras = ["all"]}
 "pdfminer.six" = {version = "^20221105", optional = true}
-pdf2image = {version = "^1.17", optional = true}
-pytesseract = {version = "^0.3", optional = true}
+pdf2image = "^1.16.3"
+pytesseract = "^0.3.10"
 pdf2docx = "^0.5.6"
+Pillow = "^10.0.1"
 
 [tool.poetry.extras]
 pdf = ["pdfminer.six", "pdf2image", "pytesseract"]

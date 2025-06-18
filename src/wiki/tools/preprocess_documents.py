@@ -3,6 +3,8 @@ import docx
 from docx.document import Document
 from docx.text.paragraph import Paragraph
 from pdf2docx import Converter
+from pdf2image import convert_from_path
+from pytesseract import image_to_string
 from yaml import safe_load
 
 # --- Heurísticas de detección de encabezados ---
@@ -62,8 +64,40 @@ def clean_docx_styles(doc_path: Path, output_path: Path) -> bool:
     return changes_made
 
 
-def batch_process_directory(input_dir: Path, output_dir: Path):
+def process_pdf_with_converter(pdf_path: Path, output_docx_path: Path) -> None:
+    """Convertir PDF a DOCX usando pdf2docx."""
+    print(f"🧪 Intentando conversión directa para {pdf_path.name}")
+    converter = Converter(str(pdf_path))
+    converter.convert(str(output_docx_path), start=0, end=None)
+    converter.close()
+
+
+def process_pdf_with_ocr(pdf_path: Path, output_dir: Path) -> None:
+    """Extrae texto e imágenes de un PDF usando OCR."""
+    print(f"🧠 Ejecutando OCR para {pdf_path.name}")
+    pages = convert_from_path(str(pdf_path))
+    output_dir.mkdir(parents=True, exist_ok=True)
+    assets_dir = output_dir / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    md_path = output_dir / f"{pdf_path.stem}.md"
+    with md_path.open("w", encoding="utf-8") as md:
+        for idx, img in enumerate(pages, start=1):
+            text = image_to_string(img)
+            md.write(f"## P\xE1gina {idx}\n\n")
+            md.write(text.strip() + "\n\n")
+            img_name = f"{pdf_path.stem}_page_{idx:03}.png"
+            img_path = assets_dir / img_name
+            img.save(img_path)
+            md.write(f"![P\xE1gina {idx}](assets/{img_name})\n\n")
+
+
+def batch_process_directory(input_dir: Path, output_dir: Path, cfg: dict | None = None):
     print(f"\n\U0001f4c2 Procesando documentos desde: {input_dir}")
+    ocr_enabled = False
+    ocr_dir = output_dir.parent / "ocr_outputs"
+    if cfg:
+        ocr_enabled = cfg.get("options", {}).get("ocr", False)
+        ocr_dir = Path(cfg["paths"].get("work", output_dir.parent)) / "ocr_outputs"
     for file in sorted(input_dir.glob("*")):
         print(f"\n\U0001f4dd {file.name}")
         output_file = output_dir / (file.stem + ".docx")
@@ -73,13 +107,13 @@ def batch_process_directory(input_dir: Path, output_dir: Path):
 
         elif file.suffix.lower() == ".pdf":
             try:
-                print("   → Convirtiendo PDF a DOCX...")
-                converter = Converter(str(file))
-                converter.convert(str(output_file), start=0, end=None)
-                converter.close()
+                if ocr_enabled:
+                    raise RuntimeError("Forzando OCR por configuración")
+                process_pdf_with_converter(file, output_file)
                 clean_docx_styles(output_file, output_file)
             except Exception as e:
                 print(f"\u274c Error al convertir {file.name}: {e}")
+                process_pdf_with_ocr(file, ocr_dir)
 
     print("\n\u2705 Limpieza completada.")
 
@@ -91,4 +125,4 @@ if __name__ == "__main__":
     input_dir = Path(cfg["paths"]["originals"])
     output_dir = Path(cfg["paths"]["cleaned"])
     output_dir.mkdir(parents=True, exist_ok=True)
-    batch_process_directory(input_dir, output_dir)
+    batch_process_directory(input_dir, output_dir, cfg)

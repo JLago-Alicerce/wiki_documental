@@ -389,7 +389,7 @@ def preprocess_docs_batch(
     output_dir = Path(cfg["paths"]["cleaned"])
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    batch_process_directory(input_dir, output_dir)
+    batch_process_directory(input_dir, output_dir, cfg)
     typer.echo(f"\u2705 Documentos limpios generados en: {output_dir}")
 
     # Copia automática de documentos limpios al directorio de entrada para wiki full
