@@ -371,7 +371,11 @@ def clean_docx_batch() -> None:
 
 
 @app.command("preprocess-docs")
-def preprocess_docs_batch() -> None:
+def preprocess_docs_batch(
+    overwrite: bool = typer.Option(
+        False, "--overwrite", help="Sobrescribir archivos existentes en to_process"
+    )
+) -> None:
     """Limpia y convierte documentos .docx y .pdf en formato procesable."""
     from .tools.preprocess_documents import batch_process_directory
 
@@ -381,6 +385,23 @@ def preprocess_docs_batch() -> None:
 
     batch_process_directory(input_dir, output_dir)
     typer.echo(f"\u2705 Documentos limpios generados en: {output_dir}")
+
+    # Copia automática de documentos limpios al directorio de entrada para wiki full
+    to_process_dir = Path(cfg["paths"]["originals"])
+    cleaned_dir = Path(cfg["paths"]["cleaned_output"])
+
+    to_process_dir.mkdir(parents=True, exist_ok=True)
+    copied_files = 0
+
+    for docx_file in cleaned_dir.glob("*.docx"):
+        dest = to_process_dir / docx_file.name
+        if overwrite or not dest.exists():
+            shutil.copy(docx_file, dest)
+            copied_files += 1
+
+    print(
+        f"\U0001f4e4 {copied_files} archivos copiados a {to_process_dir} para procesamiento posterior."
+    )
 
 
 @app.command("prepare-to-process")
