@@ -49,6 +49,8 @@ work/media/
 work/tmp/
 work/*.yaml
 work/*.csv
+work/
+inputs/
 
 # Reclasificaciones y backups
 wiki/99_unclassified.*

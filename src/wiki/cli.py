@@ -30,6 +30,11 @@ def reset_environment(cfg: dict) -> None:
                     continue
                 f.unlink()
                 console.log(f"Deleted {f}")
+
+    # Remove any DOCX files left in the work directory
+    for f in Path(cfg["paths"]["work"]).rglob("*.docx"):
+        f.unlink()
+        console.log(f"Deleted {f}")
     media_dir = Path(cfg["paths"]["wiki"]) / "assets" / "media"
     if media_dir.exists():
         rmtree(media_dir)
