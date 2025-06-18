@@ -38,10 +38,10 @@ build/
 *.egg-info/
 
 # DOCX originales
-inputs/_originals/*.docx
+inputs/_originals/
 
 # DOCX normalizados (no finales)
-work/normalized/*.docx
+work/normalized/
 
 # Archivos derivados de Pandoc
 work/md_raw/*.md
