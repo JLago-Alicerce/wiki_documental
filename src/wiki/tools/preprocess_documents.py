@@ -2,9 +2,20 @@ from pathlib import Path
 import docx
 from docx.document import Document
 from docx.text.paragraph import Paragraph
-from pdf2docx import Converter
-from pdf2image import convert_from_path
-from pytesseract import image_to_string
+try:  # pragma: no cover - optional dependency
+    from pdf2docx import Converter
+except Exception:  # pragma: no cover - if pdf2docx missing
+    Converter = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    from pdf2image import convert_from_path
+except Exception:  # pragma: no cover - if pdf2image missing
+    convert_from_path = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    from pytesseract import image_to_string
+except Exception:  # pragma: no cover - if pytesseract missing
+    image_to_string = None  # type: ignore
 from yaml import safe_load
 
 # --- Heurísticas de detección de encabezados ---
@@ -66,6 +77,8 @@ def clean_docx_styles(doc_path: Path, output_path: Path) -> bool:
 
 def process_pdf_with_converter(pdf_path: Path, output_docx_path: Path) -> None:
     """Convertir PDF a DOCX usando pdf2docx."""
+    if Converter is None:
+        raise ImportError("pdf2docx is not installed")
     print(f"🧪 Intentando conversión directa para {pdf_path.name}")
     converter = Converter(str(pdf_path))
     converter.convert(str(output_docx_path), start=0, end=None)
@@ -74,6 +87,8 @@ def process_pdf_with_converter(pdf_path: Path, output_docx_path: Path) -> None:
 
 def process_pdf_with_ocr(pdf_path: Path, output_dir: Path) -> None:
     """Extrae texto e imágenes de un PDF usando OCR."""
+    if convert_from_path is None or image_to_string is None:
+        raise ImportError("pdf2image and pytesseract are required for OCR")
     print(f"🧠 Ejecutando OCR para {pdf_path.name}")
     pages = convert_from_path(str(pdf_path))
     output_dir.mkdir(parents=True, exist_ok=True)
