@@ -9,5 +9,5 @@ paths:
 options:
   allow_heading_heuristics: true
   fallback_to_heuristics_for_pdf: true
-  ocr: false
+  ocr: true
   cutoff_similarity: 0.5
