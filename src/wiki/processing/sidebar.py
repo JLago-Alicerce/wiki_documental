@@ -41,7 +41,7 @@ def _traverse_index(
     exclude_prefix: str | None,
     max_slug_len: int | None,
 ) -> None:
-    for entry in entries:
+    for entry in sorted(entries, key=lambda e: str(e.get("title", "")).lower()):
         if not entry.get("visible", True):
             continue
         title = entry.get("title", "")
@@ -61,6 +61,8 @@ def _traverse_index(
             title = title[:97].rstrip() + "..."
         if slug:
             link = f"/wiki/{filename}" if absolute else filename
+            if level == 1 and lines:
+                lines.append("---")
             lines.append(f"{indent}* [{title}]({link})")
         else:
             lines.append(f"{indent}* {title}")
@@ -111,6 +113,13 @@ def build_sidebar(
                 )
             converted.append(sec_entry)
         index_data = converted
+
+    def sort_entries(entries: list[dict]) -> None:
+        entries.sort(key=lambda e: str(e.get("title", "")).lower())
+        for ent in entries:
+            sort_entries(ent.get("children") or [])
+
+    sort_entries(index_data)
 
     lines: list[str] = []
     _traverse_index(

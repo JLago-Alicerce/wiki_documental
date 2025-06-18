@@ -3,18 +3,24 @@ from __future__ import annotations
 from typing import List, Dict, Any
 import re
 
-MAX_LEVEL = 2
+from wiki.config import cfg
+from wiki.utils.slug import slug_to_label
 
 
-def build_index_from_map(map_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def build_index_from_map(
+    map_data: List[Dict[str, Any]],
+    max_depth: int | None = None,
+) -> List[Dict[str, Any]]:
     """Generate hierarchical index data from headings map."""
+    if max_depth is None:
+        max_depth = int(cfg.get("menu", {}).get("depth_limit", 2))
     index: List[Dict[str, Any]] = []
     stack: List[tuple[int, Dict[str, Any]]] = []
     counters: dict[int, int] = {}
 
     for item in map_data:
         level = int(item.get("level", 1))
-        if level > MAX_LEVEL:
+        if level > max_depth:
             continue
         title = str(item.get("title", ""))
         title_clean = re.sub(r"!\[[^\]]*\]\([^\)]+\)", "", title)
@@ -26,10 +32,13 @@ def build_index_from_map(map_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]
             if l > level:
                 del counters[l]
         id_parts = [str(counters[i]) for i in range(1, level + 1) if i in counters]
+        slug = item.get("slug")
         entry = {
             "id": ".".join(id_parts),
             "title": item.get("title"),
-            "slug": item.get("slug"),
+            "slug": slug,
+            "label": slug_to_label(str(slug)) if slug else None,
+            "visible": True,
             "children": [],
         }
         while stack and stack[-1][0] >= level:
