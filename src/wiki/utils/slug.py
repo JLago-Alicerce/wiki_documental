@@ -19,3 +19,10 @@ def safe_slug(text: str, used: set[str]) -> str:
         slug = f"{base}-{count}"
     used.add(slug)
     return slug
+
+
+def slug_to_label(slug: str) -> str:
+    """Return a human friendly label derived from ``slug``."""
+    slug = re.sub(r"^[0-9]+-", "", slug)
+    words = slug.split("-")
+    return " ".join(w.capitalize() for w in words if w)

@@ -11,6 +11,10 @@ options:
   fallback_to_heuristics_for_pdf: true
   ocr: true
   cutoff_similarity: 0.5
+  discard_sections:
+    portada: true
+    indice: true
+    contraportada: true
 
 menu:
   depth_limit: 2

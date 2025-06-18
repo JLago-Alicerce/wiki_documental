@@ -174,7 +174,14 @@ def full(
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
 
     for md in track(sorted(md_raw_dir.glob("*.md")), description="Ingest"):
-        ingest_content(md, index_path, wiki_dir, cutoff=cutoff, doc_source=md.stem)
+        ingest_content(
+            md,
+            index_path,
+            wiki_dir,
+            cutoff=cutoff,
+            doc_source=md.stem,
+            cfg=cfg,
+        )
 
     console.print("[bold]Generating sidebar...[/bold]")
     abs_links = ctx.obj.get("absolute_links", False) if ctx.obj else False
@@ -255,6 +262,7 @@ def index(
         False, "--overwrite", "-o", help="Overwrite existing index.yaml"
     ),
     flat: bool = typer.Option(False, "--flat", help="Generate flat two-level index"),
+    depth: int = typer.Option(None, "--depth", "-d", help="Depth limit for index"),
 ) -> None:
     """Create index.yaml from map.yaml."""
     out_file = cfg["paths"]["work"] / "index.yaml"
@@ -281,7 +289,7 @@ def index(
                         {"level": item["level"], "title": item["title"], "slug": item["slug"]}
                     )
     else:
-        index_data = build_index_from_map(map_data)
+        index_data = build_index_from_map(map_data, max_depth=depth)
     out_file.parent.mkdir(parents=True, exist_ok=True)
     with out_file.open("w", encoding="utf-8") as f:
         yaml.safe_dump(index_data, f, allow_unicode=True)
@@ -319,7 +327,14 @@ def ingest(file: Path) -> None:
     wiki_dir = cfg["paths"]["wiki"]
     cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
     doc_source = file.stem
-    ingest_content(file, index_path, wiki_dir, cutoff=cutoff, doc_source=doc_source)
+    ingest_content(
+        file,
+        index_path,
+        wiki_dir,
+        cutoff=cutoff,
+        doc_source=doc_source,
+        cfg=cfg,
+    )
     typer.echo("Content ingested")
 
 

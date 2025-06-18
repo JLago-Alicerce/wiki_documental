@@ -16,6 +16,28 @@ from .md_post import (
     normalize_image_paths,
 )
 
+DEFAULT_DISCARD = {
+    "portada": True,
+    "indice": True,
+    "contraportada": True,
+}
+
+
+def _should_discard(title: str | None, lines: List[str], cfg: dict) -> bool:
+    opts = cfg.get("options", {}).get("discard_sections", DEFAULT_DISCARD)
+    text = " ".join(l.strip() for l in lines).lower()
+    word_count = len(re.findall(r"\w+", text))
+    if opts.get("portada", True) and title == "__intro__" and word_count < 300:
+        if any(k in text for k in ("presentacion", "versi", "fecha", "document")):
+            return True
+    if opts.get("indice", True) and "..." in text:
+        if any(k in text for k in ("indice", "contents", "tabla de contenidos")):
+            return True
+    if opts.get("contraportada", True) and word_count < 200:
+        if any(k in text for k in ("firma", "autor", "revision", "confidencial")):
+            return True
+    return False
+
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 
 
@@ -130,8 +152,15 @@ def ingest_content(
     out_dir: Path,
     cutoff: float = 0.5,
     doc_source: str | Path | None = None,
+    *,
+    cfg: dict | None = None,
 ) -> None:
     """Fragment markdown file according to index.yaml and store pieces."""
+    if cfg is None:  # pragma: no cover - default config
+        from wiki.config import cfg as default_cfg
+
+        cfg = default_cfg
+
     with index_path.open("r", encoding="utf-8") as f:
         index_data = yaml.safe_load(f) or []
     entries = _flatten_index(index_data)
@@ -143,6 +172,8 @@ def ingest_content(
     untitled_count = 1
 
     for title, lines in sections:
+        if _should_discard(title, lines, cfg):
+            continue
         if title == "__intro__":
             new_title = f"Seccion sin titulo {untitled_count}"
             untitled_count += 1
