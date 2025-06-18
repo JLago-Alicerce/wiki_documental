@@ -114,8 +114,16 @@ def build_sidebar(
             converted.append(sec_entry)
         index_data = converted
 
+    def _id_is_numeric(value: str | None) -> bool:
+        if not value:
+            return False
+        return bool(re.fullmatch(r"\d+(?:\.\d+)*", str(value)))
+
     def sort_entries(entries: list[dict]) -> None:
-        entries.sort(key=lambda e: str(e.get("title", "")).lower())
+        if not all(_id_is_numeric(e.get("id")) for e in entries):
+            entries.sort(key=lambda e: str(e.get("title", "")).lower())
+        else:
+            entries.sort(key=lambda e: [int(x) for x in str(e.get("id")).split(".")])
         for ent in entries:
             sort_entries(ent.get("children") or [])
 
