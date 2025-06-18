@@ -102,6 +102,12 @@ Run the automated test suite with:
 poetry run pytest -q
 ```
 
+## Developer notes
+
+Common routines for document preprocessing reside in
+`wiki.tools.docx_utils` and `wiki.tools.pdf_utils`. These modules provide
+reusable helpers for cleaning DOCX files and converting or OCR-ing PDFs.
+
 ## Example sidebar entry
 
 ```markdown
