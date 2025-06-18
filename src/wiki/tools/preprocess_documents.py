@@ -10,22 +10,31 @@ HEADING_2_MIN_FONT_SIZE = 12
 
 
 def is_likely_heading(p: Paragraph) -> int:
-    if not p.text.strip():
+    text = p.text.strip()
+    if not text:
         return 0
+
+    if len(text.split()) > 12:
+        return 0
+
+    if text.isupper() or text[0].isupper():
+        base_score = 1
+    else:
+        base_score = 0
+
     bold_runs = [r.bold for r in p.runs if r.text.strip()]
-    if not bold_runs or not all(bold_runs):
-        return 0
-    if p.style.name.startswith('List'):
-        return 0
-    if len(p.text.strip().split()) > 10:
-        return 0
+    if bold_runs:
+        bold_ratio = sum(1 for b in bold_runs if b) / len(bold_runs)
+        if bold_ratio >= 0.5:
+            base_score += 1
+
     for r in p.runs:
         if r.text.strip() and r.font.size:
-            if r.font.size.pt >= HEADING_1_MIN_FONT_SIZE:
-                return 1
-            if r.font.size.pt >= HEADING_2_MIN_FONT_SIZE:
-                return 2
-    return 0
+            if r.font.size.pt >= 13:
+                base_score += 1
+                break
+
+    return 1 if base_score >= 2 else 0
 
 
 def clean_docx_styles(doc_path: Path, output_path: Path) -> bool:
