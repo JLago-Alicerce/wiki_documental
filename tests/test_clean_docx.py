@@ -34,11 +34,11 @@ def test_cli_clean_docx(tmp_path, monkeypatch):
     work.mkdir()
     doc_in = orig / "sample.docx"
     _create_dirty_docx(doc_in)
-    paths = {"originals": orig, "work": work}
+    paths = {"originals": orig, "cleaned": work / "cleaned", "work": work}
     monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
     result = runner.invoke(app, ["clean-docx"])
     assert result.exit_code == 0
-    cleaned = work / "cleaned" / "sample.docx"
+    cleaned = paths["cleaned"] / "sample.docx"
     assert cleaned.exists()
     doc = Document(cleaned)
     assert doc.paragraphs[0].style.name == "Heading 1"

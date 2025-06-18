@@ -1,11 +1,13 @@
 paths:
-  originals: "work/to_process"
-  cleaned_input: "inputs/_originals"
-  cleaned_output: "work/cleaned"
+  originals: "inputs/_originals"
+  cleaned: "work/cleaned"
+  to_process: "work/to_process"
   work: "work"
   wiki: "wiki"
   tmp: "work/tmp"
 
 options:
+  allow_heading_heuristics: true
+  fallback_to_heuristics_for_pdf: true
   ocr: false
   cutoff_similarity: 0.5

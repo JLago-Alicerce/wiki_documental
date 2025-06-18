@@ -45,27 +45,27 @@ def test_cli_preprocess_docs(tmp_path, monkeypatch):
 
     monkeypatch.setattr("wiki.tools.preprocess_documents.Converter", DummyConverter)
     paths = {
-        "cleaned_input": orig,
-        "cleaned_output": work / "cleaned",
-        "originals": work / "to_process",
+        "originals": orig,
+        "cleaned": work / "cleaned",
+        "to_process": work / "to_process",
     }
     monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
 
     result = runner.invoke(app, ["preprocess-docs"])
     assert result.exit_code == 0
 
-    cleaned = work / "cleaned" / "sample.docx"
+    cleaned = paths["cleaned"] / "sample.docx"
     assert cleaned.exists()
     doc = Document(cleaned)
     assert doc.paragraphs[0].style.name.startswith("Heading")
 
-    pdf_cleaned = work / "cleaned" / "sample_pdf.docx"
+    pdf_cleaned = paths["cleaned"] / "sample_pdf.docx"
     assert pdf_cleaned.exists()
     pdf_doc = Document(pdf_cleaned)
     assert pdf_doc.paragraphs[0].style.name == "Heading 1"
 
     # Cleaned files should be automatically copied for processing
-    doc_copied = work / "to_process" / "sample.docx"
-    pdf_copied = work / "to_process" / "sample_pdf.docx"
+    doc_copied = paths["to_process"] / "sample.docx"
+    pdf_copied = paths["to_process"] / "sample_pdf.docx"
     assert doc_copied.exists()
     assert pdf_copied.exists()

@@ -31,7 +31,7 @@ def _fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
 
 def test_reset_work_dir(tmp_path, monkeypatch):
     paths = {
-        "originals": tmp_path / "orig",
+        "to_process": tmp_path / "orig",
         "work": tmp_path / "work",
         "wiki": tmp_path / "wiki",
         "tmp": tmp_path / "tmp",
@@ -39,7 +39,7 @@ def test_reset_work_dir(tmp_path, monkeypatch):
     for p in paths.values():
         p.mkdir(parents=True, exist_ok=True)
 
-    doc_file = paths["originals"] / "sample.docx"
+    doc_file = paths["to_process"] / "sample.docx"
     _create_doc(doc_file)
 
     # Extra DOCX files inside work directory to verify cleanup
