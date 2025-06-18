@@ -181,7 +181,7 @@ def ingest_content(
         path = out_dir / f"{slug}.md"
 
         meta = _read_front_matter(path)
-        created = meta.get("created", datetime.utcnow().isoformat())
+        inserted = meta.get("inserted", datetime.utcnow().isoformat())
 
         existing_sources = meta.get("doc_source")
         sources: List[str] = []
@@ -206,7 +206,7 @@ def ingest_content(
                     header_lines.append(f"  - {s}")
         elif doc_source is not None:
             header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
-        header_lines.append(f"created: {created}")
+        header_lines.append(f"inserted: {inserted}")
         header_lines.append("---\n")
         header = "\n".join(header_lines)
         hidden_yaml = f"<!--\n{header}-->\n\n"
@@ -214,7 +214,7 @@ def ingest_content(
         meta_parts = [f"source: {md_path.name}"]
         if sources:
             meta_parts.append("doc: " + ", ".join(sorted(sources)))
-        meta_parts.append(f"created: {created}")
+        meta_parts.append(f"inserted: {inserted}")
         meta_line = (
             f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
         )
@@ -234,7 +234,7 @@ def ingest_content(
     if unclassified_sections:
         uc_path = out_dir / "99_unclassified.md"
         meta = _read_front_matter(uc_path)
-        created = meta.get("created", datetime.utcnow().isoformat())
+        inserted = meta.get("inserted", datetime.utcnow().isoformat())
         existing_sources = meta.get("doc_source")
         sources: List[str] = []
         if isinstance(existing_sources, list):
@@ -260,7 +260,7 @@ def ingest_content(
                             header_lines.append(f"  - {s}")
                 elif doc_source is not None:
                     header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
-                header_lines.append(f"created: {created}")
+                header_lines.append(f"inserted: {inserted}")
                 header_lines.append("---\n")
                 header = "\n".join(header_lines)
                 hidden_yaml = f"<!--\n{header}-->\n\n"
@@ -269,7 +269,7 @@ def ingest_content(
                 meta_parts = [f"source: {md_path.name}"]
                 if sources:
                     meta_parts.append("doc: " + ", ".join(sorted(sources)))
-                meta_parts.append(f"created: {created}")
+                meta_parts.append(f"inserted: {inserted}")
                 meta_line = f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
 
                 # Unificar y procesar la cabecera completa
