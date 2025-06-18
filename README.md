@@ -49,7 +49,8 @@ Generate `index.yaml` from the headings map. Options:
 Run the entire conversion pipeline from DOCX originals to the final wiki.
 
 ### `wiki reset`
-Remove generated Markdown, YAML and CSV files from `work` and `wiki`.
+Remove generated Markdown, YAML and CSV files from `work` and `wiki`. Any DOCX
+files found inside `work` are also deleted.
 
 ### `wiki normalize`
 Normalize a DOCX file so paragraph styles become proper heading levels.
