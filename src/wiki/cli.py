@@ -369,3 +369,16 @@ def clean_docx_batch() -> None:
     batch_process_directory(input_dir, output_dir)
     typer.echo(f"Archivos DOCX limpios generados en: {output_dir}")
 
+
+@app.command("preprocess-docs")
+def preprocess_docs_batch() -> None:
+    """Limpia y convierte documentos .docx y .pdf en formato procesable."""
+    from .tools.preprocess_documents import batch_process_directory
+
+    input_dir = Path(cfg["paths"]["originals"])
+    output_dir = Path(cfg["paths"]["work"]) / "cleaned"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    batch_process_directory(input_dir, output_dir)
+    typer.echo(f"\u2705 Documentos limpios generados en: {output_dir}")
+
