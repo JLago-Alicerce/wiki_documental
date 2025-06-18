@@ -26,12 +26,12 @@ def test_pipeline_full(tmp_path, monkeypatch):
     doc.add_paragraph("Body")
     doc.save(doc_path)
 
-    def fake_run(cmd, capture_output=True, text=True):
-        md = Path(cmd[-1])
-        md.write_text("# Title\nBody", encoding="utf-8")
+    def fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
         class R:
             returncode = 0
             stderr = ""
+            stdout = "# Title\nBody"
+
         return R()
 
     monkeypatch.setattr("subprocess.run", fake_run)
@@ -67,9 +67,7 @@ def test_pipeline_full_with_image(tmp_path, monkeypatch):
     run.font.size = Pt(16)
     doc.save(doc_path)
 
-    def fake_run(cmd, capture_output=True, text=True):
-        md = Path(cmd[-1])
-        md.write_text("# Title\n![alt](media\\img.png)", encoding="utf-8")
+    def fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
         media_dir = None
         for part in cmd:
             if part.startswith("--extract-media="):
@@ -77,9 +75,12 @@ def test_pipeline_full_with_image(tmp_path, monkeypatch):
         if media_dir is not None:
             (media_dir / "media").mkdir(parents=True, exist_ok=True)
             (media_dir / "media" / "img.png").write_text("binary", encoding="utf-8")
+
         class R:
             returncode = 0
             stderr = ""
+            stdout = "# Title\n![alt](media\\img.png)"
+
         return R()
 
     monkeypatch.setattr("subprocess.run", fake_run)

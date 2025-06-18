@@ -15,17 +15,18 @@ def _create_doc(path: Path) -> None:
     doc.add_paragraph("Body")
     doc.save(path)
 
-def _fake_run(cmd, capture_output=True, text=True):
-    md = Path(cmd[-1])
-    md.write_text("# Title\nBody", encoding="utf-8")
+def _fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
     for part in cmd:
         if part.startswith("--extract-media="):
             dest = Path(part.split("=", 1)[1]) / "media"
             dest.mkdir(parents=True, exist_ok=True)
             (dest / "img.png").write_text("bin", encoding="utf-8")
+
     class R:
         returncode = 0
         stderr = ""
+        stdout = "# Title\nBody"
+
     return R()
 
 def test_reset_work_dir(tmp_path, monkeypatch):
