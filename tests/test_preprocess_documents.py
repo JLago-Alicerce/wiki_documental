@@ -69,3 +69,39 @@ def test_cli_preprocess_docs(tmp_path, monkeypatch):
     pdf_copied = paths["to_process"] / "sample_pdf.docx"
     assert doc_copied.exists()
     assert pdf_copied.exists()
+
+
+def test_discard_sections(tmp_path, monkeypatch):
+    orig = tmp_path / "orig"
+    work = tmp_path / "work"
+    orig.mkdir()
+    work.mkdir()
+
+    doc_in = orig / "sample.docx"
+    doc = Document()
+    doc.add_paragraph("MANUAL TECNICO")
+    doc.add_paragraph("Fecha: 2024")
+    doc.add_paragraph("LOGO")
+    doc.add_paragraph("Contenido")
+    doc.add_paragraph("Intro ...... 1")
+    doc.add_paragraph("Introduccion", style="Heading 1")
+    doc.add_paragraph("Texto real")
+    doc.add_paragraph("Agradecimientos")
+    doc.save(doc_in)
+
+    cfg = {
+        "paths": {"originals": orig, "cleaned": work / "cleaned", "to_process": work / "to_process"},
+        "options": {"discard_sections": {"portada": True, "indice": True, "contraportada": True}},
+    }
+    monkeypatch.setattr("wiki.cli.cfg", cfg)
+
+    result = runner.invoke(app, ["preprocess-docs"])
+    assert result.exit_code == 0
+
+    cleaned = cfg["paths"]["cleaned"] / "sample.docx"
+    doc = Document(cleaned)
+    texts = [p.text for p in doc.paragraphs]
+    assert "MANUAL TECNICO" not in texts
+    assert not any("Contenido" in t for t in texts)
+    assert "Agradecimientos" not in texts
+    assert "Texto real" in texts
