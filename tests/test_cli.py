@@ -26,7 +26,7 @@ def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
     monkeypatch.setattr("wiki.cli.ensure_pandoc", dummy)
 
     paths = {
-        "originals": tmp_path / "orig",
+        "to_process": tmp_path / "orig",
         "work": tmp_path / "work",
         "wiki": tmp_path / "wiki",
         "tmp": tmp_path / "tmp",
@@ -34,7 +34,7 @@ def test_full_calls_ensure_pandoc(monkeypatch, tmp_path):
     for p in paths.values():
         p.mkdir(parents=True, exist_ok=True)
 
-    doc_path = paths["originals"] / "sample.docx"
+    doc_path = paths["to_process"] / "sample.docx"
     doc = Document()
     run = doc.add_paragraph().add_run("Title")
     run.bold = True

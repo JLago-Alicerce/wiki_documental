@@ -99,10 +99,10 @@ def full(
         console.print(str(exc), style="red")
         raise typer.Exit(code=1)
 
-    originals_dir = cfg["paths"]["originals"]
-    docx_files = sorted(originals_dir.glob("*.docx"))
+    source_dir = cfg["paths"]["to_process"]
+    docx_files = sorted(source_dir.glob("*.docx"))
     if not docx_files:
-        console.print("No DOCX files found in originals directory", style="red")
+        console.print("No DOCX files found in to_process directory", style="red")
         raise typer.Exit(code=1)
 
     norm_dir = cfg["paths"]["work"] / "normalized"
@@ -369,7 +369,7 @@ def clean_docx_batch() -> None:
     from .tools.clean_docx import batch_process_directory
 
     input_dir = Path(cfg["paths"]["originals"])
-    output_dir = Path(cfg["paths"]["work"]) / "cleaned"
+    output_dir = Path(cfg["paths"]["cleaned"])
     output_dir.mkdir(parents=True, exist_ok=True)
 
     batch_process_directory(input_dir, output_dir)
@@ -385,16 +385,16 @@ def preprocess_docs_batch(
     """Limpia y convierte documentos .docx y .pdf en formato procesable."""
     from .tools.preprocess_documents import batch_process_directory
 
-    input_dir = Path(cfg["paths"]["cleaned_input"])
-    output_dir = Path(cfg["paths"]["cleaned_output"])
+    input_dir = Path(cfg["paths"]["originals"])
+    output_dir = Path(cfg["paths"]["cleaned"])
     output_dir.mkdir(parents=True, exist_ok=True)
 
     batch_process_directory(input_dir, output_dir)
     typer.echo(f"\u2705 Documentos limpios generados en: {output_dir}")
 
     # Copia automática de documentos limpios al directorio de entrada para wiki full
-    to_process_dir = Path(cfg["paths"]["originals"])
-    cleaned_dir = Path(cfg["paths"]["cleaned_output"])
+    to_process_dir = Path(cfg["paths"]["to_process"])
+    cleaned_dir = Path(cfg["paths"]["cleaned"])
 
     to_process_dir.mkdir(parents=True, exist_ok=True)
     copied_files = 0
@@ -420,8 +420,8 @@ def move_cleaned_to_process() -> None:
     cfg_path = Path("config.yaml")
     cfg = safe_load(cfg_path.read_text(encoding="utf-8"))
 
-    cleaned_dir = Path(cfg["paths"]["cleaned_output"])
-    process_dir = Path(cfg["paths"]["originals"])
+    cleaned_dir = Path(cfg["paths"]["cleaned"])
+    process_dir = Path(cfg["paths"]["to_process"])
     process_dir.mkdir(parents=True, exist_ok=True)
 
     for f in cleaned_dir.glob("*.docx"):
