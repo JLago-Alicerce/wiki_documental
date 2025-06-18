@@ -47,6 +47,21 @@ The generated wiki will be placed in the `wiki/` directory. Open `wiki/index.htm
 - `wiki/` – final Markdown files and Docsify assets.
 - `docs/` – additional documentation (see `docs/arquitectura.md`).
 
+## Configuration
+
+The `config.yaml` file controls various aspects of the workflow. You can
+customise how headings are detected when building `map.yaml` by defining
+custom styles under the `headings:` key. For example:
+
+```yaml
+headings:
+  styles:
+    "!!": 1
+    "!": 2
+```
+
+If omitted, the default Markdown `#` markers are used.
+
 ## CLI reference
 
 ### `wiki index`
@@ -101,6 +116,12 @@ Run the automated test suite with:
 ```bash
 poetry run pytest -q
 ```
+
+## Developer notes
+
+Common routines for document preprocessing reside in
+`wiki.tools.docx_utils` and `wiki.tools.pdf_utils`. These modules provide
+reusable helpers for cleaning DOCX files and converting or OCR-ing PDFs.
 
 ## Example sidebar entry
 

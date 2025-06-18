@@ -3,8 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from docx import Document
+import logging
 
 from .normalization_utils import (
+    average_font_size,
+    detect_heading_by_fallback,
     detect_heading_by_heuristics,
     detect_heading_by_style,
     should_use_heuristics,
@@ -31,12 +34,23 @@ def normalize_styles(doc_path: Path, out_path: Path, cfg: dict | None = None) ->
     _remove_toc_paragraphs(document)
 
     use_heuristics = should_use_heuristics(doc_path, cfg)
+    use_fallback = cfg.get("options", {}).get("use_heuristic_headings", False)
+    avg_size = average_font_size(document) if use_fallback else 0.0
 
     for paragraph in document.paragraphs:
-        if use_heuristics:
+        level = detect_heading_by_style(paragraph)
+
+        if level == 0 and use_heuristics:
             level = detect_heading_by_heuristics(paragraph)
-        else:
-            level = detect_heading_by_style(paragraph)
+
+        if level == 0 and use_fallback:
+            level = detect_heading_by_fallback(paragraph, avg_size)
+            if level:
+                logging.warning(
+                    "Fallback heading detection used for paragraph: %s",
+                    paragraph.text[:50],
+                )
+
         if level:
             paragraph.style = f"Heading {level}"
 

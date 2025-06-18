@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import logging
+import re
 import yaml
 
 from wiki.config import cfg
@@ -47,6 +48,7 @@ def build_tree(map_items: list[dict], depth_limit: int) -> tuple[list[dict], dic
         if not visible:
             hidden += 1
         node = {
+            "id": item.get("id"),
             "title": item.get("title", ""),
             "path": item.get("filename", ""),
             "visible": bool(visible),
@@ -65,6 +67,36 @@ def build_tree(map_items: list[dict], depth_limit: int) -> tuple[list[dict], dic
 
     stats = {"processed": len(map_items), "truncated": truncated, "hidden": hidden}
     return tree, stats
+
+
+def _id_is_numeric(value: str | None) -> bool:
+    if not value:
+        return False
+    return bool(re.fullmatch(r"\d+(?:\.\d+)*", str(value)))
+
+
+def _sort_tree(nodes: list[dict]) -> None:
+    if not nodes:
+        return
+    ids = [n.get("id") for n in nodes if n.get("id") is not None]
+    if ids and all(_id_is_numeric(i) for i in ids):
+        def num_key(n: dict) -> list[int]:
+            value = n.get("id")
+            if not _id_is_numeric(value):
+                return [10**9]
+            return [int(x) for x in str(value).split(".")]
+
+        nodes.sort(key=num_key)
+    else:
+        nodes.sort(key=lambda n: str(n.get("title", "")).lower())
+    for n in nodes:
+        _sort_tree(n.get("children") or [])
+
+
+def _drop_ids(nodes: list[dict]) -> None:
+    for n in nodes:
+        n.pop("id", None)
+        _drop_ids(n.get("children") or [])
 
 
 # ---------------------------------------------------------------------------
@@ -136,7 +168,9 @@ def generate_index(map_path: Path, wiki_dir: Path, out_path: Path) -> None:
         for filename in leftovers:
             title = Path(filename).stem.replace("-", " ").capitalize()
             pages.append({"title": title, "path": filename, "visible": default_visible})
+        pages.sort(key=lambda n: str(n.get("title", "")).lower())
         tree.append({"title": fallback_section, "path": "", "visible": True, "children": pages})
+    _sort_tree(tree)
 
     missing_files: list[str] = []
     for node in _iter_nodes(tree):
@@ -147,6 +181,7 @@ def generate_index(map_path: Path, wiki_dir: Path, out_path: Path) -> None:
                 node["note"] = "missing file"
                 missing_files.append(path)
 
+    _drop_ids(tree)
     save_index(tree, out_path)
 
     logger.info("Total de nodos procesados: %s", stats["processed"])
