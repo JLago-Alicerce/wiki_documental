@@ -11,6 +11,7 @@ from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
 from .processing.ingest import ingest_content
 from .processing.sidebar import build_sidebar
+from .tools.auto_index import auto_index_missing
 from .processing.reclassify import reclassify_unclassified
 from .processing.search_index import build_search_index
 from rich.progress import track
@@ -426,4 +427,22 @@ def move_cleaned_to_process() -> None:
     for f in cleaned_dir.glob("*.docx"):
         copyfile(f, process_dir / f.name)
         print(f"\u2713 {f.name} → {process_dir}")
+
+
+@app.command("auto-index-missing")
+def auto_index_missing_cli(
+    set_visible: bool = typer.Option(
+        False,
+        "--set-visible",
+        help="Marcar como visibles los documentos añadidos",
+    )
+) -> None:
+    """Añade al index los archivos Markdown no listados."""
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    wiki_dir = cfg["paths"]["wiki"]
+    added = auto_index_missing(index_path, wiki_dir, set_visible=set_visible)
+    if added:
+        typer.echo(f"{len(added)} nuevos documentos añadidos al índice")
+    else:
+        typer.echo("No se encontraron documentos huérfanos")
 

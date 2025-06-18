@@ -42,25 +42,28 @@ def _traverse_index(
     max_slug_len: int | None,
 ) -> None:
     for entry in entries:
+        if not entry.get("visible", True):
+            continue
         title = entry.get("title", "")
         slug = entry.get("slug")
-        if not slug:
+        if slug and exclude_prefix and slug.startswith(exclude_prefix):
             continue
-        if exclude_prefix and slug.startswith(exclude_prefix):
-            continue
-        if max_slug_len and len(slug) > max_slug_len:
+        if slug and max_slug_len and len(slug) > max_slug_len:
             continue
         if len(title.split()) > 25:
             continue
-        filename = f"{slug}.md"
-        path = wiki_dir / filename
-        if not title or not _has_valid_title(path):
+        filename = f"{slug}.md" if slug else None
+        path = wiki_dir / filename if filename else None
+        if not title or (path and not _has_valid_title(path)):
             continue
-        link = f"/wiki/{filename}" if absolute else filename
         indent = "  " * (level - 1)
         if len(title) > 100:
             title = title[:97].rstrip() + "..."
-        lines.append(f"{indent}* [{title}]({link})")
+        if slug:
+            link = f"/wiki/{filename}" if absolute else filename
+            lines.append(f"{indent}* [{title}]({link})")
+        else:
+            lines.append(f"{indent}* {title}")
         children = entry.get("children") or []
         _traverse_index(
             children,
@@ -84,6 +87,30 @@ def build_sidebar(
     """Generate a Docsify sidebar from index.yaml applying simple filters."""
     with index_path.open(encoding="utf-8") as f:
         index_data = yaml.safe_load(f) or []
+
+    # Detect new format with sections/pages
+    if index_data and "section" in index_data[0]:
+        converted: list[dict] = []
+        for i, section in enumerate(index_data, start=1):
+            sec_entry = {
+                "id": str(i),
+                "title": section.get("section", ""),
+                "slug": None,
+                "children": [],
+            }
+            for j, page in enumerate(section.get("pages", []), start=1):
+                slug = Path(page.get("path", "")).stem
+                sec_entry["children"].append(
+                    {
+                        "id": f"{i}.{j}",
+                        "title": page.get("title", ""),
+                        "slug": slug,
+                        "visible": page.get("visible", True),
+                        "children": [],
+                    }
+                )
+            converted.append(sec_entry)
+        index_data = converted
 
     lines: list[str] = []
     _traverse_index(
