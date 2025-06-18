@@ -47,6 +47,21 @@ The generated wiki will be placed in the `wiki/` directory. Open `wiki/index.htm
 - `wiki/` – final Markdown files and Docsify assets.
 - `docs/` – additional documentation (see `docs/arquitectura.md`).
 
+## Configuration
+
+The `config.yaml` file controls various aspects of the workflow. You can
+customise how headings are detected when building `map.yaml` by defining
+custom styles under the `headings:` key. For example:
+
+```yaml
+headings:
+  styles:
+    "!!": 1
+    "!": 2
+```
+
+If omitted, the default Markdown `#` markers are used.
+
 ## CLI reference
 
 ### `wiki index`

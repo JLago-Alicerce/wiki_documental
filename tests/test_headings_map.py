@@ -61,3 +61,18 @@ def test_strip_numbers(tmp_path):
             "filename": "tercero.md",
         },
     ]
+
+
+def test_custom_styles(tmp_path, monkeypatch):
+    md_folder = tmp_path / "md_raw"
+    md_folder.mkdir()
+    md_file = md_folder / "sample.md"
+    md_file.write_text("!! H1\n! H2\n", encoding="utf-8")
+
+    custom_cfg = {"headings": {"styles": {"!!": 1, "!": 2}}}
+    import wiki.processing.headings_map as hm
+
+    monkeypatch.setattr(hm, "cfg", custom_cfg)
+    result = hm.build_headings_map(md_folder)
+    assert [r["level"] for r in result] == [1, 2]
+    assert [r["slug"] for r in result] == ["h1", "h2"]

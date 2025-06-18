@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import List, Dict
 
 import yaml
+from wiki.config import cfg
 from wiki.utils.slug import safe_slug
 
 used_slugs: set[str] = set()
@@ -25,15 +26,40 @@ def build_headings_map(
     map_data: List[Dict[str, str | int]] = []
     used_slugs.clear()
     counters: dict[int, int] = {}
+
+    styles_cfg = cfg.get("headings", {}).get("styles")
+    patterns: list[tuple[re.Pattern[str], int]] | None = None
+    if styles_cfg:
+        patterns = [
+            (re.compile(rf"^{re.escape(s)}\s+(.*)$"), int(level))
+            for s, level in sorted(styles_cfg.items(), key=lambda x: -len(x[0]))
+        ]
+
     for md_file in sorted(md_folder.rglob("*.md")):
         with md_file.open("r", encoding="utf-8") as f:
             for line in f:
-                m = HEADING_RE.match(line.strip())
-                if m:
+                stripped = line.strip()
+                if patterns:
+                    match = None
+                    level = 0
+                    title = ""
+                    for pat, lvl in patterns:
+                        m = pat.match(stripped)
+                        if m:
+                            match = m
+                            level = lvl
+                            title = m.group(1).strip()
+                            break
+                    if not match:
+                        continue
+                else:
+                    m = HEADING_RE.match(stripped)
+                    if not m:
+                        continue
                     level = len(m.group(1))
                     title = m.group(2).strip()
-                    if strip_numbers and level >= from_level:
-                        title = NUMBER_RE.sub("", title)
+                if strip_numbers and level >= from_level:
+                    title = NUMBER_RE.sub("", title)
 
                     counters[level] = counters.get(level, 0) + 1
                     for l in list(counters.keys()):
