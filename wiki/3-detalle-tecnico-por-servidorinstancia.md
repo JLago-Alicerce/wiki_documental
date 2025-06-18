@@ -1,9 +1,9 @@
 ---
 source: EstadoActualPlataformaBBD_V0306_10_32.md
 doc_source: EstadoActualPlataformaBBD_V0306_10_32.docx
-created: 2025-06-17T22:07:13.960208
+created: 2025-06-17T22:28:01.672194
 ---
-<div class="fragment-meta">source: EstadoActualPlataformaBBD_V0306_10_32.md | doc: EstadoActualPlataformaBBD_V0306_10_32.docx | created: 2025-06-17T22:07:13.960208</div>
+<div class="fragment-meta">source: EstadoActualPlataformaBBD_V0306_10_32.md | doc: EstadoActualPlataformaBBD_V0306_10_32.docx | created: 2025-06-17T22:28:01.672194</div>
 
 # 3. Detalle técnico por servidor/instancia
 
