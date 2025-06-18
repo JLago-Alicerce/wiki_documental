@@ -1,5 +1,7 @@
 paths:
-  originals: "inputs/_originals"
+  originals: "work/to_process"
+  cleaned_input: "inputs/_originals"
+  cleaned_output: "work/cleaned"
   work: "work"
   wiki: "wiki"
   tmp: "work/tmp"
