@@ -61,8 +61,8 @@ def test_ingest_heading_clean(tmp_path):
 def test_ingest_no_duplicate_meta(tmp_path):
     md = tmp_path / "full.md"
     md.write_text(
-        "<!--\n---\nsource: full.md\ncreated: 2020-01-01\n---\n-->\n\n"
-        "<div class=\"fragment-meta\">source: full.md | doc: DocA.docx | created: 2020-01-01</div>\n\n"
+        "<!--\n---\nsource: full.md\ninserted: 2020-01-01\n---\n-->\n\n"
+        "<div class=\"fragment-meta\">source: full.md | doc: DocA.docx | inserted: 2020-01-01</div>\n\n"
         "# Seccion\nTexto\n",
         encoding="utf-8",
     )
