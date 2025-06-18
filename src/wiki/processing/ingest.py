@@ -6,6 +6,8 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Dict, List
 
+from wiki.utils.slug import basic_slug
+
 import yaml
 from .md_post import (
     post_process_text,
@@ -135,11 +137,15 @@ def ingest_content(
     sections = _parse_sections(md_path)
 
     content_map: Dict[str, List[str]] = {e["slug"]: [] for e in entries}
-    unclassified: List[str] = []
+    unclassified_sections: List[tuple[str, List[str]]] = []
+    untitled_count = 1
 
     for title, lines in sections:
         if title == "__intro__":
-            unclassified.extend(lines)
+            new_title = f"Seccion sin titulo {untitled_count}"
+            untitled_count += 1
+            lines = [f"# {new_title}\n", "<!-- Fallback: sin correspondencia -->\n"] + list(lines)
+            unclassified_sections.append((new_title, lines))
             continue
         best_ratio = 0.0
         best_slug: str | None = None
@@ -151,7 +157,15 @@ def ingest_content(
         if best_slug is not None and best_ratio >= cutoff:
             content_map[best_slug].extend(lines)
         else:
-            unclassified.extend(lines)
+            if not HEADING_RE.match(lines[0]):
+                new_title = f"Seccion sin titulo {untitled_count}"
+                untitled_count += 1
+                lines.insert(0, f"# {new_title}\n")
+                sec_title = new_title
+            else:
+                sec_title = title
+            lines.insert(1, "<!-- Fallback: sin correspondencia -->\n")
+            unclassified_sections.append((sec_title, lines))
 
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -214,51 +228,68 @@ def ingest_content(
         with path.open("w", encoding="utf-8") as f:
             f.write(final_text)
 
-    if unclassified:
-        meta = _read_front_matter(out_dir / "99_unclassified.md")
-        created = meta.get("created", datetime.utcnow().isoformat())
-        existing_sources = meta.get("doc_source")
-        sources: List[str] = []
-        if isinstance(existing_sources, list):
-            sources.extend(existing_sources)
-        elif isinstance(existing_sources, str):
-            sources.append(existing_sources)
-        if doc_source is not None:
-            new_src = f"{Path(doc_source).stem}.docx"
-            if new_src not in sources:
-                sources.append(new_src)
-        unclassified_text = "".join(unclassified)
-        _fm, body = _split_front_matter(unclassified_text)
-        header_lines = ["---", f"source: {md_path.name}"]
-        if sources:
-            if len(sources) == 1:
-                header_lines.append(f"doc_source: {sources[0]}")
-            else:
-                header_lines.append("doc_source:")
-                for s in sorted(sources):
-                    header_lines.append(f"  - {s}")
-        elif doc_source is not None:
-            header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
-        header_lines.append(f"created: {created}")
-        header_lines.append("---\n")
-        header = "\n".join(header_lines)
+if unclassified_sections:
+    uc_path = out_dir / "99_unclassified.md"
+    meta = _read_front_matter(uc_path)
+    created = meta.get("created", datetime.utcnow().isoformat())
+    existing_sources = meta.get("doc_source")
+    sources: List[str] = []
+    if isinstance(existing_sources, list):
+        sources.extend(existing_sources)
+    elif isinstance(existing_sources, str):
+        sources.append(existing_sources)
+    if doc_source is not None:
+        new_src = f"{Path(doc_source).stem}.docx"
+        if new_src not in sources:
+            sources.append(new_src)
 
-        meta_parts = [f"source: {md_path.name}"]
-        if sources:
-            meta_parts.append("doc: " + ", ".join(sorted(sources)))
-        meta_parts.append(f"created: {created}")
-        meta_line = (
-            f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
-        )
+    mode = "a" if uc_path.exists() else "w"
+    with uc_path.open(mode, encoding="utf-8") as f:
+        if mode == "w":
+            # Bloque YAML
+            header_lines = ["---", f"source: {md_path.name}"]
+            if sources:
+                if len(sources) == 1:
+                    header_lines.append(f"doc_source: {sources[0]}")
+                else:
+                    header_lines.append("doc_source:")
+                    for s in sorted(sources):
+                        header_lines.append(f"  - {s}")
+            elif doc_source is not None:
+                header_lines.append(f"doc_source: {Path(doc_source).stem}.docx")
+            header_lines.append(f"created: {created}")
+            header_lines.append("---\n")
+            header = "\n".join(header_lines)
 
-        body_lines = body.splitlines()
-        if not any("fragment-meta" in line for line in body_lines[:5]):
-            body = meta_line + body
+            # Bloque HTML <div class="fragment-meta">
+            meta_parts = [f"source: {md_path.name}"]
+            if sources:
+                meta_parts.append("doc: " + ", ".join(sorted(sources)))
+            meta_parts.append(f"created: {created}")
+            meta_line = f'<div class="fragment-meta">{" | ".join(meta_parts)}</div>\n\n'
 
-        final_text = post_process_text(header + body)
-        final_text = fix_image_links(final_text)
-        final_text = normalize_image_paths(final_text)
-        assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
-        warn_missing_images(final_text, out_dir)
-        with (out_dir / "99_unclassified.md").open("w", encoding="utf-8") as f:
-            f.write(final_text)
+            # Unificación
+            header_text = header + meta_line
+            header_text = post_process_text(header_text)
+            header_text = fix_image_links(header_text)
+            header_text = normalize_image_paths(header_text)
+            assert "assets/assets/media/" not in header_text, "❌ Doble ruta assets detectada"
+            warn_missing_images(header_text, out_dir)
+            f.write(header_text)
+
+        # Escribir los fragmentos no clasificados
+        for sec_title, section in unclassified_sections:
+            sec_text = "".join(section)
+            sec_text = post_process_text(sec_text)
+            sec_text = fix_image_links(sec_text)
+            sec_text = normalize_image_paths(sec_text)
+            assert "assets/assets/media/" not in sec_text, "❌ Doble ruta assets detectada"
+            warn_missing_images(sec_text, out_dir)
+            f.write(sec_text)
+
+    # Registrar los títulos de secciones no clasificadas
+    log_dir = uc_path.parent.parent / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    with (log_dir / "unclassified_report.txt").open("a", encoding="utf-8") as log_f:
+        for sec_title, _ in unclassified_sections:
+            log_f.write(basic_slug(sec_title) + "\n")
