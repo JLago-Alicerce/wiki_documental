@@ -55,3 +55,26 @@ def test_ingest_heading_clean(tmp_path):
     heading = next(l for l in body if l.startswith('#'))
     assert heading == '# Introducción'
 
+
+def test_ingest_no_duplicate_meta(tmp_path):
+    md = tmp_path / "full.md"
+    md.write_text(
+        "---\nsource: full.md\n---\n"
+        "<div class=\"fragment-meta\">source: full.md | doc: DocA.docx | created: 2020-01-01</div>\n\n"
+        "# Seccion\nTexto\n",
+        encoding="utf-8",
+    )
+
+    index = [{"id": "1", "title": "Seccion", "slug": "seccion", "children": []}]
+    index_path = tmp_path / "index.yaml"
+    index_path.write_text(yaml.safe_dump(index, allow_unicode=True), encoding="utf-8")
+
+    out_dir = tmp_path / "wiki"
+    ingest_content(md, index_path, out_dir, cutoff=0.5, doc_source="DocA")
+
+    final = out_dir / "seccion.md"
+    assert final.exists()
+    lines = final.read_text(encoding="utf-8").splitlines()
+    meta_lines = [l for l in lines if '<div class="fragment-meta">' in l]
+    assert len(meta_lines) == 1
+
