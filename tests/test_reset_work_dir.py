@@ -42,6 +42,14 @@ def test_reset_work_dir(tmp_path, monkeypatch):
     doc_file = paths["originals"] / "sample.docx"
     _create_doc(doc_file)
 
+    # Extra DOCX files inside work directory to verify cleanup
+    extra_docx = paths["work"] / "orphan.docx"
+    _create_doc(extra_docx)
+    subdir = paths["work"] / "sub"
+    subdir.mkdir(parents=True, exist_ok=True)
+    nested_docx = subdir / "nested.docx"
+    _create_doc(nested_docx)
+
     monkeypatch.setattr("subprocess.run", _fake_run)
     monkeypatch.setattr("wiki.processing.docx_to_md.ensure_pandoc", lambda: None)
     monkeypatch.setattr("wiki.cli.ensure_pandoc", lambda: None)
@@ -63,4 +71,8 @@ def test_reset_work_dir(tmp_path, monkeypatch):
     for pattern in ["*.md", "*.yaml", "*.csv"]:
         assert not list(paths["work"].rglob(pattern))
         assert not list(paths["wiki"].rglob(pattern))
+
+    # Ensure DOCX files were removed from work directory
+    assert not extra_docx.exists()
+    assert not nested_docx.exists()
 
