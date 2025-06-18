@@ -14,6 +14,7 @@ from .processing.sidebar import build_sidebar
 from .tools.auto_index import auto_index_missing
 from .processing.reclassify import reclassify_unclassified
 from .processing.search_index import build_search_index
+from .tools.preview_generator import generate_docsify_preview
 from rich.progress import track
 import yaml
 
@@ -445,4 +446,10 @@ def auto_index_missing_cli(
         typer.echo(f"{len(added)} nuevos documentos añadidos al índice")
     else:
         typer.echo("No se encontraron documentos huérfanos")
+
+
+@app.command("preview")
+def preview_docsify_site() -> None:
+    """Prepara la web estática navegable con Docsify a partir de los .md ya normalizados."""
+    generate_docsify_preview()
 
