@@ -3,6 +3,7 @@ import docx
 from docx.document import Document
 from docx.text.paragraph import Paragraph
 from pdf2docx import Converter
+from yaml import safe_load
 
 # --- Heurísticas de detección de encabezados ---
 HEADING_1_MIN_FONT_SIZE = 14  # pt
@@ -81,3 +82,13 @@ def batch_process_directory(input_dir: Path, output_dir: Path):
                 print(f"\u274c Error al convertir {file.name}: {e}")
 
     print("\n\u2705 Limpieza completada.")
+
+
+if __name__ == "__main__":
+    cfg_path = Path("config.yaml")
+    cfg = safe_load(cfg_path.read_text(encoding="utf-8"))
+
+    input_dir = Path(cfg["paths"]["cleaned_input"])
+    output_dir = Path(cfg["paths"]["cleaned_output"])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    batch_process_directory(input_dir, output_dir)

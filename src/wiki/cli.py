@@ -375,10 +375,29 @@ def preprocess_docs_batch() -> None:
     """Limpia y convierte documentos .docx y .pdf en formato procesable."""
     from .tools.preprocess_documents import batch_process_directory
 
-    input_dir = Path(cfg["paths"]["originals"])
-    output_dir = Path(cfg["paths"]["work"]) / "cleaned"
+    input_dir = Path(cfg["paths"]["cleaned_input"])
+    output_dir = Path(cfg["paths"]["cleaned_output"])
     output_dir.mkdir(parents=True, exist_ok=True)
 
     batch_process_directory(input_dir, output_dir)
     typer.echo(f"\u2705 Documentos limpios generados en: {output_dir}")
+
+
+@app.command("prepare-to-process")
+def move_cleaned_to_process() -> None:
+    """Copia archivos limpios desde cleaned → to_process (para ejecución de wiki full)."""
+    from shutil import copyfile
+    from pathlib import Path
+    from yaml import safe_load
+
+    cfg_path = Path("config.yaml")
+    cfg = safe_load(cfg_path.read_text(encoding="utf-8"))
+
+    cleaned_dir = Path(cfg["paths"]["cleaned_output"])
+    process_dir = Path(cfg["paths"]["originals"])
+    process_dir.mkdir(parents=True, exist_ok=True)
+
+    for f in cleaned_dir.glob("*.docx"):
+        copyfile(f, process_dir / f.name)
+        print(f"\u2713 {f.name} → {process_dir}")
 

@@ -44,7 +44,12 @@ def test_cli_preprocess_docs(tmp_path, monkeypatch):
             pass
 
     monkeypatch.setattr("wiki.tools.preprocess_documents.Converter", DummyConverter)
-    monkeypatch.setattr("wiki.cli.cfg", {"paths": {"originals": orig, "work": work}})
+    paths = {
+        "cleaned_input": orig,
+        "cleaned_output": work / "cleaned",
+        "originals": work / "to_process",
+    }
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths})
 
     result = runner.invoke(app, ["preprocess-docs"])
     assert result.exit_code == 0
