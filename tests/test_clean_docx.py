@@ -43,3 +43,19 @@ def test_cli_clean_docx(tmp_path, monkeypatch):
     doc = Document(cleaned)
     assert doc.paragraphs[0].style.name == "Heading 1"
 
+
+def test_clean_docx_styles_missing_style(tmp_path):
+    dirty = tmp_path / "sample.docx"
+    cleaned = tmp_path / "cleaned.docx"
+    _create_dirty_docx(dirty)
+
+    # remove Heading 1 to force fallback
+    doc_tmp = Document(dirty)
+    style = doc_tmp.styles["Heading 1"]
+    doc_tmp.styles.element.remove(style._element)
+    doc_tmp.save(dirty)
+
+    clean_docx_styles(dirty, cleaned)
+    doc = Document(cleaned)
+    assert doc.paragraphs[0].style.name.startswith("Heading")
+

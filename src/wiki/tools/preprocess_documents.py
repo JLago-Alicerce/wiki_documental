@@ -23,7 +23,7 @@ except Exception:
 
 from yaml import safe_load
 
-from .docx_utils import clean_docx_styles
+from .docx_utils import clean_docx_styles, get_safe_heading_style
 from . import pdf_utils
 
 # Re-export Converter for backwards compatibility with tests
@@ -37,7 +37,25 @@ def is_likely_heading(p: Paragraph) -> int:
     text = p.text.strip()
     if not text:
         return 0
-    return 0  # Placeholder logic, implement actual heuristics
+
+    if len(text.split()) > 12:
+        return 0
+
+    base_score = 1 if text.isupper() or text[0].isupper() else 0
+
+    bold_runs = [r.bold for r in p.runs if r.text.strip()]
+    if bold_runs:
+        bold_ratio = sum(1 for b in bold_runs if b) / len(bold_runs)
+        if bold_ratio >= 0.5:
+            base_score += 1
+
+    for r in p.runs:
+        if r.text.strip() and r.font.size:
+            if r.font.size.pt >= 13:
+                base_score += 1
+                break
+
+    return 1 if base_score >= 2 else 0
 
 def _remove_paragraphs(paragraphs: list[Paragraph]) -> None:
     for p in paragraphs:
@@ -111,7 +129,8 @@ def clean_docx_styles(doc_path: Path, output_path: Path, cfg: dict | None = None
         heading_level = is_likely_heading(p)
         if heading_level > 0:
             print(f"  → '{p.text[:50].strip()}' → Heading {heading_level}")
-            p.style = f'Heading {heading_level}'
+            safe_style = get_safe_heading_style(doc, heading_level)
+            p.style = safe_style
             changes_made = True
 
     if changes_made:
