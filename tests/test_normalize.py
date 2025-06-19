@@ -60,3 +60,24 @@ def test_normalize_styles_fallback(tmp_path, caplog):
 
     doc = Document(out)
     assert doc.paragraphs[0].style.name.startswith("Heading")
+
+
+def test_normalize_styles_missing_style(tmp_path):
+    sample = tmp_path / "sample.docx"
+    doc = Document()
+    run = doc.add_paragraph().add_run("H4 Title")
+    run.bold = True
+    run.italic = True
+    doc.save(sample)
+
+    # Remove Heading 4 style to force fallback
+    doc2 = Document(sample)
+    style = doc2.styles["Heading 4"]
+    doc2.styles.element.remove(style._element)
+    doc2.save(sample)
+
+    out = tmp_path / "out.docx"
+    normalize_styles(sample, out)
+
+    doc_out = Document(out)
+    assert doc_out.paragraphs[0].style.name.startswith("Heading")

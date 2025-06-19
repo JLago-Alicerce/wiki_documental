@@ -4,6 +4,7 @@ from pathlib import Path
 
 from docx import Document
 import logging
+from ..tools.docx_utils import get_safe_heading_style
 
 from .normalization_utils import (
     average_font_size,
@@ -52,7 +53,8 @@ def normalize_styles(doc_path: Path, out_path: Path, cfg: dict | None = None) ->
                 )
 
         if level:
-            paragraph.style = f"Heading {level}"
+            safe_style = get_safe_heading_style(document, level)
+            paragraph.style = safe_style
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     document.save(str(out_path))
