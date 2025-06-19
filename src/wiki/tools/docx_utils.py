@@ -5,6 +5,7 @@ from pathlib import Path
 import docx
 from docx.document import Document
 from docx.text.paragraph import Paragraph
+from docx.enum.style import WD_STYLE_TYPE
 
 # Heuristic thresholds for heading detection
 HEADING_1_MIN_FONT_SIZE = 14  # pt
@@ -37,6 +38,34 @@ def is_likely_heading(p: Paragraph) -> int:
     return 1 if base_score >= 2 else 0
 
 
+def get_safe_heading_style(doc: Document, target_level: int) -> str:
+    """Return a valid heading style name, falling back if needed."""
+    target = f"Heading {target_level}"
+    styles = [s.name for s in doc.styles if s.type == WD_STYLE_TYPE.PARAGRAPH]
+
+    if target in styles:
+        return target
+
+    fallback = None
+    for level in range(target_level - 1, 0, -1):
+        cand = f"Heading {level}"
+        if cand in styles:
+            fallback = cand
+            break
+
+    if not fallback:
+        fallback = "Heading 1" if "Heading 1" in styles else "Normal"
+
+    try:
+        new_style = doc.styles.add_style(target, WD_STYLE_TYPE.PARAGRAPH)
+        new_style.base_style = doc.styles[fallback]
+        print(f"⚠️ Estilo \"{target}\" no encontrado. Se ha clonado \"{fallback}\".")
+        return target
+    except Exception:
+        print(f"⚠️ Estilo \"{target}\" no encontrado. Se ha usado \"{fallback}\" como sustituto.")
+        return fallback
+
+
 def clean_docx_styles(doc_path: Path, output_path: Path) -> bool:
     """Normalize paragraphs to Heading styles if they look like titles."""
     try:
@@ -52,7 +81,8 @@ def clean_docx_styles(doc_path: Path, output_path: Path) -> bool:
         heading_level = is_likely_heading(p)
         if heading_level > 0:
             print(f"  -> '{p.text[:50].strip()}' \u2192 Heading {heading_level}")
-            p.style = f"Heading {heading_level}"
+            safe_style = get_safe_heading_style(doc, heading_level)
+            p.style = safe_style
             changes_made = True
 
     if changes_made:
