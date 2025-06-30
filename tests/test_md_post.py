@@ -1,4 +1,4 @@
-from wiki_documental.processing.md_post import (
+from wiki.processing.md_post import (
     post_process_text,
     clean_markdown,
     fix_image_links,
@@ -31,6 +31,13 @@ def test_heading_cleanup():
     assert lines[2] == '### Another Title'
 
 
+def test_heading_cleanup_h1():
+    text = '# 1 Introducción <sub>draft</sub>\ncontenido\n'
+    result = clean_markdown(text)
+    lines = result.splitlines()
+    assert lines[0] == '# Introducción'
+
+
 def test_fix_image_links_and_warning(tmp_path, capsys):
     text = '![a](media/img.png) and ![](../media/img2.jpg)'
     assets = tmp_path / 'assets' / 'media'
@@ -41,13 +48,22 @@ def test_fix_image_links_and_warning(tmp_path, capsys):
     warn_missing_images(fixed, tmp_path)
     captured = capsys.readouterr()
     assert 'assets/media/img.png' in fixed
-    assert '../media/img2.jpg' in fixed
-    assert 'img2.jpg' not in captured.out
+    assert 'assets/media/img2.jpg' in fixed
+    assert 'img2.jpg' in captured.out
 
 
 def test_fix_image_links_no_duplicate():
     text = '![alt](assets/media/img.png)'
     assert fix_image_links(text) == text
+
+
+def test_fix_image_links_extra_prefix():
+    text = '![alt](/assets/media/img.png) ![](../assets/media/img2.png)'
+    fixed = fix_image_links(text)
+    assert '/assets/media/' not in fixed
+    assert '../assets/media/' not in fixed
+    assert 'assets/media/img.png' in fixed
+    assert 'assets/media/img2.png' in fixed
 
 
 def test_normalize_image_paths():
@@ -56,3 +72,16 @@ def test_normalize_image_paths():
     assert '\\' not in result
     assert 'C:/' not in result
     assert 'assets/media/img.png' in result
+
+
+def test_fix_image_links_html_img():
+    text = '<img src="../media/img.png">'
+    fixed = fix_image_links(text)
+    assert fixed == '<img src="assets/media/img.png">'
+
+
+def test_normalize_image_paths_html():
+    text = '<img src="C:/temp/foo.png">'
+    result = normalize_image_paths(text)
+    assert 'C:/' not in result
+    assert result == '<img src="assets/media/foo.png">'

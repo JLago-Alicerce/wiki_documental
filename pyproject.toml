@@ -6,17 +6,23 @@ authors = ["Jose Manuel Lago <jose.lago.varela@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
+[[tool.poetry.packages]]
+include = "wiki"
+from = "src"
+
 [tool.poetry.dependencies]
 python = "^3.11"
-python-docx = "^1.1"
+python-docx = "^1.2.0"
 PyYAML = "^6.0"
 rich = "^13.7"
 python-slugify = "^8.0"
 tqdm = "^4.66"
-typer = {version = "^0.9", extras = ["all"]}
+typer = {version = "^0.12", extras = ["all"]}
 "pdfminer.six" = {version = "^20221105", optional = true}
-pdf2image = {version = "^1.17", optional = true}
-pytesseract = {version = "^0.3", optional = true}
+pdf2image = "^1.16.3"
+pytesseract = "^0.3.10"
+pdf2docx = "^0.5.6"
+Pillow = "^10.0.1"
 
 [tool.poetry.extras]
 pdf = ["pdfminer.six", "pdf2image", "pytesseract"]
@@ -27,4 +33,4 @@ pytest-cov = "^5.0"
 types-python-slugify = "^8.0"
 
 [tool.poetry.scripts]
-wiki = "wiki_documental.cli:app"
+wiki = "wiki.cli:app"

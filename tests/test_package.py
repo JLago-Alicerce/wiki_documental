@@ -4,7 +4,7 @@ from docx.shared import Pt
 from typer.testing import CliRunner
 from zipfile import ZipFile
 
-from wiki_documental.cli import app
+from wiki.cli import app
 
 runner = CliRunner()
 
@@ -18,9 +18,7 @@ def _create_doc(path: Path) -> None:
     doc.save(path)
 
 
-def _fake_run(cmd, capture_output=True, text=True):
-    md = Path(cmd[-1])
-    md.write_text("# Title\n![alt](media/img.png)", encoding="utf-8")
+def _fake_run(cmd, capture_output=True, text=True, encoding="utf-8"):
     media_dir = None
     for part in cmd:
         if part.startswith("--extract-media="):
@@ -28,15 +26,18 @@ def _fake_run(cmd, capture_output=True, text=True):
     if media_dir is not None:
         (media_dir / "media").mkdir(parents=True, exist_ok=True)
         (media_dir / "media" / "img.png").write_text("binary", encoding="utf-8")
+
     class R:
         returncode = 0
         stderr = ""
+        stdout = "# Title\n![alt](media/img.png)"
+
     return R()
 
 
 def test_package_static(tmp_path, monkeypatch):
     paths = {
-        "originals": tmp_path / "orig",
+        "to_process": tmp_path / "orig",
         "work": tmp_path / "work",
         "wiki": tmp_path / "wiki",
         "tmp": tmp_path / "tmp",
@@ -44,13 +45,13 @@ def test_package_static(tmp_path, monkeypatch):
     for p in paths.values():
         p.mkdir(parents=True, exist_ok=True)
 
-    doc_path = paths["originals"] / "sample.docx"
+    doc_path = paths["to_process"] / "sample.docx"
     _create_doc(doc_path)
 
     monkeypatch.setattr("subprocess.run", _fake_run)
-    monkeypatch.setattr("wiki_documental.processing.docx_to_md.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.ensure_pandoc", lambda: None)
-    monkeypatch.setattr("wiki_documental.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
+    monkeypatch.setattr("wiki.processing.docx_to_md.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.ensure_pandoc", lambda: None)
+    monkeypatch.setattr("wiki.cli.cfg", {"paths": paths, "options": {"cutoff_similarity": 0.5}})
 
     monkeypatch.chdir(tmp_path)
     import sys

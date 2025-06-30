@@ -2,7 +2,7 @@ import subprocess
 import shutil
 import pytest
 
-from wiki_documental.utils.system import ensure_pandoc
+from wiki.utils.system import ensure_pandoc
 
 
 def test_missing_pandoc(monkeypatch):

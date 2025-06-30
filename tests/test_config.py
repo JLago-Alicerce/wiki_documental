@@ -1,26 +1,32 @@
 from pathlib import Path
 
-import wiki_documental.config as config
+import wiki.config as config
 
 
 def test_load_config_creates_directories(tmp_path, monkeypatch):
     root = tmp_path / "project"
     root.mkdir()
-    (root / "src/wiki_documental").mkdir(parents=True)
+    (root / "src/wiki").mkdir(parents=True)
     config_yaml = (
         "paths:\n"
         "  originals: 'inputs/_originals'\n"
+        "  cleaned: 'work/cleaned'\n"
+        "  to_process: 'work/to_process'\n"
         "  work: 'work'\n"
         "  wiki: 'wiki'\n"
         "  tmp: 'work/tmp'\n"
         "\n"
         "options:\n"
-        "  ocr: false\n"
+        "  allow_heading_heuristics: true\n"
+        "  fallback_to_heuristics_for_pdf: true\n"
+        "  ocr:\n"
+        "    enabled: false\n"
+        "    include_images: true\n"
         "  cutoff_similarity: 0.5\n"
     )
     (root / "config.yaml").write_text(config_yaml, encoding="utf-8")
 
-    fake_file = root / "src/wiki_documental/config.py"
+    fake_file = root / "src/wiki/config.py"
     fake_file.write_text("", encoding="utf-8")
     monkeypatch.setattr(config, "__file__", str(fake_file))
 

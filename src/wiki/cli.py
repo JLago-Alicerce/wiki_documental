@@ -1,0 +1,474 @@
+import shutil
+import typer
+from pathlib import Path
+from shutil import rmtree
+from rich.console import Console
+
+from . import ensure_pandoc, __version__
+from .config import cfg
+from .processing.normalize_docx import normalize_styles
+from .processing.docx_to_md import convert_docx_to_md
+from .processing.headings_map import build_headings_map, save_map_yaml
+from .processing.ingest import ingest_content, insert_section_numbers
+from .processing.sidebar import build_sidebar
+from .tools.auto_index import auto_index_missing
+from .processing.reclassify import reclassify_unclassified
+from .processing.search_index import build_search_index
+from .tools.preview_generator import generate_docsify_preview
+from rich.progress import track
+import yaml
+
+app = typer.Typer(add_completion=False, add_help_option=True, rich_markup_mode=None)
+
+
+def reset_environment(cfg: dict) -> None:
+    """Remove generated artifacts from wiki and work directories."""
+    console = Console()
+    paths = [cfg["paths"]["wiki"], cfg["paths"]["work"]]
+    for path in paths:
+        for pattern in ["*.md", "*.yaml", "*.csv"]:
+            for f in Path(path).rglob(pattern):
+                if f.name == "index.html":
+                    continue
+                f.unlink()
+                console.log(f"Deleted {f}")
+
+    # Remove any DOCX files left in the work directory
+    for f in Path(cfg["paths"]["work"]).rglob("*.docx"):
+        f.unlink()
+        console.log(f"Deleted {f}")
+    media_dir = Path(cfg["paths"]["wiki"]) / "assets" / "media"
+    if media_dir.exists():
+        rmtree(media_dir)
+        console.log(f"Removed directory {media_dir}")
+
+    work_dir = Path(cfg["paths"]["work"])
+    paths_to_clean = [
+        work_dir / "md_raw",
+        work_dir / "normalized",
+        work_dir / "tmp",
+        work_dir / "media",
+    ]
+    for path in paths_to_clean:
+        if path.exists():
+            rmtree(path)
+            console.log(f"Removed directory {path}")
+
+
+def _version_callback(value: bool) -> None:
+    if value:
+        typer.echo(f"wiki_documental {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    ctx: typer.Context,
+    version: bool = typer.Option(
+        None,
+        "--version",
+        "-v",
+        callback=_version_callback,
+        is_eager=True,
+        help="Show the application version and exit.",
+    ),
+    absolute_links: bool = typer.Option(
+        False,
+        "--absolute-links",
+        help="Usar enlaces absolutos en el sidebar (/wiki/...)",
+    ),
+):
+    """Wiki Documental CLI."""
+    ctx.obj = {"absolute_links": absolute_links}
+    return
+
+
+@app.command()
+def full(
+    ctx: typer.Context,
+    skip_verify: bool = typer.Option(
+        False,
+        "--skip-verify",
+        help="Omit verification step and continue even if differences are found."
+    ),
+) -> None:
+
+    console = Console()
+    try:
+        ensure_pandoc()
+    except RuntimeError as exc:
+        console.print(str(exc), style="red")
+        raise typer.Exit(code=1)
+
+    source_dir = cfg["paths"]["to_process"]
+    docx_files = sorted(source_dir.glob("*.docx"))
+    if not docx_files:
+        console.print("No DOCX files found in to_process directory", style="red")
+        raise typer.Exit(code=1)
+
+    norm_dir = cfg["paths"]["work"] / "normalized"
+    md_raw_dir = cfg["paths"]["work"] / "md_raw"
+    tmp_dir = cfg["paths"]["tmp"]
+    wiki_dir = cfg["paths"]["wiki"]
+
+    norm_dir.mkdir(parents=True, exist_ok=True)
+    md_raw_dir.mkdir(parents=True, exist_ok=True)
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    wiki_dir.mkdir(parents=True, exist_ok=True)
+
+    console.print("[bold]Normalizing DOCX files...[/bold]")
+    for docx in track(docx_files, description="Normalize"):
+        out = norm_dir / docx.name
+        try:
+            normalize_styles(docx, out)
+        except Exception as exc:  # pragma: no cover - defensive
+            console.print(f"Error normalizing {docx.name}: {exc}", style="red")
+            raise typer.Exit(code=1)
+
+    console.print("[bold]Converting DOCX to Markdown...[/bold]")
+    for docx in track(norm_dir.glob("*.docx"), description="Convert"):
+        out = md_raw_dir / f"{docx.stem}.md"
+        try:
+            convert_docx_to_md(docx, out, wiki_dir)
+        except Exception as exc:  # pragma: no cover - defensive
+            console.print(f"Error converting {docx.name}: {exc}", style="red")
+            raise typer.Exit(code=1)
+
+    console.print("[bold]Generating consolidated markdown...[/bold]")
+    tmp_full = tmp_dir / "tmp_full.md"
+    with tmp_full.open("w", encoding="utf-8") as out:
+        for md in sorted(md_raw_dir.glob("*.md")):
+            out.write(md.read_text(encoding="utf-8"))
+            out.write("\n\n")
+
+    map_path = cfg["paths"]["work"] / "map.yaml"
+    console.print("[bold]Generating map...[/bold]")
+    map_data = build_headings_map(md_raw_dir)
+    save_map_yaml(map_data, map_path)
+
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    console.print("[bold]Regenerating index before verify...[/bold]")
+    index_data = build_index_from_map(map_data)
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    with index_path.open("w", encoding="utf-8") as f:
+        yaml.safe_dump(index_data, f, allow_unicode=True)
+
+    console.print("[bold]Verifying map and index...[/bold]")
+    diffs = compare_map_index(map_path, index_path)
+    if diffs["missing_in_index"] or diffs["missing_in_map"]:
+        table = Table(title="Differences")
+        table.add_column("Type")
+        table.add_column("Slugs")
+        table.add_row("Missing in index", ", ".join(diffs["missing_in_index"]) or "-")
+        table.add_row("Missing in map", ", ".join(diffs["missing_in_map"]) or "-")
+        console.print(table)
+
+        if not skip_verify:
+            raise typer.Exit(code=1)
+        else:
+            console.print(
+                "[yellow]Continuando ejecución a pesar de las diferencias detectadas (--skip-verify activado)[/yellow]"
+            )
+
+
+    console.print("[bold]Ingesting content...[/bold]")
+    cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
+
+    for md in track(sorted(md_raw_dir.glob("*.md")), description="Ingest"):
+        ingest_content(
+            md,
+            index_path,
+            wiki_dir,
+            cutoff=cutoff,
+            doc_source=md.stem,
+            cfg=cfg,
+        )
+
+    with index_path.open("r", encoding="utf-8") as f:
+        index_data = yaml.safe_load(f) or []
+    insert_section_numbers(index_data, wiki_dir)
+
+    console.print("[bold]Generating sidebar...[/bold]")
+    abs_links = ctx.obj.get("absolute_links", False) if ctx.obj else False
+    build_sidebar(
+        index_path=index_path,
+        wiki_dir=wiki_dir,
+        absolute_links=abs_links,
+    )
+
+    media_src = md_raw_dir / "media"
+    if media_src.exists():
+        dest = wiki_dir / "assets" / "media"
+        double_media = dest / "media"
+        if double_media.exists():
+            for img in double_media.iterdir():
+                shutil.move(img, dest)
+            shutil.rmtree(double_media)
+        if dest.exists():
+            shutil.rmtree(dest)
+        shutil.copytree(media_src, dest)
+
+    content_files = [f for f in wiki_dir.glob("*.md") if f.name not in ("_sidebar.md", "README.md")]
+    readme = wiki_dir / "README.md"
+    if not readme.exists() or not content_files:
+        readme.write_text(
+            "# Conocimiento Técnico Navantia\n\nEsta wiki fue generada automáticamente. Consulta el menú lateral para navegar.",
+            encoding="utf-8",
+        )
+
+    build_search_index(wiki_dir)
+    console.print("[green]Índice de búsqueda generado correctamente[/green]")
+
+    console.print(f"\N{check mark} Wiki generada correctamente en: {wiki_dir / 'index.html'}")
+
+
+@app.command()
+def reset() -> None:
+    """Reset wiki and work directories removing generated files."""
+    reset_environment(cfg)
+
+
+@app.command()
+def normalize(file: Path) -> None:
+    """Normalize styles in a DOCX file."""
+    dest_dir = cfg["paths"]["work"] / "normalized"
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    out_file = dest_dir / file.name
+    normalize_styles(file, out_file)
+    typer.echo(f"Normalized DOCX saved to {out_file}")
+
+
+@app.command()
+def convert(file: Path) -> None:
+    """Convert DOCX to Markdown using Pandoc."""
+    dest_dir = cfg["paths"]["work"] / "md_raw"
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    out_file = dest_dir / f"{file.stem}.md"
+    convert_docx_to_md(file, out_file, cfg["paths"]["wiki"])
+    typer.echo(f"Converted markdown saved to {out_file}")
+
+
+@app.command()
+def map() -> None:
+    """Generate YAML map of markdown headings."""
+    md_folder = cfg["paths"]["work"] / "md_raw"
+    map_data = build_headings_map(md_folder)
+    out_file = cfg["paths"]["work"] / "map.yaml"
+    save_map_yaml(map_data, out_file)
+    typer.echo(f"Headings map saved to {out_file}")
+
+
+from .processing.index_builder import build_index_from_map
+
+
+@app.command()
+def index(
+    overwrite: bool = typer.Option(
+        False, "--overwrite", "-o", help="Overwrite existing index.yaml"
+    ),
+    flat: bool = typer.Option(False, "--flat", help="Generate flat two-level index"),
+    depth: int = typer.Option(None, "--depth", "-d", help="Depth limit for index"),
+) -> None:
+    """Create index.yaml from map.yaml."""
+    out_file = cfg["paths"]["work"] / "index.yaml"
+    if out_file.exists() and not overwrite:
+        typer.echo("index.yaml already exists")
+        return
+    map_path = cfg["paths"]["work"] / "map.yaml"
+    if map_path.exists():
+        with map_path.open("r", encoding="utf-8") as f:
+            map_data = yaml.safe_load(f) or []
+    else:
+        map_data = build_headings_map(cfg["paths"]["work"] / "md_raw")
+
+    if flat:
+        index_data: list[dict] = []
+        current: dict | None = None
+        for item in map_data:
+            if item.get("level") == 1:
+                current = {"title": item["title"], "slug": item["slug"], "children": []}
+                index_data.append(current)
+            else:
+                if current is not None:
+                    current["children"].append(
+                        {"level": item["level"], "title": item["title"], "slug": item["slug"]}
+                    )
+    else:
+        index_data = build_index_from_map(map_data, max_depth=depth)
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    with out_file.open("w", encoding="utf-8") as f:
+        yaml.safe_dump(index_data, f, allow_unicode=True)
+    typer.echo(f"Index saved to {out_file}")
+
+from .processing.verify_pre_ingest import compare_map_index
+from rich.table import Table
+
+
+@app.command()
+def verify(force: bool = typer.Option(False, "--force", "-f", help="Continue even if differences are found.")) -> None:
+    """Verify map.yaml and index.yaml consistency."""
+    map_path = cfg["paths"]["work"] / "map.yaml"
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    diffs = compare_map_index(map_path, index_path)
+    console = Console()
+    if not diffs["missing_in_index"] and not diffs["missing_in_map"]:
+        console.print("Map and index are consistent.")
+        raise typer.Exit()
+
+    table = Table(title="Differences")
+    table.add_column("Type")
+    table.add_column("Slugs")
+    table.add_row("Missing in index", ", ".join(diffs["missing_in_index"]) or "-")
+    table.add_row("Missing in map", ", ".join(diffs["missing_in_map"]) or "-")
+    console.print(table)
+    if not force:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def ingest(file: Path) -> None:
+    """Fragment a consolidated Markdown file into wiki sections."""
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    wiki_dir = cfg["paths"]["wiki"]
+    cutoff = float(cfg.get("options", {}).get("cutoff_similarity", 0.5))
+    doc_source = file.stem
+    ingest_content(
+        file,
+        index_path,
+        wiki_dir,
+        cutoff=cutoff,
+        doc_source=doc_source,
+        cfg=cfg,
+    )
+    typer.echo("Content ingested")
+
+
+@app.command()
+def sidebar(ctx: typer.Context) -> None:
+    """Generate _sidebar.md for Docsify."""
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    wiki_dir = cfg["paths"]["wiki"]
+    abs_links = ctx.obj.get("absolute_links", False) if ctx.obj else False
+    build_sidebar(index_path, wiki_dir, absolute_links=abs_links)
+    typer.echo("Sidebar generated")
+
+
+@app.command()
+def reclassify(
+    threshold: float = typer.Option(0.3, "--threshold", "-t", help="Match threshold")
+) -> None:
+    """Reclassify sections from 99_unclassified.md."""
+    wiki_dir = cfg["paths"]["wiki"]
+    unclassified = wiki_dir / "99_unclassified.md"
+    if not unclassified.exists():
+        raise typer.Exit(code=1)
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    reclassify_unclassified(unclassified, index_path, wiki_dir, threshold=threshold)
+    typer.echo("Reclassification completed")
+
+
+@app.command("package")
+def package_static() -> None:
+    """Empaqueta la wiki generada en un archivo ZIP entregable."""
+    from scripts.package_static import main as pack
+
+    pack()
+
+
+@app.command()
+def search_index() -> None:
+    """Genera el índice JSON para búsqueda Docsify."""
+    wiki_dir = cfg["paths"]["wiki"]
+    build_search_index(wiki_dir)
+    typer.echo("search_index.json generado en carpeta wiki/")
+
+
+@app.command("clean-docx")
+def clean_docx_batch() -> None:
+    """Aplica limpieza automática a los .docx originales."""
+    from .tools.clean_docx import batch_process_directory
+
+    input_dir = Path(cfg["paths"]["originals"])
+    output_dir = Path(cfg["paths"]["cleaned"])
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    batch_process_directory(input_dir, output_dir)
+    typer.echo(f"Archivos DOCX limpios generados en: {output_dir}")
+
+
+@app.command("preprocess-docs")
+def preprocess_docs_batch(
+    overwrite: bool = typer.Option(
+        False, "--overwrite", help="Sobrescribir archivos existentes en to_process"
+    )
+) -> None:
+    """Limpia y convierte documentos .docx y .pdf en formato procesable."""
+    from .tools.preprocess_documents import batch_process_directory
+
+    input_dir = Path(cfg["paths"]["originals"])
+    output_dir = Path(cfg["paths"]["cleaned"])
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    batch_process_directory(input_dir, output_dir, cfg)
+    typer.echo(f"\u2705 Documentos limpios generados en: {output_dir}")
+
+    # Copia automática de documentos limpios al directorio de entrada para wiki full
+    to_process_dir = Path(cfg["paths"]["to_process"])
+    cleaned_dir = Path(cfg["paths"]["cleaned"])
+
+    to_process_dir.mkdir(parents=True, exist_ok=True)
+    copied_files = 0
+
+    for docx_file in cleaned_dir.glob("*.docx"):
+        dest = to_process_dir / docx_file.name
+        if overwrite or not dest.exists():
+            shutil.copy(docx_file, dest)
+            copied_files += 1
+
+    print(
+        f"\U0001f4e4 {copied_files} archivos copiados a {to_process_dir} para procesamiento posterior."
+    )
+
+
+@app.command("prepare-to-process")
+def move_cleaned_to_process() -> None:
+    """Copia archivos limpios desde cleaned → to_process (para ejecución de wiki full)."""
+    from shutil import copyfile
+    from pathlib import Path
+    from yaml import safe_load
+
+    cfg_path = Path("config.yaml")
+    cfg = safe_load(cfg_path.read_text(encoding="utf-8"))
+
+    cleaned_dir = Path(cfg["paths"]["cleaned"])
+    process_dir = Path(cfg["paths"]["to_process"])
+    process_dir.mkdir(parents=True, exist_ok=True)
+
+    for f in cleaned_dir.glob("*.docx"):
+        copyfile(f, process_dir / f.name)
+        print(f"\u2713 {f.name} → {process_dir}")
+
+
+@app.command("auto-index-missing")
+def auto_index_missing_cli(
+    set_visible: bool = typer.Option(
+        False,
+        "--set-visible",
+        help="Marcar como visibles los documentos añadidos",
+    )
+) -> None:
+    """Añade al index los archivos Markdown no listados."""
+    index_path = cfg["paths"]["work"] / "index.yaml"
+    wiki_dir = cfg["paths"]["wiki"]
+    added = auto_index_missing(index_path, wiki_dir, set_visible=set_visible)
+    if added:
+        typer.echo(f"{len(added)} nuevos documentos añadidos al índice")
+    else:
+        typer.echo("No se encontraron documentos huérfanos")
+
+
+@app.command("preview")
+def preview_docsify_site() -> None:
+    """Prepara la web estática navegable con Docsify a partir de los .md ya normalizados."""
+    generate_docsify_preview()
+

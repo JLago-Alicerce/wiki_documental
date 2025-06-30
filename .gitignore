@@ -38,10 +38,10 @@ build/
 *.egg-info/
 
 # DOCX originales
-inputs/_originals/*.docx
+inputs/_originals/
 
 # DOCX normalizados (no finales)
-work/normalized/*.docx
+work/normalized/
 
 # Archivos derivados de Pandoc
 work/md_raw/*.md
@@ -49,7 +49,10 @@ work/media/
 work/tmp/
 work/*.yaml
 work/*.csv
+work/
+inputs/
 
 # Reclasificaciones y backups
 wiki/99_unclassified.*
 report_reclassify.csv
+wiki/search_index.json
