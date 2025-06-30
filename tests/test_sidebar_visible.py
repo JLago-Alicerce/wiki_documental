@@ -26,4 +26,4 @@ def test_sidebar_visible_flag(tmp_path, monkeypatch):
     result = runner.invoke(app, ["sidebar"])
     assert result.exit_code == 0
     content = (tmp_path / "_sidebar.md").read_text(encoding="utf-8").splitlines()
-    assert content == ["* Sec", "  * [A](a.md)"]
+    assert content == ["* 1. Sec", "  * [1.1. A](a.md)"]
