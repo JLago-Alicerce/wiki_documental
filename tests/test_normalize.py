@@ -81,3 +81,26 @@ def test_normalize_styles_missing_style(tmp_path):
 
     doc_out = Document(out)
     assert doc_out.paragraphs[0].style.name.startswith("Heading")
+
+
+def test_normalize_nav_styles(tmp_path):
+    sample = tmp_path / "nav.docx"
+    doc = Document()
+    from docx.enum.style import WD_STYLE_TYPE
+    doc.styles.add_style("Nav_Tit_1", WD_STYLE_TYPE.PARAGRAPH)
+    doc.styles.add_style("Nav_Tit_2", WD_STYLE_TYPE.PARAGRAPH)
+    doc.styles.add_style("Nav_Tit_3", WD_STYLE_TYPE.PARAGRAPH)
+    doc.add_paragraph("Uno", style="Nav_Tit_1")
+    doc.add_paragraph("Dos", style="Nav_Tit_2")
+    doc.add_paragraph("Tres", style="Nav_Tit_3")
+    doc.save(sample)
+
+    out = tmp_path / "out.docx"
+    normalize_styles(sample, out)
+
+    doc_out = Document(out)
+    assert [p.style.name for p in doc_out.paragraphs[:3]] == [
+        "Heading 1",
+        "Heading 2",
+        "Heading 3",
+    ]

@@ -4,6 +4,8 @@ from pathlib import Path
 
 from docx import Document
 import logging
+
+STYLE_TO_LEVEL = {"Nav_Tit_1": 1, "Nav_Tit_2": 2, "Nav_Tit_3": 3}
 from ..tools.docx_utils import get_safe_heading_style
 
 from .normalization_utils import (
@@ -40,6 +42,11 @@ def normalize_styles(doc_path: Path, out_path: Path, cfg: dict | None = None) ->
 
     for paragraph in document.paragraphs:
         level = detect_heading_by_style(paragraph)
+
+        if level == 0:
+            style_name = paragraph.style.name if paragraph.style else ""
+            if style_name in STYLE_TO_LEVEL:
+                level = STYLE_TO_LEVEL[style_name]
 
         if level == 0 and use_heuristics:
             level = detect_heading_by_heuristics(paragraph)

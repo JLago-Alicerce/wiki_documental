@@ -19,7 +19,7 @@ options:
     contraportada: true
 
 menu:
-  depth_limit: 2
+  depth_limit: 3
   default_visible: true
   fallback_section: "99. Documentos no indexados"
 

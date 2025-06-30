@@ -28,4 +28,4 @@ def test_sidebar_filters(tmp_path, monkeypatch):
     sidebar = tmp_path / "_sidebar.md"
     assert sidebar.exists()
     content = sidebar.read_text(encoding="utf-8").splitlines()
-    assert content == ["* [A](a.md)"]
+    assert content == ["* [1. A](a.md)"]
