@@ -57,6 +57,15 @@ def test_fix_image_links_no_duplicate():
     assert fix_image_links(text) == text
 
 
+def test_fix_image_links_extra_prefix():
+    text = '![alt](/assets/media/img.png) ![](../assets/media/img2.png)'
+    fixed = fix_image_links(text)
+    assert '/assets/media/' not in fixed
+    assert '../assets/media/' not in fixed
+    assert 'assets/media/img.png' in fixed
+    assert 'assets/media/img2.png' in fixed
+
+
 def test_normalize_image_paths():
     text = '![alt](assets\\media\\img.png) and ![](C:/temp/foo.png)'
     result = normalize_image_paths(text)

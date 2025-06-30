@@ -226,7 +226,12 @@ def ingest_content(
             if new_src not in sources:
                 sources.append(new_src)
 
-        _fm, body = _split_front_matter(text)
+        if text.lstrip().startswith("---\n"):
+            body = text
+            skip_meta = True
+        else:
+            skip_meta = False
+            _fm, body = _split_front_matter(text)
         header_lines = ["---", f"source: {md_path.name}"]
         if sources:
             if len(sources) == 1:
@@ -254,7 +259,16 @@ def ingest_content(
         if not any("fragment-meta" in line for line in body_lines[:5]):
             body = meta_line + body
 
-        final_text = post_process_text(hidden_yaml + body)
+        processed = post_process_text(body)
+        processed = fix_image_links(processed)
+        processed = normalize_image_paths(processed)
+        if skip_meta:
+            final_text = processed
+        else:
+            meta = post_process_text(hidden_yaml)
+            meta = fix_image_links(meta)
+            meta = normalize_image_paths(meta)
+            final_text = meta + processed
         final_text = fix_image_links(final_text)
         final_text = normalize_image_paths(final_text)
         assert "assets/assets/media/" not in final_text, "\u274c Doble ruta assets detectada"
@@ -328,3 +342,29 @@ def ingest_content(
         with (log_dir / "unclassified_report.txt").open("a", encoding="utf-8") as log_f:
             for sec_title, _ in unclassified_sections:
                 log_f.write(basic_slug(sec_title) + "\n")
+
+
+def insert_section_numbers(index_data: List[Dict[str, Any]], wiki_dir: Path) -> None:
+    """Insert numeric identifiers in H1 titles according to index data."""
+
+    def _walk(entries: List[Dict[str, Any]], depth: int = 1) -> None:
+        for entry in entries:
+            slug = entry.get("slug")
+            identifier = str(entry.get("id", ""))
+            title = str(entry.get("title", ""))
+            if depth <= 3 and slug and identifier and identifier[0].isdigit() and not title.lower().startswith("anexo"):
+                md_file = wiki_dir / f"{slug}.md"
+                if md_file.exists():
+                    lines = md_file.read_text(encoding="utf-8").splitlines(keepends=True)
+                    for i, line in enumerate(lines):
+                        if line.startswith("#"):
+                            m = re.match(r"^(#{1,6})\s+(.*)$", line)
+                            if m:
+                                prefix, text = m.groups()
+                                if not text.startswith(f"{identifier}. "):
+                                    lines[i] = f"{prefix} {identifier}. {text}\n"
+                            break
+                    md_file.write_text("".join(lines), encoding="utf-8")
+            _walk(entry.get("children") or [], depth + 1)
+
+    _walk(index_data)

@@ -9,7 +9,7 @@ from .config import cfg
 from .processing.normalize_docx import normalize_styles
 from .processing.docx_to_md import convert_docx_to_md
 from .processing.headings_map import build_headings_map, save_map_yaml
-from .processing.ingest import ingest_content
+from .processing.ingest import ingest_content, insert_section_numbers
 from .processing.sidebar import build_sidebar
 from .tools.auto_index import auto_index_missing
 from .processing.reclassify import reclassify_unclassified
@@ -183,6 +183,10 @@ def full(
             doc_source=md.stem,
             cfg=cfg,
         )
+
+    with index_path.open("r", encoding="utf-8") as f:
+        index_data = yaml.safe_load(f) or []
+    insert_section_numbers(index_data, wiki_dir)
 
     console.print("[bold]Generating sidebar...[/bold]")
     abs_links = ctx.obj.get("absolute_links", False) if ctx.obj else False

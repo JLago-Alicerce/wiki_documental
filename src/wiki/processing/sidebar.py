@@ -59,13 +59,18 @@ def _traverse_index(
         indent = "  " * (level - 1)
         if len(title) > 100:
             title = title[:97].rstrip() + "..."
+        display_title = (
+            f"{entry['id']}. {title}"
+            if str(entry.get('id', '')) and str(entry.get('id'))[0].isdigit()
+            else title
+        )
         if slug:
             link = f"/wiki/{filename}" if absolute else filename
             if level == 1 and lines:
                 lines.append("---")
-            lines.append(f"{indent}* [{title}]({link})")
+            lines.append(f"{indent}* [{display_title}]({link})")
         else:
-            lines.append(f"{indent}* {title}")
+            lines.append(f"{indent}* {display_title}")
         children = entry.get("children") or []
         _traverse_index(
             children,

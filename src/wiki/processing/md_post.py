@@ -18,6 +18,8 @@ def fix_image_links(text: str) -> str:
     text = IMG_TAG_PREFIX_RE.sub(r"\1assets/media/", text)
     text = re.sub(r"(assets/)+media/", "assets/media/", text)
     text = re.sub(r"(media/)+", "media/", text)
+    text = re.sub(r"(\\|/)?assets/media/", "assets/media/", text)
+    text = re.sub(r"\.\./assets/media/", "assets/media/", text)
     return text
 
 
