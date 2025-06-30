@@ -2,11 +2,11 @@
 ---
 source: EstadoActualPlataformaBBD_V27_3_42.md
 doc_source: EstadoActualPlataformaBBD_V27_3_42.docx
-inserted: 2025-06-18T23:01:28.032372
+inserted: 2025-06-19T08:07:59.899380
 ---
 -->
 
-<div class="fragment-meta">source: EstadoActualPlataformaBBD_V27_3_42.md | doc: EstadoActualPlataformaBBD_V27_3_42.docx | inserted: 2025-06-18T23:01:28.032372</div>
+<div class="fragment-meta">source: EstadoActualPlataformaBBD_V27_3_42.md | doc: EstadoActualPlataformaBBD_V27_3_42.docx | inserted: 2025-06-19T08:07:59.899380</div>
 
 # Fechas clave:
 
@@ -30,7 +30,7 @@ integración y consolidación de datos técnicos, documentos y órdenes
 asociadas a los sistemas heredados, facilitando la automatización de
 tareas críticas.
 
-### Funciones de los Paquetes SSIS
+#### Funciones de los Paquetes SSIS
 
 Los paquetes SSIS permiten la automatización de las siguientes tareas
 críticas:
@@ -60,7 +60,7 @@ críticas:
   EEA5_DB2.dtsx permiten la comunicación y sincronización con el entorno
   EEA5, asegurando que los datos sean consistentes y actualizados.
 
-### Características Técnicas
+#### Características Técnicas
 
 Los scripts SSIS incluyen lógica avanzada para:
 
@@ -97,17 +97,18 @@ no se han portado a versiones superiores.
 1.  <span id="_Toc199209690" class="anchor"></span>Características
     generales
 
-**Rol:** Plataforma Necor@NC (entorno legado).  
-**Versión:** SQL Server 2014 SP3.  
-**Bases de datos:** Necor@NC.  
-**Conexiones entrantes:** ECADAT, SAP (vía interfaces HojasCatálogo).  
-**Conexiones salientes:** HOSTDB2 y NECORANET para consolidación.  
-**Parámetros relevantes:** Puerto dinámico, sin integración AD,
-collation por defecto.  
-**Cambios recientes:** — Información no disponible.
+- **Rol:** Plataforma Necor@NC (entorno legado).  
+  **Versión:** SQL Server 2014 SP3.  
+  **Bases de datos:** Necor@NC.  
+  **Conexiones entrantes:** ECADAT, SAP (vía interfaces
+  HojasCatálogo).  
+  **Conexiones salientes:** HOSTDB2 y NECORANET para consolidación.  
+  **Parámetros relevantes:** Puerto dinámico, sin integración AD,
+  collation por defecto.  
+  **Cambios recientes:** — Información no disponible.
 
-2.  <span id="_Toc199209691" class="anchor"></span>Contexto y
-    dependencias
+  1.  <span id="_Toc199209691" class="anchor"></span>Contexto y
+      dependencias
 
 La instancia alberga exclusivamente la base de datos Necor@NC, empleada
 por los módulos de ingeniería y aplicaciones internas como ECADAT. Su
@@ -121,7 +122,7 @@ persistan las dependencias funcionales de los módulos de ingeniería. Su
 retirada definitiva está condicionada a la migración completa de dichos
 esquemas y rutinas a versiones superiores de SQL Server.
 
-2.  <span id="_Toc198809881" class="anchor"></span>MASQL20142/NECORANET
+1.  <span id="_Toc198809881" class="anchor"></span>MASQL20142/NECORANET
     – (MASQL20222)
 
 Instancia SQL Server 2017 CU22 que funciona como plataforma funcional

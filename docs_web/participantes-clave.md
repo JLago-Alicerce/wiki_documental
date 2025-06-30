@@ -2,11 +2,11 @@
 ---
 source: EstadoActualPlataformaBBD_V27_3_42.md
 doc_source: EstadoActualPlataformaBBD_V27_3_42.docx
-inserted: 2025-06-18T23:01:28.029371
+inserted: 2025-06-19T08:07:59.893795
 ---
 -->
 
-<div class="fragment-meta">source: EstadoActualPlataformaBBD_V27_3_42.md | doc: EstadoActualPlataformaBBD_V27_3_42.docx | inserted: 2025-06-18T23:01:28.029371</div>
+<div class="fragment-meta">source: EstadoActualPlataformaBBD_V27_3_42.md | doc: EstadoActualPlataformaBBD_V27_3_42.docx | inserted: 2025-06-19T08:07:59.893795</div>
 
 # Participantes clave:
 
